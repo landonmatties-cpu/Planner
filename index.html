@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson Planner</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --border: #e2e6ea;
+      --primary: #4a6cf7;
+      --primary-dark: #3a5ce5;
+      --primary-light: #eef1fe;
+      --danger: #e74c3c;
+      --danger-light: #fdecea;
+      --text: #1a1f36;
+      --muted: #6b7280;
+      --tag-bg: #e8f0fe;
+      --tag-text: #3a5ce5;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    header .header-right { display: flex; align-items: center; gap: 12px; }
+
+    /* ── Layout ── */
+    .app { display: flex; height: calc(100vh - 60px); }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 16px 0;
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 0 16px 8px;
+    }
+    .topic-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 0;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .topic-item:hover { background: var(--bg); }
+    .topic-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .topic-item .count {
+      background: var(--border);
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+    .topic-item.active .count { background: var(--primary); color: #fff; }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-box:focus { border-color: var(--primary); }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); }
+    .btn-danger { background: var(--danger-light); color: var(--danger); border: none; }
+    .btn-danger:hover { background: #f8d7da; }
+    .btn-sm { padding: 5px 11px; font-size: 0.8rem; }
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 1rem;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-icon:hover { background: var(--bg); color: var(--text); }
+
+    /* ── Lesson cards ── */
+    .lessons-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .card:hover { border-color: var(--primary); box-shadow: 0 4px 20px rgba(74,108,247,0.1); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .card-title { font-size: 1rem; font-weight: 700; flex: 1; }
+    .card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+    .tag-subject { background: #fef3c7; color: #92400e; }
+    .tag-duration { background: #d1fae5; color: #065f46; }
+
+    .card-objectives {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 1rem; margin-bottom: 16px; }
+
+    /* ── Modal ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+      overflow-y: auto;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 680px;
+      padding: 28px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 700; }
+
+    .form-grid { display: grid; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--primary); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Detail view ── */
+    .detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+      overflow-y: auto;
+    }
+    .detail-overlay.open { display: flex; }
+
+    .detail-modal {
+      background: var(--surface);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 720px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .detail-hero {
+      background: var(--primary);
+      padding: 28px 28px 22px;
+      color: #fff;
+    }
+    .detail-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .detail-hero h2 { font-size: 1.4rem; font-weight: 700; }
+    .detail-hero-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .detail-hero-close:hover { background: rgba(255,255,255,0.35); }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .detail-tag {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .detail-body { padding: 24px 28px; }
+    .detail-section { margin-bottom: 22px; }
+    .detail-section:last-child { margin-bottom: 0; }
+    .detail-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .detail-section-content {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+    .detail-section-content.muted { color: var(--muted); font-style: italic; }
+
+    .detail-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Confirm dialog ── */
+    .confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-overlay.open { display: flex; }
+    .confirm-box {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 360px;
+      width: 90%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    .confirm-box h3 { font-size: 1.05rem; margin-bottom: 10px; }
+    .confirm-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+    .sort-select {
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Lesson Planner</h1>
+  <div class="header-right">
+    <select class="sort-select" id="sort-select" onchange="renderLessons()">
+      <option value="date-desc">Newest first</option>
+      <option value="date-asc">Oldest first</option>
+      <option value="title">Title A–Z</option>
+    </select>
+    <button class="btn btn-primary" onclick="openForm()">+ New Lesson</button>
+  </div>
+</header>
+
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Topics</div>
+    <div id="topic-list"></div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="toolbar">
+      <input class="search-box" type="search" id="search-input" placeholder="Search lessons…" oninput="renderLessons()" />
+    </div>
+    <div class="lessons-grid" id="lessons-grid"></div>
+  </main>
+</div>
+
+<!-- Form modal (create / edit) -->
+<div class="overlay" id="form-overlay" onclick="handleOverlayClick(event, 'form-overlay')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="form-title">New Lesson</span>
+      <button class="btn-icon" onclick="closeForm()" title="Close">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-title">Title *</label>
+          <input id="f-title" type="text" placeholder="e.g. Introduction to Fractions" />
+        </div>
+        <div class="form-group">
+          <label for="f-subject">Subject *</label>
+          <input id="f-subject" type="text" placeholder="e.g. Math" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-topic">Topic / Category</label>
+        <input id="f-topic" type="text" placeholder="e.g. Number Sense" list="topic-datalist" />
+        <datalist id="topic-datalist"></datalist>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-date">Date</label>
+          <input id="f-date" type="date" />
+        </div>
+        <div class="form-group">
+          <label for="f-duration">Duration (mins)</label>
+          <input id="f-duration" type="number" min="1" placeholder="e.g. 45" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-objectives">Learning Objectives</label>
+        <textarea id="f-objectives" placeholder="What will students be able to do by the end of this lesson?"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="f-activities">Activities</label>
+        <textarea id="f-activities" placeholder="Describe the activities planned for this lesson…"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="f-materials">Materials</label>
+        <textarea id="f-materials" style="min-height:60px" placeholder="List any materials or resources needed…"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="f-notes">Lesson Notes / Reflections</label>
+        <textarea id="f-notes" placeholder="How did it go? Any observations or things to improve?"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLesson()">Save Lesson</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="detail-overlay" id="detail-overlay" onclick="handleOverlayClick(event, 'detail-overlay')">
+  <div class="detail-modal">
+    <div class="detail-hero" id="detail-hero">
+      <div class="detail-hero-top">
+        <h2 id="d-title"></h2>
+        <button class="detail-hero-close" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="detail-tags" id="d-tags"></div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section" id="ds-objectives">
+        <div class="detail-section-title">Learning Objectives</div>
+        <div class="detail-section-content" id="d-objectives"></div>
+      </div>
+      <div class="detail-section" id="ds-activities">
+        <div class="detail-section-title">Activities</div>
+        <div class="detail-section-content" id="d-activities"></div>
+      </div>
+      <div class="detail-section" id="ds-materials">
+        <div class="detail-section-title">Materials</div>
+        <div class="detail-section-content" id="d-materials"></div>
+      </div>
+      <div class="detail-section" id="ds-notes">
+        <div class="detail-section-title">Notes & Reflections</div>
+        <div class="detail-section-content" id="d-notes"></div>
+      </div>
+    </div>
+    <div class="detail-footer">
+      <button class="btn btn-danger btn-sm" id="d-delete-btn">Delete</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeDetail()">Close</button>
+      <button class="btn btn-primary btn-sm" id="d-edit-btn">Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3>Delete this lesson?</h3>
+    <p>This action cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────
+  let lessons = JSON.parse(localStorage.getItem('lessonPlanner_lessons') || '[]');
+  let editingId = null;
+  let activeTopicFilter = 'all';
+  let pendingDeleteId = null;
+  let viewingId = null;
+
+  function save() {
+    localStorage.setItem('lessonPlanner_lessons', JSON.stringify(lessons));
+  }
+
+  function genId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  // ── Topic sidebar ──────────────────────────────────────────────
+  function renderSidebar() {
+    const list = document.getElementById('topic-list');
+    const allCount = lessons.length;
+    const topics = {};
+    lessons.forEach(l => {
+      const t = (l.topic || '').trim() || 'Uncategorized';
+      topics[t] = (topics[t] || 0) + 1;
+    });
+
+    let html = `
+      <div class="topic-item ${activeTopicFilter === 'all' ? 'active' : ''}" onclick="setTopic('all')">
+        All Lessons <span class="count">${allCount}</span>
+      </div>`;
+
+    Object.keys(topics).sort().forEach(t => {
+      const active = activeTopicFilter === t ? 'active' : '';
+      html += `<div class="topic-item ${active}" onclick="setTopic('${escHtml(t)}')">${escHtml(t)}<span class="count">${topics[t]}</span></div>`;
+    });
+
+    list.innerHTML = html;
+
+    // update datalist for topic input
+    const dl = document.getElementById('topic-datalist');
+    dl.innerHTML = Object.keys(topics).filter(t => t !== 'Uncategorized').map(t => `<option value="${escHtml(t)}">`).join('');
+  }
+
+  function setTopic(t) {
+    activeTopicFilter = t;
+    renderSidebar();
+    renderLessons();
+  }
+
+  // ── Lesson cards ───────────────────────────────────────────────
+  function getFilteredLessons() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const sort = document.getElementById('sort-select').value;
+
+    let list = lessons.filter(l => {
+      const matchTopic = activeTopicFilter === 'all' ||
+        (l.topic || '').trim() === activeTopicFilter ||
+        (activeTopicFilter === 'Uncategorized' && !(l.topic || '').trim());
+      if (!matchTopic) return false;
+      if (!q) return true;
+      return [l.title, l.subject, l.topic, l.objectives, l.activities, l.materials, l.notes]
+        .some(f => (f || '').toLowerCase().includes(q));
+    });
+
+    list = [...list].sort((a, b) => {
+      if (sort === 'date-asc') return (a.date || '') < (b.date || '') ? -1 : 1;
+      if (sort === 'date-desc') return (a.date || '') > (b.date || '') ? -1 : 1;
+      return (a.title || '').localeCompare(b.title || '');
+    });
+
+    return list;
+  }
+
+  function renderLessons() {
+    renderSidebar();
+    const grid = document.getElementById('lessons-grid');
+    const list = getFilteredLessons();
+
+    if (!list.length) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📝</div>
+          <p>${lessons.length === 0 ? 'No lessons yet — create your first one!' : 'No lessons match your filter.'}</p>
+          ${lessons.length === 0 ? '<button class="btn btn-primary" onclick="openForm()">+ New Lesson</button>' : ''}
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map(l => {
+      const topic = (l.topic || '').trim() || 'Uncategorized';
+      const dateStr = l.date ? new Date(l.date + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+      return `
+        <div class="card" onclick="openDetail('${l.id}')">
+          <div class="card-header">
+            <div class="card-title">${escHtml(l.title || 'Untitled')}</div>
+            <div class="card-actions" onclick="event.stopPropagation()">
+              <button class="btn-icon" title="Edit" onclick="openForm('${l.id}')">✏️</button>
+              <button class="btn-icon" title="Delete" onclick="confirmDelete('${l.id}')">🗑️</button>
+            </div>
+          </div>
+          <div class="card-meta">
+            <span class="tag tag-subject">${escHtml(l.subject || 'No subject')}</span>
+            <span class="tag">${escHtml(topic)}</span>
+            ${l.duration ? `<span class="tag tag-duration">${l.duration} min</span>` : ''}
+            ${dateStr ? `<span style="color:var(--muted);font-size:0.8rem">${dateStr}</span>` : ''}
+          </div>
+          ${l.objectives ? `<div class="card-objectives">${escHtml(l.objectives)}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  // ── Form ───────────────────────────────────────────────────────
+  function openForm(id) {
+    editingId = id || null;
+    const lesson = id ? lessons.find(l => l.id === id) : null;
+    document.getElementById('form-title').textContent = id ? 'Edit Lesson' : 'New Lesson';
+    document.getElementById('f-title').value = lesson?.title || '';
+    document.getElementById('f-subject').value = lesson?.subject || '';
+    document.getElementById('f-topic').value = lesson?.topic || '';
+    document.getElementById('f-date').value = lesson?.date || '';
+    document.getElementById('f-duration').value = lesson?.duration || '';
+    document.getElementById('f-objectives').value = lesson?.objectives || '';
+    document.getElementById('f-activities').value = lesson?.activities || '';
+    document.getElementById('f-materials').value = lesson?.materials || '';
+    document.getElementById('f-notes').value = lesson?.notes || '';
+    document.getElementById('form-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('f-title').focus(), 50);
+    closeDetail();
+  }
+
+  function closeForm() {
+    document.getElementById('form-overlay').classList.remove('open');
+    editingId = null;
+  }
+
+  function saveLesson() {
+    const title = document.getElementById('f-title').value.trim();
+    const subject = document.getElementById('f-subject').value.trim();
+    if (!title) { alert('Please enter a lesson title.'); return; }
+    if (!subject) { alert('Please enter a subject.'); return; }
+
+    const data = {
+      title,
+      subject,
+      topic: document.getElementById('f-topic').value.trim(),
+      date: document.getElementById('f-date').value,
+      duration: document.getElementById('f-duration').value,
+      objectives: document.getElementById('f-objectives').value.trim(),
+      activities: document.getElementById('f-activities').value.trim(),
+      materials: document.getElementById('f-materials').value.trim(),
+      notes: document.getElementById('f-notes').value.trim(),
+    };
+
+    if (editingId) {
+      const idx = lessons.findIndex(l => l.id === editingId);
+      lessons[idx] = { ...lessons[idx], ...data };
+    } else {
+      lessons.unshift({ id: genId(), createdAt: Date.now(), ...data });
+    }
+
+    save();
+    closeForm();
+    renderLessons();
+  }
+
+  // ── Detail view ────────────────────────────────────────────────
+  function openDetail(id) {
+    const l = lessons.find(x => x.id === id);
+    if (!l) return;
+    viewingId = id;
+
+    const topic = (l.topic || '').trim() || 'Uncategorized';
+    const dateStr = l.date ? new Date(l.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '';
+
+    document.getElementById('d-title').textContent = l.title || 'Untitled';
+
+    let tags = `<span class="detail-tag">${escHtml(l.subject || 'No subject')}</span>
+                <span class="detail-tag">${escHtml(topic)}</span>`;
+    if (l.duration) tags += `<span class="detail-tag">${l.duration} min</span>`;
+    if (dateStr) tags += `<span class="detail-tag">${dateStr}</span>`;
+    document.getElementById('d-tags').innerHTML = tags;
+
+    setSection('objectives', l.objectives);
+    setSection('activities', l.activities);
+    setSection('materials', l.materials);
+    setSection('notes', l.notes);
+
+    document.getElementById('d-edit-btn').onclick = () => openForm(id);
+    document.getElementById('d-delete-btn').onclick = () => { closeDetail(); confirmDelete(id); };
+
+    document.getElementById('detail-overlay').classList.add('open');
+  }
+
+  function setSection(key, value) {
+    const section = document.getElementById(`ds-${key}`);
+    const content = document.getElementById(`d-${key}`);
+    if (value) {
+      section.style.display = '';
+      content.textContent = value;
+      content.classList.remove('muted');
+    } else {
+      section.style.display = 'none';
+    }
+  }
+
+  function closeDetail() {
+    document.getElementById('detail-overlay').classList.remove('open');
+    viewingId = null;
+  }
+
+  // ── Delete ─────────────────────────────────────────────────────
+  function confirmDelete(id) {
+    pendingDeleteId = id;
+    document.getElementById('confirm-overlay').classList.add('open');
+    document.getElementById('confirm-delete-btn').onclick = () => {
+      lessons = lessons.filter(l => l.id !== pendingDeleteId);
+      save();
+      renderLessons();
+      closeConfirm();
+      closeDetail();
+    };
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirm-overlay').classList.remove('open');
+    pendingDeleteId = null;
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function handleOverlayClick(e, id) {
+    if (e.target.id === id) {
+      if (id === 'form-overlay') closeForm();
+      if (id === 'detail-overlay') closeDetail();
+    }
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeForm(); closeDetail(); closeConfirm(); }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      if (document.getElementById('form-overlay').classList.contains('open')) saveLesson();
+    }
+  });
+
+  // ── Init ───────────────────────────────────────────────────────
+  renderLessons();
+</script>
+</body>
+</html>
