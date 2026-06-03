@@ -7,354 +7,203 @@
   <style>
     /* ── Reset & Variables ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f7f8fc;
-      --surface: #ffffff;
-      --border: #e4e7ec;
-      --border2: #ced3dc;
-      --text: #111827;
-      --text2: #374151;
-      --muted: #9ca3af;
-      --primary: #4a6cf7;
-      --primary-dark: #3a5ce5;
-      --primary-light: #eef2ff;
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --success: #10b981;
-      --header-h: 56px;
-      --dow-h: 34px;
-      --b1: #4361ee; --b1-light: #eef1fe; --b1-text: #1e3a8a;
-      --b2: #0ea5e9; --b2-light: #e0f2fe; --b2-text: #075985;
-      --b3: #10b981; --b3-light: #d1fae5; --b3-text: #065f46;
-      --b4: #f59e0b; --b4-light: #fef3c7; --b4-text: #78350f;
+      --bg: #f7f8fc; --surface: #fff; --border: #e4e7ec; --border2: #ced3dc;
+      --text: #111827; --text2: #374151; --muted: #9ca3af;
+      --primary: #4a6cf7; --primary-dark: #3a5ce5; --primary-light: #eef2ff;
+      --danger: #ef4444; --danger-light: #fef2f2; --success: #10b981;
+      --header-h: 56px; --dow-h: 34px;
     }
-
-    /* ── Dark Mode ── */
     html.dark {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #272a3a;
-      --border2: #343848;
-      --text: #e1e4ed;
-      --text2: #b0b7c8;
-      --muted: #5a6178;
-      --primary: #6b83f8;
-      --primary-dark: #5b73e8;
-      --primary-light: #1a2040;
-      --danger: #f87171;
-      --danger-light: #2d1c1c;
-      --b1-light: #1c2454; --b1-text: #93a8fc;
-      --b2-light: #0c2d47; --b2-text: #7dd3fc;
-      --b3-light: #092e22; --b3-text: #6ee7b7;
-      --b4-light: #2a1c06; --b4-text: #fcd34d;
-      color-scheme: dark;
+      --bg: #0f1117; --surface: #1a1d27; --border: #272a3a; --border2: #343848;
+      --text: #e1e4ed; --text2: #b0b7c8; --muted: #5a6178;
+      --primary: #6b83f8; --primary-dark: #5b73e8; --primary-light: #1a2040;
+      --danger: #f87171; --danger-light: #2d1c1c; color-scheme: dark;
     }
-
-    html, body {
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-    }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
 
     /* ── Header ── */
-    header {
-      height: var(--header-h);
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px; position: relative; z-index: 5;
-    }
+    header { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 5; position: relative; }
     .logo { font-size: 1.05rem; font-weight: 700; color: var(--primary); }
     .nav { display: flex; align-items: center; gap: 6px; }
-    .nav-btn {
-      border: 1px solid var(--border); background: var(--surface); color: var(--text);
-      border-radius: 7px; padding: 5px 12px; font-size: 0.85rem; font-weight: 500;
-      cursor: pointer; transition: background 0.12s;
-    }
+    .nav-btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 7px; padding: 5px 12px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: background 0.12s; }
     .nav-btn:hover { background: var(--bg); }
     .nav-arrow { padding: 5px 10px; font-size: 1rem; }
     .month-label { font-size: 1rem; font-weight: 700; min-width: 170px; text-align: center; }
-    .header-right { display: flex; align-items: center; gap: 8px; }
+    .hdr-right { display: flex; align-items: center; gap: 8px; }
     .save-badge { font-size: 0.75rem; color: var(--success); opacity: 0; transition: opacity 0.3s; }
     .save-badge.show { opacity: 1; }
-    .icon-btn {
-      background: none; border: 1px solid var(--border); border-radius: 7px;
-      color: var(--muted); cursor: pointer; padding: 5px 9px; font-size: 1rem;
-      transition: background 0.12s, color 0.12s; line-height: 1;
-    }
+    .icon-btn { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); cursor: pointer; padding: 5px 9px; font-size: 1rem; transition: background 0.12s, color 0.12s; line-height: 1; }
     .icon-btn:hover { background: var(--bg); color: var(--text); }
 
-    /* ── Calendar wrapper ── */
+    /* ── Calendar ── */
     .cal-wrapper { height: calc(100vh - var(--header-h)); display: flex; flex-direction: column; overflow: hidden; }
-    .cal-dow {
-      display: grid; grid-template-columns: repeat(7, 1fr);
-      height: var(--dow-h); background: var(--surface);
-      border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .cal-dow-cell {
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--muted);
-      border-right: 1px solid var(--border);
-    }
+    .cal-dow { display: grid; height: var(--dow-h); background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .cal-dow-cell { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-right: 1px solid var(--border); }
     .cal-dow-cell:last-child { border-right: none; }
-    .cal-dow-cell.weekend { color: var(--border2); }
-
     .cal-scroll { flex: 1; overflow-y: auto; }
-
-    /* ── Rows & Cells ── */
-    .cal-row { display: grid; grid-template-columns: repeat(7, 1fr); }
-
-    .cal-cell {
-      min-height: 110px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 5px 5px 4px;
-      cursor: pointer; background: var(--surface);
-      transition: background 0.1s;
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-row { display: grid; }
+    .cal-cell { min-height: 100px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5px 5px 4px; cursor: pointer; background: var(--surface); transition: background 0.1s; display: flex; flex-direction: column; gap: 2px; }
     .cal-cell:hover { background: var(--primary-light); }
-    .cal-cell.other-month { background: var(--bg); opacity: 0.6; }
+    .cal-cell.other-month { background: var(--bg); opacity: 0.55; pointer-events: none; }
     .cal-cell.today .date-num { background: var(--primary); color: #fff; border-radius: 50%; }
     .cal-cell.selected { background: var(--primary-light); outline: 2px solid var(--primary); outline-offset: -2px; }
-
-    .cell-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
-    .date-num {
-      font-size: 0.8rem; font-weight: 600;
-      width: 24px; height: 24px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .day-type-badge {
-      font-size: 0.62rem; font-weight: 700; padding: 1px 5px;
-      border-radius: 4px; background: var(--primary-light); color: var(--primary);
-    }
-    .cell-blocks { display: flex; flex-direction: column; gap: 2px; flex: 1; min-height: 0; }
-
-    .block-chip {
-      display: flex; align-items: center; gap: 4px;
-      font-size: 0.69rem; line-height: 1; font-weight: 500;
-      padding: 2px 5px; border-radius: 4px;
-      overflow: hidden; white-space: nowrap;
-    }
+    .cell-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1px; flex-shrink: 0; }
+    .date-num { font-size: 0.8rem; font-weight: 600; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+    .week-badge { font-size: 0.6rem; font-weight: 700; padding: 1px 4px; border-radius: 3px; background: var(--primary-light); color: var(--primary); white-space: nowrap; }
+    .cell-blocks { display: flex; flex-direction: column; gap: 2px; flex: 1; min-height: 0; overflow: hidden; }
+    .block-chip { display: flex; align-items: center; gap: 4px; font-size: 0.68rem; font-weight: 600; padding: 2px 5px; border-radius: 4px; overflow: hidden; white-space: nowrap; }
     .block-chip .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
     .block-chip .chip-label { overflow: hidden; text-overflow: ellipsis; }
-    .block-chip.b1 { background: var(--b1-light); color: var(--b1-text); }
-    .block-chip.b2 { background: var(--b2-light); color: var(--b2-text); }
-    .block-chip.b3 { background: var(--b3-light); color: var(--b3-text); }
-    .block-chip.b4 { background: var(--b4-light); color: var(--b4-text); }
-    .block-chip.b1 .dot { background: var(--b1); }
-    .block-chip.b2 .dot { background: var(--b2); }
-    .block-chip.b3 .dot { background: var(--b3); }
-    .block-chip.b4 .dot { background: var(--b4); }
-    .block-chip.empty { opacity: 0.22; }
+    .event-chip-sm { font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
     /* ── Expander ── */
     .cal-expander { display: none; border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); background: var(--primary-light); animation: expandIn 0.2s ease; }
     .cal-expander.open { display: block; }
-    @keyframes expandIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes expandIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .exp-inner { padding: 14px 14px 18px; max-width: 1100px; margin: 0 auto; }
+    .exp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .exp-date { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+    .exp-meta { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-top: 2px; }
+    .exp-close { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); cursor: pointer; padding: 4px 10px; font-size: 0.82rem; font-weight: 600; transition: background 0.12s; white-space: nowrap; flex-shrink: 0; }
+    .exp-close:hover { background: var(--surface); color: var(--text); }
 
-    .expander-inner { padding: 16px 14px 18px; }
-    .expander-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .expander-date { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
-    .expander-meta { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
-    .expander-close {
-      background: none; border: none; cursor: pointer; color: var(--muted);
-      font-size: 0.85rem; padding: 4px 10px; border-radius: 6px; font-weight: 600;
-      transition: background 0.12s; border: 1px solid var(--border);
-    }
-    .expander-close:hover { background: var(--surface); color: var(--text); }
-
-    .expander-blocks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    @media (max-width: 960px)  { .expander-blocks { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 560px)  { .expander-blocks { grid-template-columns: 1fr; } }
-
-    /* ── Block Card ── */
-    .block-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-    .block-card-top { padding: 9px 11px 8px; border-bottom: 1px solid var(--border); }
-    .block-card.b1 .block-card-top { border-top: 3px solid var(--b1); }
-    .block-card.b2 .block-card-top { border-top: 3px solid var(--b2); }
-    .block-card.b3 .block-card-top { border-top: 3px solid var(--b3); }
-    .block-card.b4 .block-card-top { border-top: 3px solid var(--b4); }
-
-    .block-period-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
-    .block-card.b1 .block-period-label { color: var(--b1); }
-    .block-card.b2 .block-period-label { color: var(--b2); }
-    .block-card.b3 .block-period-label { color: var(--b3); }
-    .block-card.b4 .block-period-label { color: var(--b4); }
-    .block-time { font-size: 0.65rem; font-weight: 500; color: var(--muted); }
-
-    .block-title-input {
-      width: 100%; border: none; outline: none; background: transparent;
-      font-size: 0.9rem; font-weight: 700; color: var(--text); font-family: inherit; padding: 0;
-    }
-    .block-title-input::placeholder { color: var(--border2); font-weight: 400; }
-
-    .block-card-body { padding: 9px 11px 11px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
-    .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    /* ── Timetable view ── */
+    .tt-view { display: flex; flex-direction: column; gap: 6px; }
+    .tt-block-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .tt-block-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px 6px; border-bottom: 1px solid var(--border); }
+    .tt-block-id { display: flex; align-items: center; gap: 6px; }
+    .tt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tt-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .tt-subject-input { border: none; outline: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text); font-family: inherit; min-width: 0; flex: 1; }
+    .tt-subject-input::placeholder { color: var(--muted); font-weight: 400; }
+    .tt-time { font-size: 0.72rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .tt-body { padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 7px; }
+    .tt-title-input { width: 100%; border: none; outline: none; background: transparent; font-size: 0.95rem; font-weight: 700; color: var(--text); font-family: inherit; padding: 0; }
+    .tt-title-input::placeholder { color: var(--border2); font-weight: 400; }
+    .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .field-group { display: flex; flex-direction: column; gap: 3px; }
     .field-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-    .field-input, .field-ta {
-      width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
-      font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--bg);
-      outline: none; transition: border-color 0.14s, background 0.14s;
-    }
+    .field-input, .field-ta { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.14s; }
     .field-input:focus, .field-ta:focus { border-color: var(--primary); background: var(--surface); }
-    .field-ta { resize: vertical; min-height: 58px; }
-    .field-ta.short { min-height: 42px; }
-
-    .detail-toggle {
-      display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 3px 0;
-      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-      color: var(--muted); border: none; background: none; width: 100%; text-align: left; user-select: none;
-    }
+    .field-ta { resize: vertical; min-height: 56px; }
+    .field-ta.short { min-height: 40px; }
+    .detail-toggle { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 3px 0; font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border: none; background: none; width: 100%; text-align: left; user-select: none; }
     .detail-toggle:hover { color: var(--text); }
-    .detail-toggle .arrow { transition: transform 0.18s; font-size: 0.6rem; }
-    .detail-toggle.open .arrow { transform: rotate(90deg); }
+    .detail-toggle .arr { transition: transform 0.18s; font-size: 0.6rem; }
+    .detail-toggle.open .arr { transform: rotate(90deg); }
     .detail-section.closed { display: none; }
     .detail-fields { display: flex; flex-direction: column; gap: 7px; padding-top: 5px; }
 
-    /* ── Settings Panel ── */
-    .settings-backdrop {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 60;
-    }
+    /* ── Break slot ── */
+    .tt-break { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
+    .tt-break-name { flex: 1; }
+    .tt-break-time { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── Events section ── */
+    .events-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+    .events-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .event-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; }
+    .event-item-left { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+    .event-name { font-size: 0.83rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .event-time { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+    .event-repeat-badge { font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; background: var(--primary-light); color: var(--primary); white-space: nowrap; }
+    .event-del { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 0.85rem; padding: 2px 5px; border-radius: 4px; transition: background 0.12s, color 0.12s; flex-shrink: 0; }
+    .event-del:hover { background: var(--danger-light); color: var(--danger); }
+    .add-event-btn { background: none; border: 1px dashed var(--border2); border-radius: 6px; color: var(--muted); cursor: pointer; padding: 5px 10px; font-size: 0.8rem; font-weight: 600; width: 100%; text-align: center; transition: border-color 0.12s, color 0.12s; }
+    .add-event-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── Event form ── */
+    .event-form { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .ef-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .ef-input { padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--surface); outline: none; }
+    .ef-input:focus { border-color: var(--primary); }
+    .ef-input.name { flex: 1; min-width: 120px; }
+    .ef-input.time { width: 85px; }
+    .ef-select { padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; font-family: inherit; color: var(--text); background: var(--surface); cursor: pointer; outline: none; }
+    .ef-color { width: 32px; height: 30px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; padding: 0; }
+    .ef-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    .days-check { display: flex; gap: 8px; flex-wrap: wrap; }
+    .day-check-label { display: flex; align-items: center; gap: 3px; font-size: 0.78rem; cursor: pointer; }
+
+    /* ── Settings panel ── */
+    .settings-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 60; }
     .settings-backdrop.open { display: block; }
-
-    .settings-panel {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 460px; max-width: 100vw;
-      background: var(--surface); border-left: 1px solid var(--border);
-      box-shadow: -6px 0 30px rgba(0,0,0,0.15); z-index: 61;
-      display: flex; flex-direction: column;
-      transform: translateX(100%); transition: transform 0.25s ease;
-    }
+    .settings-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 500px; max-width: 100vw; background: var(--surface); border-left: 1px solid var(--border); box-shadow: -6px 0 30px rgba(0,0,0,0.14); z-index: 61; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.25s ease; }
     .settings-panel.open { transform: translateX(0); }
-
-    .settings-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .settings-title { font-size: 1rem; font-weight: 700; }
-
-    .settings-tabs {
-      display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
-      padding: 0 4px; background: var(--surface);
-      overflow-x: auto; gap: 2px;
-    }
-    .s-tab {
-      padding: 9px 13px; font-size: 0.82rem; font-weight: 600;
-      border: none; background: none; cursor: pointer; color: var(--muted);
-      border-bottom: 2px solid transparent; transition: color 0.14s, border-color 0.14s;
-      white-space: nowrap;
-    }
+    .s-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .s-title { font-size: 1rem; font-weight: 700; }
+    .s-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; overflow-x: auto; }
+    .s-tab { padding: 9px 14px; font-size: 0.82rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.14s, border-color 0.14s; white-space: nowrap; }
     .s-tab:hover { color: var(--text); }
     .s-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .s-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 18px; }
 
-    .settings-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
-
-    /* ── Settings UI components ── */
-    .s-section { display: flex; flex-direction: column; gap: 10px; }
-    .s-section-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
-
-    .s-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    /* ── Settings form elements ── */
+    .s-section { display: flex; flex-direction: column; gap: 8px; }
+    .s-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 2px; }
+    .s-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
     .s-row:last-child { border-bottom: none; }
     .s-row-label { font-size: 0.88rem; font-weight: 600; }
-    .s-row-desc { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
-
-    /* Toggle switch */
-    .toggle-wrap { display: flex; align-items: center; flex-shrink: 0; }
-    .toggle { position: relative; width: 40px; height: 22px; cursor: pointer; }
+    .s-row-desc { font-size: 0.76rem; color: var(--muted); margin-top: 1px; }
+    .toggle { position: relative; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
     .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-track {
-      position: absolute; inset: 0; background: var(--border2); border-radius: 999px;
-      transition: background 0.2s;
-    }
-    .toggle input:checked ~ .toggle-track { background: var(--primary); }
-    .toggle-thumb {
-      position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
-      background: #fff; border-radius: 50%; transition: transform 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
-
-    .s-input {
-      padding: 6px 10px; border: 1px solid var(--border); border-radius: 7px;
-      font-size: 0.85rem; font-family: inherit; color: var(--text); background: var(--bg);
-      outline: none; transition: border-color 0.14s;
-    }
+    .tog-track { position: absolute; inset: 0; background: var(--border2); border-radius: 999px; transition: background 0.2s; }
+    .toggle input:checked ~ .tog-track { background: var(--primary); }
+    .tog-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .toggle input:checked ~ .tog-thumb { transform: translateX(18px); }
+    .s-input { padding: 5px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.84rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; }
     .s-input:focus { border-color: var(--primary); }
     .s-input.wide { width: 100%; }
-    .s-input.time { width: 90px; }
-    .s-input.sm { width: 70px; }
-
-    .s-select {
-      padding: 5px 8px; border: 1px solid var(--border); border-radius: 7px;
-      font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--bg);
-      cursor: pointer; outline: none;
-    }
-
-    .s-btn {
-      padding: 6px 12px; border-radius: 7px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; transition: background 0.12s, border-color 0.12s; white-space: nowrap;
-    }
+    .s-select { padding: 5px 7px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
+    .s-btn { padding: 5px 11px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.81rem; font-weight: 600; cursor: pointer; transition: background 0.12s; white-space: nowrap; }
     .s-btn:hover { background: var(--border); }
     .s-btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     .s-btn.primary:hover { background: var(--primary-dark); }
     .s-btn.danger { color: var(--danger); border-color: var(--danger-light); background: var(--danger-light); }
     .s-btn.danger:hover { background: var(--danger); color: #fff; }
-    .s-btn.sm { padding: 3px 8px; font-size: 0.76rem; }
-    .s-btn.icon { padding: 3px 7px; }
+    .s-btn.sm { padding: 3px 8px; font-size: 0.75rem; }
 
-    /* Timetable rows */
-    .timetable-row {
-      display: grid; grid-template-columns: 14px 1fr 90px 90px auto;
-      align-items: center; gap: 8px; padding: 6px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .timetable-row:last-child { border-bottom: none; }
-    .t-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .t-dot.b1 { background: var(--b1); }
-    .t-dot.b2 { background: var(--b2); }
-    .t-dot.b3 { background: var(--b3); }
-    .t-dot.b4 { background: var(--b4); }
-
-    /* Subjects */
-    .subject-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
-    .subject-item:last-child { border-bottom: none; }
-    .subject-color { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--border); cursor: pointer; padding: 0; }
-
-    /* Rotation */
-    .day-type-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
-    .day-type-header { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg); border-bottom: 1px solid var(--border); }
-    .day-type-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
-    .order-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; }
-    .order-pos { font-size: 0.7rem; color: var(--muted); font-weight: 700; width: 16px; }
-    .order-pill { display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 5px; flex: 1; font-size: 0.8rem; font-weight: 600; }
-    .order-pill.b1 { background: var(--b1-light); color: var(--b1-text); }
-    .order-pill.b2 { background: var(--b2-light); color: var(--b2-text); }
-    .order-pill.b3 { background: var(--b3-light); color: var(--b3-text); }
-    .order-pill.b4 { background: var(--b4-light); color: var(--b4-text); }
-
-    .pattern-grid { display: grid; grid-template-columns: 60px 1fr; gap: 6px 10px; align-items: center; }
-    .pattern-label { font-size: 0.82rem; font-weight: 600; }
-
-    .radio-group { display: flex; gap: 12px; }
-    .radio-opt { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.85rem; }
-    .radio-opt input { cursor: pointer; accent-color: var(--primary); }
-
-    /* Color picker input reset */
+    /* ── Blocks tab ── */
+    .block-row { display: grid; grid-template-columns: 28px 60px 1fr; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+    .block-row:last-child { border-bottom: none; }
+    .color-swatch { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; padding: 0; }
     input[type="color"] { -webkit-appearance: none; border: none; cursor: pointer; }
     input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
     input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
 
-    /* Scrollbar */
+    /* ── Schedule tab (timetable) ── */
+    .tt-slot-row { display: flex; align-items: center; gap: 7px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+    .tt-slot-row:last-child { border-bottom: none; }
+    .slot-label { font-size: 0.78rem; font-weight: 700; white-space: nowrap; width: 64px; }
+    .tt-break-color { width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; padding: 0; flex-shrink: 0; }
+    .time-input { width: 78px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; }
+    .time-input:focus { border-color: var(--primary); }
+
+    /* ── Rotation tab (week templates) ── */
+    .wt-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+    .wt-header { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .pattern-grid { display: grid; gap: 4px; padding: 10px; overflow-x: auto; }
+    .pattern-grid .pg-head { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); text-align: center; }
+    .pattern-grid .pg-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+    .pg-select { width: 100%; padding: 3px 4px; border: 1px solid var(--border); border-radius: 5px; font-size: 0.75rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; text-align: center; }
+
+    /* ── Recurring events in settings ── */
+    .re-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .re-item:last-child { border-bottom: none; }
+    .re-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .re-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .re-name { font-size: 0.86rem; font-weight: 600; }
+    .re-detail { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Misc ── */
+    .no-schedule { padding: 20px; text-align: center; color: var(--muted); font-size: 0.88rem; }
+    .radio-group { display: flex; gap: 12px; }
+    .radio-opt { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; cursor: pointer; }
+    .radio-opt input { accent-color: var(--primary); cursor: pointer; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
   </style>
 </head>
 <body>
@@ -367,7 +216,7 @@
     <button class="nav-btn nav-arrow" onclick="navigate(1)">›</button>
     <button class="nav-btn" onclick="goToday()">Today</button>
   </div>
-  <div class="header-right">
+  <div class="hdr-right">
     <span class="save-badge" id="save-badge">✓ Saved</span>
     <button class="icon-btn" onclick="openSettings()" title="Settings">⚙︎</button>
   </div>
@@ -378,393 +227,549 @@
   <div class="cal-scroll" id="cal-scroll"></div>
 </div>
 
-<!-- Settings -->
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
 <div class="settings-panel" id="settings-panel">
-  <div class="settings-header">
-    <span class="settings-title">Settings</span>
+  <div class="s-header">
+    <span class="s-title">Settings</span>
     <button class="icon-btn" onclick="closeSettings()">✕</button>
   </div>
-  <div class="settings-tabs" id="settings-tabs">
+  <div class="s-tabs" id="s-tabs">
     <button class="s-tab active" onclick="switchTab('appearance')">Appearance</button>
+    <button class="s-tab" onclick="switchTab('blocks')">Blocks</button>
     <button class="s-tab" onclick="switchTab('schedule')">Schedule</button>
-    <button class="s-tab" onclick="switchTab('subjects')">Subjects</button>
     <button class="s-tab" onclick="switchTab('rotation')">Rotation</button>
   </div>
-  <div class="settings-body" id="settings-body"></div>
+  <div class="s-body" id="s-body"></div>
 </div>
 
 <datalist id="subjects-dl"></datalist>
 
 <script>
-// ── Constants ─────────────────────────────────────────────
-const MONTHS   = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS_SUN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const DAYS_MON = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const BLOCK_CLS = ['b1','b2','b3','b4'];
-const BLOCK_HEX = ['#4361ee','#0ea5e9','#10b981','#f59e0b'];
+// ── Constants ─────────────────────────────────────────────────────────
+const MONTHS  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW_SUN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DOW_MON = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DOW_LONG_MON = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DOW_LONG_SUN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 const DEFAULT_SETTINGS = {
-  darkMode: false,
-  showWeekends: true,
-  weekStartMonday: false,
-  blockNames: ['Block 1', 'Block 2', 'Block 3', 'Block 4'],
-  blockTimes: [
-    { start: '08:00', end: '09:00' },
-    { start: '09:10', end: '10:10' },
-    { start: '10:20', end: '11:20' },
-    { start: '11:30', end: '12:30' },
+  darkMode: false, showWeekends: true, weekStartMonday: false,
+  blocks: [
+    { id:'A', subject:'Math',        color:'#4361ee' },
+    { id:'B', subject:'English',     color:'#0ea5e9' },
+    { id:'C', subject:'Science',     color:'#10b981' },
+    { id:'D', subject:'History',     color:'#f59e0b' },
+    { id:'E', subject:'Art',         color:'#8b5cf6' },
+    { id:'F', subject:'PE',          color:'#ef4444' },
+    { id:'G', subject:'Music',       color:'#f97316' },
+    { id:'H', subject:'Technology',  color:'#06b6d4' },
   ],
-  subjects: [],
-  rotation: {
-    enabled: false,
-    mode: 'weekly',
-    dayTypes: [
-      { name: 'Day A', order: [0,1,2,3] },
-      { name: 'Day B', order: [1,2,3,0] },
-      { name: 'Day C', order: [2,3,0,1] },
-      { name: 'Day D', order: [3,0,1,2] },
-    ],
-    weeklyPattern: [null, 0, 1, 2, 3, null, null], // index 0=Sun
-    rollingStart: '',
-    rollingStartType: 0,
-    skipWeekends: true,
-  }
+  timetable: [
+    { type:'block', slot:0, start:'08:00', end:'09:00' },
+    { type:'break', name:'Recess', start:'09:00', end:'09:15', color:'#9ca3af' },
+    { type:'block', slot:1, start:'09:15', end:'10:15' },
+    { type:'block', slot:2, start:'10:15', end:'11:15' },
+    { type:'break', name:'Lunch',  start:'11:15', end:'12:00', color:'#86efac' },
+    { type:'block', slot:3, start:'12:00', end:'13:00' },
+  ],
+  weekTemplates: [
+    { id:'wt1', name:'Week 1', days:{ '1':['A','B','C','D'], '2':['E','F','G','H'], '3':['A','B','C','D'], '4':['E','F','G','H'], '5':['A','B','C','D'] } },
+    { id:'wt2', name:'Week 2', days:{ '1':['B','A','D','C'], '2':['F','E','H','G'], '3':['B','A','D','C'], '4':['F','E','H','G'], '5':['B','A','D','C'] } },
+  ],
+  rotation: { startDate:'', startTemplateId:'wt1' },
+  recurringEvents: [],
 };
 
-// ── State ─────────────────────────────────────────────────
-let viewYear, viewMonth;
-let openKey = null;
+// ── State ─────────────────────────────────────────────────────────────
+let viewYear, viewMonth, openKey = null, settingsTab = 'appearance';
+let blockDetailOpen = {}; // { blockId: bool }
+let showEventForm = false;
 let saveTimer = null;
-let settingsTab = 'appearance';
-let blockDetailOpen = [false, false, false, false];
 
-let data     = JSON.parse(localStorage.getItem('lp2_data')     || '{}');
-let settings = deepMerge(DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('lp2_settings') || '{}'));
+let settings = deepMerge(DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('lp3_settings') || '{}'));
+let data      = JSON.parse(localStorage.getItem('lp3_data') || '{}');
 
-// ── Init ──────────────────────────────────────────────────
+// Migrate blocks array if needed (ensure 8 blocks)
+if (!settings.blocks || settings.blocks.length < 8) settings.blocks = DEFAULT_SETTINGS.blocks;
+
+// ── Init ──────────────────────────────────────────────────────────────
 function init() {
   const now = new Date();
-  viewYear  = now.getFullYear();
-  viewMonth = now.getMonth();
-  applySettings(false);
+  viewYear = now.getFullYear(); viewMonth = now.getMonth();
+  applyDarkMode();
+  updateSubjectsDL();
   renderDOW();
   renderCalendar();
 }
 
-// ── Navigation ────────────────────────────────────────────
+// ── Color helpers ─────────────────────────────────────────────────────
+function hexRGB(hex) {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [128,128,128];
+}
+function hexToRgba(hex, a) { const [r,g,b] = hexRGB(hex); return `rgba(${r},${g},${b},${a})`; }
+function hexDark(hex)  { const [r,g,b] = hexRGB(hex); return `rgb(${Math.floor(r*.38)},${Math.floor(g*.38)},${Math.floor(b*.38)})`; }
+function hexLight(hex) { const [r,g,b] = hexRGB(hex); return `rgb(${Math.min(255,r+130)},${Math.min(255,g+130)},${Math.min(255,b+130)})`; }
+
+function blockByID(id) { return settings.blocks.find(b => b.id === id) || { id, subject:'', color:'#9ca3af' }; }
+
+function chipStyle(color) {
+  return settings.darkMode
+    ? `background:${hexToRgba(color,.22)};color:${hexLight(color)}`
+    : `background:${hexToRgba(color,.13)};color:${hexDark(color)}`;
+}
+function labelStyle(color) { return `color:${settings.darkMode ? hexLight(color) : color}`; }
+
+// ── Navigation ────────────────────────────────────────────────────────
 function navigate(dir) {
   viewMonth += dir;
   if (viewMonth > 11) { viewMonth = 0; viewYear++; }
   if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
-  openKey = null;
-  renderCalendar();
+  openKey = null; renderCalendar();
 }
 function goToday() {
-  const now = new Date();
-  viewYear = now.getFullYear(); viewMonth = now.getMonth();
+  const n = new Date(); viewYear = n.getFullYear(); viewMonth = n.getMonth();
   openKey = null; renderCalendar();
 }
 
-// ── Rotation logic ────────────────────────────────────────
-function getBlockOrder(key) {
-  const rot = settings.rotation;
-  if (!rot.enabled || !rot.dayTypes.length) return [0,1,2,3];
-
-  if (rot.mode === 'weekly') {
-    const d = new Date(key + 'T00:00:00');
-    let dow = d.getDay();
-    const typeIdx = rot.weeklyPattern[dow];
-    if (typeIdx === null || typeIdx === undefined || !rot.dayTypes[typeIdx]) return null;
-    return rot.dayTypes[typeIdx].order;
-  } else {
-    if (!rot.rollingStart) return [0,1,2,3];
-    let start   = new Date(rot.rollingStart + 'T00:00:00');
-    let current = new Date(key + 'T00:00:00');
-    if (current < start) return null;
-    let count = 0;
-    let d = new Date(start);
-    while (d < current) {
-      d.setDate(d.getDate() + 1);
-      if (rot.skipWeekends && (d.getDay() === 0 || d.getDay() === 6)) continue;
-      count++;
-    }
-    if (rot.skipWeekends && (current.getDay() === 0 || current.getDay() === 6)) return null;
-    const idx = (rot.rollingStartType + count) % rot.dayTypes.length;
-    return rot.dayTypes[idx].order;
-  }
+// ── Week template / rotation logic ────────────────────────────────────
+function getMondayOfWeek(date) {
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const dow = d.getDay();
+  d.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+  return d;
 }
 
-function getDayTypeName(key) {
-  const rot = settings.rotation;
-  if (!rot.enabled || !rot.dayTypes.length) return null;
-  if (rot.mode === 'weekly') {
-    const dow = new Date(key + 'T00:00:00').getDay();
-    const idx = rot.weeklyPattern[dow];
-    return (idx !== null && idx !== undefined && rot.dayTypes[idx]) ? rot.dayTypes[idx].name : null;
-  } else {
-    const order = getBlockOrder(key);
-    if (!order) return null;
-    const current = new Date(key + 'T00:00:00');
-    let start = new Date(rot.rollingStart + 'T00:00:00');
-    let count = 0;
-    let d = new Date(start);
-    while (d < current) {
-      d.setDate(d.getDate() + 1);
-      if (rot.skipWeekends && (d.getDay() === 0 || d.getDay() === 6)) continue;
-      count++;
-    }
-    const idx = (rot.rollingStartType + count) % rot.dayTypes.length;
-    return rot.dayTypes[idx]?.name || null;
+function getActiveTemplate(dateKey) {
+  // Day-level override takes priority
+  if (data[dateKey]?.templateOverride) {
+    return settings.weekTemplates.find(t => t.id === data[dateKey].templateOverride) || null;
   }
+  const { startDate, startTemplateId } = settings.rotation;
+  if (!settings.weekTemplates.length) return null;
+  if (!startDate) return settings.weekTemplates[0];
+
+  const thisMonday  = getMondayOfWeek(new Date(dateKey + 'T00:00:00'));
+  const startMonday = getMondayOfWeek(new Date(startDate + 'T00:00:00'));
+  const weeksDiff   = Math.round((thisMonday - startMonday) / 6.048e8); // ms in 7 days
+  if (weeksDiff < 0) return null;
+
+  const startIdx = settings.weekTemplates.findIndex(t => t.id === startTemplateId);
+  const idx      = ((startIdx < 0 ? 0 : startIdx) + weeksDiff) % settings.weekTemplates.length;
+  return settings.weekTemplates[idx];
 }
 
-// ── DOW header ────────────────────────────────────────────
+function getBlocksForDay(dateKey) {
+  const tmpl = getActiveTemplate(dateKey);
+  if (!tmpl) return null;
+  const dow = String(new Date(dateKey + 'T00:00:00').getDay());
+  return tmpl.days[dow] || null;
+}
+
+// ── Events for day ────────────────────────────────────────────────────
+function getEventsForDay(dateKey) {
+  const dow    = new Date(dateKey + 'T00:00:00').getDay();
+  const result = [];
+
+  for (const ev of settings.recurringEvents) {
+    if (!ev.repeat) continue;
+    const { type, days, startDate: evStart, startTemplateId: evTmplId } = ev.repeat;
+    if (!days || !days.includes(dow)) continue;
+    if (type === 'weekly') { result.push({ ...ev, _recurring: true }); continue; }
+    if (type === 'biweekly') {
+      const tmpl = getActiveTemplate(dateKey);
+      if (tmpl && tmpl.id === evTmplId) result.push({ ...ev, _recurring: true });
+    }
+  }
+
+  const dayEvents = data[dateKey]?._events || [];
+  result.push(...dayEvents);
+  return result.sort((a,b) => (a.start||'').localeCompare(b.start||''));
+}
+
+// ── DOW header ────────────────────────────────────────────────────────
 function renderDOW() {
-  const days = settings.weekStartMonday ? DAYS_MON : DAYS_SUN;
-  const showWE = settings.showWeekends;
-  const visible = showWE ? days : days.filter((_, i) => {
-    const idx = settings.weekStartMonday ? (i + 1) % 7 : i;
+  const days    = settings.weekStartMonday ? DOW_MON : DOW_SUN;
+  const visible = settings.showWeekends ? days : days.filter((_,i) => {
+    const idx = settings.weekStartMonday ? (i+1)%7 : i;
     return idx !== 0 && idx !== 6;
   });
   const cols = visible.length;
-  const dow = document.getElementById('cal-dow');
-  dow.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  dow.innerHTML = visible.map((d, i) => {
-    const realIdx = settings.weekStartMonday ? (i + 1) % 7 : i;
-    const we = realIdx === 0 || realIdx === 6;
-    return `<div class="cal-dow-cell${we ? ' weekend' : ''}">${d}</div>`;
+  const dow  = document.getElementById('cal-dow');
+  dow.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  dow.innerHTML = visible.map((d,i) => {
+    const realIdx = settings.weekStartMonday ? (i+1)%7 : i;
+    return `<div class="cal-dow-cell${realIdx===0||realIdx===6?' weekend':''}">${d}</div>`;
   }).join('');
 }
 
-// ── Calendar render ───────────────────────────────────────
+// ── Calendar render ───────────────────────────────────────────────────
 function renderCalendar() {
   document.getElementById('month-label').textContent = `${MONTHS[viewMonth]} ${viewYear}`;
-
   const showWE  = settings.showWeekends;
   const startMon = settings.weekStartMonday;
   const cols    = showWE ? 7 : 5;
+  const todayKey = dateKey(new Date());
 
   const firstDay = new Date(viewYear, viewMonth, 1);
   const lastDay  = new Date(viewYear, viewMonth + 1, 0);
-  const todayKey = dateKey(new Date());
 
-  // Compute start offset based on week start
+  // Build ordered list of visible dates
   let startDow = firstDay.getDay(); // 0=Sun
-  if (startMon) startDow = (startDow + 6) % 7; // Mon=0
-  if (!showWE)  startDow = startMon ? startDow : (startDow === 0 ? 5 : startDow - 1); // skip Sat/Sun offset
+  if (startMon) startDow = (startDow + 6) % 7;
 
-  // Build list of dates to render
   let cellDates = [];
-  // pre-month padding
-  for (let i = 0; i < startDow; i++) {
-    const d = new Date(viewYear, viewMonth, 1 - (startDow - i));
-    if (!showWE) {
-      const dw = d.getDay();
-      if (dw === 0 || dw === 6) { i++; continue; }
-    }
+  // Pre-month fill
+  for (let i = startDow - 1; i >= 0; i--) {
+    const d = new Date(viewYear, viewMonth, -i);
+    if (!showWE && (d.getDay()===0||d.getDay()===6)) continue;
     cellDates.push(d);
   }
-  // month days
+  // Month days
   for (let i = 1; i <= lastDay.getDate(); i++) {
     const d = new Date(viewYear, viewMonth, i);
-    if (!showWE && (d.getDay() === 0 || d.getDay() === 6)) continue;
+    if (!showWE && (d.getDay()===0||d.getDay()===6)) continue;
     cellDates.push(d);
   }
-  // post-month padding to fill grid
-  const remainder = cellDates.length % cols;
-  if (remainder > 0) {
-    const padding = cols - remainder;
-    let j = 1;
-    while (cellDates.length % cols !== 0) {
-      const d = new Date(viewYear, viewMonth + 1, j++);
-      if (!showWE && (d.getDay() === 0 || d.getDay() === 6)) continue;
-      cellDates.push(d);
-    }
+  // Post-month fill
+  let post = 1;
+  while (cellDates.length % cols !== 0) {
+    const d = new Date(viewYear, viewMonth+1, post++);
+    if (!showWE && (d.getDay()===0||d.getDay()===6)) continue;
+    cellDates.push(d);
   }
 
-  const numWeeks = Math.ceil(cellDates.length / cols);
-  const scroll = document.getElementById('cal-scroll');
+  const numWeeks = cellDates.length / cols;
+  const scroll   = document.getElementById('cal-scroll');
   let html = '';
 
   for (let w = 0; w < numWeeks; w++) {
     html += `<div class="cal-row" style="grid-template-columns:repeat(${cols},1fr)">`;
     for (let d = 0; d < cols; d++) {
-      const cellDate = cellDates[w * cols + d];
-      if (!cellDate) { html += `<div class="cal-cell" style="border-right:none"></div>`; continue; }
-      const key      = dateKey(cellDate);
-      const inMonth  = cellDate.getMonth() === viewMonth;
-      const order    = inMonth ? getBlockOrder(key) : null;
-      const typeName = inMonth && settings.rotation.enabled ? getDayTypeName(key) : null;
+      const cd  = cellDates[w*cols+d];
+      if (!cd) { html += `<div class="cal-cell"></div>`; continue; }
+      const key = dateKey(cd);
+      const inMonth = cd.getMonth() === viewMonth;
+      const order   = inMonth ? getBlocksForDay(key) : null;
+      const tmpl    = inMonth ? getActiveTemplate(key) : null;
+      const evts    = inMonth ? getEventsForDay(key) : [];
 
       let cls = 'cal-cell';
       if (!inMonth)        cls += ' other-month';
-      if (key === todayKey) cls += ' today';
-      if (key === openKey)  cls += ' selected';
-
-      const blocks = data[key] || null;
-      const displayOrder = order || [0,1,2,3];
+      if (key===todayKey)  cls += ' today';
+      if (key===openKey)   cls += ' selected';
 
       html += `<div class="${cls}" data-key="${key}" onclick="toggleDay('${key}')">`;
-      html += `<div class="cell-top">`;
-      html += `<div class="date-num">${cellDate.getDate()}</div>`;
-      if (typeName) html += `<div class="day-type-badge">${escHtml(typeName.replace('Day ', ''))}</div>`;
-      html += `</div>`;
-      html += `<div class="cell-blocks">`;
+      html += `<div class="cell-top"><div class="date-num">${cd.getDate()}</div>`;
+      if (tmpl && order) html += `<div class="week-badge">${escHtml(tmpl.name)}</div>`;
+      html += `</div><div class="cell-blocks">`;
 
-      if (order !== null || !settings.rotation.enabled) {
-        for (let pos = 0; pos < 4; pos++) {
-          const b   = displayOrder[pos];
-          const blk = blocks?.[b];
-          const txt = blk?.title || blk?.subject || '';
-          if (txt) {
-            html += `<div class="block-chip ${BLOCK_CLS[b]}"><span class="dot"></span><span class="chip-label">${escHtml(txt)}</span></div>`;
-          } else if (inMonth) {
-            html += `<div class="block-chip ${BLOCK_CLS[b]} empty"><span class="dot"></span></div>`;
-          }
-        }
+      if (order) {
+        order.forEach(bid => {
+          const blk = blockByID(bid);
+          const lesson = data[key]?.[bid] || {};
+          const subj = lesson.subjectOverride || blk.subject;
+          const txt  = lesson.title || subj || bid;
+          html += `<div class="block-chip" style="${chipStyle(blk.color)}">`;
+          html += `<span class="dot" style="background:${blk.color}"></span>`;
+          html += `<span class="chip-label">${escHtml(txt)}</span></div>`;
+        });
       }
+      evts.forEach(ev => {
+        html += `<div class="event-chip-sm" style="background:${hexToRgba(ev.color||'#888',.15)};color:${ev.color||'#888'}">${escHtml(ev.name)}</div>`;
+      });
+
       html += `</div></div>`;
     }
     html += `</div>`;
 
     // Expander after this row
-    const expanderOpen = openKey && isKeyInWeek(openKey, w, cellDates, cols);
-    html += `<div class="cal-expander${expanderOpen ? ' open' : ''}" id="expander-row-${w}">`;
-    if (expanderOpen) html += buildExpanderHTML(openKey);
+    const exOpen = openKey && isKeyInWeek(openKey, w, cellDates, cols);
+    html += `<div class="cal-expander${exOpen?' open':''}" id="exp-${w}">`;
+    if (exOpen) html += buildExpanderHTML(openKey);
     html += `</div>`;
   }
 
   scroll.innerHTML = html;
   if (openKey) {
     const ex = document.querySelector('.cal-expander.open');
-    if (ex) ex.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (ex) ex.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
 }
 
-function isKeyInWeek(key, weekIndex, cellDates, cols) {
+function isKeyInWeek(key, w, cellDates, cols) {
   const idx = cellDates.findIndex(d => d && dateKey(d) === key);
-  return idx !== -1 && Math.floor(idx / cols) === weekIndex;
+  return idx !== -1 && Math.floor(idx/cols) === w;
 }
 
-// ── Toggle day ────────────────────────────────────────────
+// ── Toggle day ────────────────────────────────────────────────────────
 function toggleDay(key) {
-  if (openKey === key) {
-    openKey = null;
-  } else {
-    openKey = key;
-    blockDetailOpen = [false,false,false,false];
-    ensureDay(key);
-  }
+  if (openKey === key) { openKey = null; }
+  else { openKey = key; blockDetailOpen = {}; showEventForm = false; ensureDay(key); }
   renderCalendar();
 }
 function closeExpander() { openKey = null; renderCalendar(); }
 
-// ── Expander HTML ─────────────────────────────────────────
+// ── Expander HTML ─────────────────────────────────────────────────────
 function buildExpanderHTML(key) {
-  const d = new Date(key + 'T00:00:00');
+  const d     = new Date(key + 'T00:00:00');
   const label = d.toLocaleDateString(undefined, { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-  const typeName = getDayTypeName(key);
-  const order = getBlockOrder(key) || [0,1,2,3];
-  const blocks = data[key] || Array.from({length:4}, emptyBlock);
+  const tmpl  = getActiveTemplate(key);
+  const order = getBlocksForDay(key);
 
-  let html = `<div class="expander-inner">`;
-  html += `<div class="expander-header">`;
-  html += `<div><div class="expander-date">${label}</div>`;
-  if (typeName) html += `<div class="expander-meta">${escHtml(typeName)}</div>`;
-  html += `</div>`;
-  html += `<button class="expander-close" onclick="closeExpander()">✕ Close</button>`;
-  html += `</div>`;
-  html += `<div class="expander-blocks">`;
+  let html = `<div class="exp-inner">`;
+  html += `<div class="exp-header"><div>`;
+  html += `<div class="exp-date">${label}</div>`;
+  if (tmpl) html += `<div class="exp-meta">${escHtml(tmpl.name)}</div>`;
+  html += `</div><button class="exp-close" onclick="closeExpander()">✕ Close</button></div>`;
 
-  for (let pos = 0; pos < 4; pos++) {
-    const b   = order[pos];
-    const blk = blocks[b] || emptyBlock();
-    const cls = BLOCK_CLS[b];
-    const name = settings.blockNames[b] || `Block ${b+1}`;
-    const time = settings.blockTimes[pos];
-    const timeStr = (time?.start && time?.end) ? `${time.start}–${time.end}` : '';
-    const isOpen = blockDetailOpen[b];
+  html += `<div class="tt-view">`;
 
-    html += `<div class="block-card ${cls}">`;
-    html += `<div class="block-card-top">`;
-    html += `<div class="block-period-label"><span>${escHtml(name)}</span>${timeStr ? `<span class="block-time">${timeStr}</span>` : ''}</div>`;
-    html += `<input class="block-title-input" type="text" placeholder="Lesson title…" value="${escAttr(blk.title)}" oninput="updateField('${key}',${b},'title',this.value)" />`;
-    html += `</div>`;
-    html += `<div class="block-card-body">`;
-    html += `<div class="field-row-2">`;
-    html += fInput(key, b, 'subject', blk.subject, 'Subject', 'e.g. Math', 'list="subjects-dl"');
-    html += fInput(key, b, 'topic',   blk.topic,   'Topic',   'e.g. Fractions');
-    html += `</div>`;
-    html += `<button class="detail-toggle${isOpen?' open':''}" onclick="toggleDetail(${b})"><span class="arrow">▶</span>Details</button>`;
-    html += `<div class="detail-section${isOpen?'':' closed'}" id="detail-${b}">`;
-    html += `<div class="detail-fields">`;
-    html += fTA(key, b, 'objectives', blk.objectives, 'Objectives', 'What will students be able to do?');
-    html += fTA(key, b, 'activities', blk.activities, 'Activities', 'Planned activities…');
-    html += fTA(key, b, 'materials',  blk.materials,  'Materials',  'Required materials…', 'short');
-    html += fTA(key, b, 'notes',      blk.notes,      'Notes & Reflections', 'How did it go?');
-    html += `</div></div></div></div>`;
+  // Events section (top)
+  html += buildEventsSection(key);
+
+  // Timetable
+  if (!order) {
+    html += `<div class="no-schedule">No blocks scheduled — set up week templates in Settings → Rotation.</div>`;
+  } else {
+    let slotIdx = 0;
+    for (const item of settings.timetable) {
+      if (item.type === 'block' && slotIdx < order.length) {
+        const bid    = order[slotIdx];
+        const blk    = blockByID(bid);
+        const lesson = data[key]?.[bid] || {};
+        const subj   = lesson.subjectOverride !== undefined ? lesson.subjectOverride : '';
+        const isOpen = !!blockDetailOpen[bid];
+        html += buildBlockCard(key, bid, blk, lesson, subj, item, isOpen);
+        slotIdx++;
+      } else if (item.type === 'break') {
+        const c = item.color || '#9ca3af';
+        html += `<div class="tt-break" style="background:${hexToRgba(c,.18)};color:${settings.darkMode?hexLight(c):hexDark(c)}">`;
+        html += `<span class="tt-break-name">${escHtml(item.name)}</span>`;
+        html += `<span class="tt-break-time">${item.start}–${item.end}</span></div>`;
+      }
+    }
   }
+
   html += `</div></div>`;
   return html;
 }
 
-function fInput(key, b, field, val, label, ph, extra='') {
-  return `<div class="field-group"><div class="field-label">${label}</div>
-    <input class="field-input" type="text" placeholder="${ph}" value="${escAttr(val)}" ${extra}
-      oninput="updateField('${key}',${b},'${field}',this.value)" /></div>`;
-}
-function fTA(key, b, field, val, label, ph, cls='') {
-  return `<div class="field-group"><div class="field-label">${label}</div>
-    <textarea class="field-ta${cls?' '+cls:''}" placeholder="${ph}"
-      oninput="updateField('${key}',${b},'${field}',this.value)">${escHtml(val)}</textarea></div>`;
+function buildBlockCard(key, bid, blk, lesson, subjVal, item, isOpen) {
+  const color   = blk.color;
+  const timeStr = item ? `${item.start}–${item.end}` : '';
+
+  let html = `<div class="tt-block-card" style="border-left:3px solid ${color}">`;
+  html += `<div class="tt-block-head" style="background:${hexToRgba(color, settings.darkMode?.18:.08)}">`;
+  html += `<div class="tt-block-id">`;
+  html += `<span class="tt-dot" style="background:${color}"></span>`;
+  html += `<span class="tt-label" style="${labelStyle(color)}">Block ${escHtml(bid)}</span>`;
+  html += `</div>`;
+  html += `<input class="tt-subject-input" type="text" placeholder="${escAttr(blk.subject)}" value="${escAttr(subjVal)}"`;
+  html += ` oninput="updateLesson('${key}','${bid}','subjectOverride',this.value)" list="subjects-dl" />`;
+  html += `<span class="tt-time">${timeStr}</span>`;
+  html += `</div>`;
+
+  html += `<div class="tt-body">`;
+  html += `<input class="tt-title-input" type="text" placeholder="Lesson title…" value="${escAttr(lesson.title||'')}"`;
+  html += ` oninput="updateLesson('${key}','${bid}','title',this.value)" />`;
+  html += `<div class="field-row-2">`;
+  html += fInput(key, bid, 'topic', lesson.topic||'', 'Topic', 'e.g. Fractions');
+  html += `<div class="field-group"><div class="field-label">Pages / Resources</div>`;
+  html += `<input class="field-input" type="text" placeholder="p.12–15, worksheet…" value="${escAttr(lesson.resources||'')}" oninput="updateLesson('${key}','${bid}','resources',this.value)" /></div>`;
+  html += `</div>`;
+  html += `<button class="detail-toggle${isOpen?' open':''}" onclick="toggleDetail('${bid}')"><span class="arr">▶</span>Details</button>`;
+  html += `<div class="detail-section${isOpen?'':' closed'}" id="detail-${bid}">`;
+  html += `<div class="detail-fields">`;
+  html += fTA(key,bid,'objectives',lesson.objectives||'','Objectives','What will students be able to do?');
+  html += fTA(key,bid,'activities',lesson.activities||'','Activities','Planned activities…');
+  html += fTA(key,bid,'materials', lesson.materials||'', 'Materials','Required materials…','short');
+  html += fTA(key,bid,'notes',     lesson.notes||'',    'Notes & Reflections','How did it go?');
+  html += `</div></div></div></div>`;
+  return html;
 }
 
-function toggleDetail(b) {
-  blockDetailOpen[b] = !blockDetailOpen[b];
-  const sec = document.getElementById(`detail-${b}`);
-  const btn = sec?.previousElementSibling;
-  sec?.classList.toggle('closed', !blockDetailOpen[b]);
-  btn?.classList.toggle('open', blockDetailOpen[b]);
+function buildEventsSection(key) {
+  const evts = getEventsForDay(key);
+  let html = `<div class="events-section">`;
+  html += `<div class="events-title">Events & Interruptions</div>`;
+
+  evts.forEach(ev => {
+    const c = ev.color || '#888';
+    html += `<div class="event-item" style="background:${hexToRgba(c,.12)}">`;
+    html += `<div class="event-item-left">`;
+    html += `<span class="tt-dot" style="background:${c}"></span>`;
+    html += `<span class="event-name">${escHtml(ev.name)}</span>`;
+    html += `<span class="event-time">${ev.start||''}${ev.end?'–'+ev.end:''}</span>`;
+    if (ev._recurring) html += `<span class="event-repeat-badge">🔁 Recurring</span>`;
+    html += `</div>`;
+    if (ev._recurring) {
+      html += `<button class="event-del" onclick="removeRecurringEvent('${ev.id}')" title="Delete series">✕</button>`;
+    } else {
+      html += `<button class="event-del" onclick="removeOnceEvent('${key}','${ev.id}')" title="Delete">✕</button>`;
+    }
+    html += `</div>`;
+  });
+
+  if (!showEventForm) {
+    html += `<button class="add-event-btn" onclick="openEventForm('${key}')">+ Add event</button>`;
+  } else {
+    html += buildEventForm(key);
+  }
+  html += `</div>`;
+  return html;
 }
 
-// ── Data updates ──────────────────────────────────────────
-function updateField(key, b, field, value) {
-  ensureDay(key);
-  data[key][b][field] = value;
+function buildEventForm(key) {
+  const dow = new Date(key + 'T00:00:00').getDay();
+  const tmpl = getActiveTemplate(key);
+  const dayLabels = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  let html = `<div class="event-form">`;
+  html += `<div class="ef-row">`;
+  html += `<input class="ef-input name" id="ef-name" type="text" placeholder="Event name (e.g. Library)" />`;
+  html += `<input class="ef-color" id="ef-color" type="color" value="#8b5cf6" />`;
+  html += `</div>`;
+  html += `<div class="ef-row">`;
+  html += `<span style="font-size:.78rem;color:var(--muted)">Time:</span>`;
+  html += `<input class="ef-input time" id="ef-start" type="time" />`;
+  html += `<span style="color:var(--muted)">–</span>`;
+  html += `<input class="ef-input time" id="ef-end" type="time" />`;
+  html += `</div>`;
+  html += `<div class="ef-row"><span style="font-size:.78rem;color:var(--muted)">Repeat:</span>`;
+  html += `<select class="ef-select" id="ef-repeat" onchange="toggleRepeatOptions()">`;
+  html += `<option value="none">One-time (this day only)</option>`;
+  html += `<option value="weekly">Weekly</option>`;
+  html += `<option value="biweekly">Bi-weekly (every other week)</option>`;
+  html += `</select></div>`;
+  html += `<div id="ef-days-row" style="display:none"><span style="font-size:.78rem;color:var(--muted)">On:</span>`;
+  html += `<div class="days-check">`;
+  [1,2,3,4,5].forEach(d => {
+    html += `<label class="day-check-label"><input type="checkbox" class="ef-day-check" value="${d}" ${d===dow?'checked':''}>${dayLabels[d]}</label>`;
+  });
+  html += `</div></div>`;
+  if (tmpl && settings.weekTemplates.length > 1) {
+    html += `<div id="ef-week-row" style="display:none"><span style="font-size:.78rem;color:var(--muted)">Occurs on:</span>`;
+    html += `<select class="ef-select" id="ef-week-tmpl">`;
+    settings.weekTemplates.forEach(t => {
+      html += `<option value="${t.id}"${t.id===tmpl.id?' selected':''}>${escHtml(t.name)}</option>`;
+    });
+    html += `</select></div>`;
+  }
+  html += `<div class="ef-actions">`;
+  html += `<button class="s-btn sm" onclick="cancelEventForm('${key}')">Cancel</button>`;
+  html += `<button class="s-btn sm primary" onclick="saveEvent('${key}')">Add Event</button>`;
+  html += `</div></div>`;
+  return html;
+}
+
+function toggleRepeatOptions() {
+  const val = document.getElementById('ef-repeat')?.value;
+  const daysRow = document.getElementById('ef-days-row');
+  const weekRow = document.getElementById('ef-week-row');
+  if (daysRow) daysRow.style.display = (val==='weekly'||val==='biweekly') ? '' : 'none';
+  if (weekRow) weekRow.style.display = val==='biweekly' ? '' : 'none';
+}
+
+// ── Event CRUD ────────────────────────────────────────────────────────
+function openEventForm(key) {
+  showEventForm = true;
+  const expander = document.querySelector('.cal-expander.open');
+  if (expander) expander.innerHTML = buildExpanderHTML(key);
+}
+function cancelEventForm(key) {
+  showEventForm = false;
+  const expander = document.querySelector('.cal-expander.open');
+  if (expander) expander.innerHTML = buildExpanderHTML(key);
+}
+
+function saveEvent(key) {
+  const name  = document.getElementById('ef-name')?.value.trim();
+  const color = document.getElementById('ef-color')?.value || '#8b5cf6';
+  const start = document.getElementById('ef-start')?.value;
+  const end   = document.getElementById('ef-end')?.value;
+  const repeat = document.getElementById('ef-repeat')?.value;
+  if (!name) return;
+
+  if (repeat === 'none') {
+    ensureDay(key);
+    if (!data[key]._events) data[key]._events = [];
+    data[key]._events.push({ id: genId(), name, color, start, end });
+    scheduleSave();
+  } else {
+    const days = [...document.querySelectorAll('.ef-day-check:checked')].map(el => parseInt(el.value));
+    const ev = { id: genId(), name, color, start, end, repeat: { type: repeat, days } };
+    if (repeat === 'biweekly') {
+      const sel = document.getElementById('ef-week-tmpl');
+      ev.repeat.startTemplateId = sel ? sel.value : settings.weekTemplates[0]?.id;
+    }
+    settings.recurringEvents.push(ev);
+    saveSettings();
+  }
+
+  showEventForm = false;
+  renderCalendar();
+}
+
+function removeRecurringEvent(id) {
+  settings.recurringEvents = settings.recurringEvents.filter(e => e.id !== id);
+  saveSettings();
+  renderCalendar();
+}
+function removeOnceEvent(key, id) {
+  if (!data[key]?._events) return;
+  data[key]._events = data[key]._events.filter(e => e.id !== id);
   scheduleSave();
-  if (field === 'title' || field === 'subject') updateChip(key, b);
+  renderCalendar();
 }
 
-function updateChip(key, b) {
+// ── Lesson data updates ───────────────────────────────────────────────
+function updateLesson(key, bid, field, value) {
+  ensureDay(key);
+  if (!data[key][bid]) data[key][bid] = {};
+  data[key][bid][field] = value;
+  scheduleSave();
+  // Live-update chip without full re-render
+  if (field === 'title' || field === 'subjectOverride') updateChip(key, bid);
+}
+
+function updateChip(key, bid) {
   const cell = document.querySelector(`.cal-cell[data-key="${key}"]`);
   if (!cell) return;
+  const blk    = blockByID(bid);
+  const lesson = data[key]?.[bid] || {};
+  const txt    = lesson.title || lesson.subjectOverride || blk.subject || bid;
+  const order  = getBlocksForDay(key) || [];
+  const pos    = order.indexOf(bid);
+  if (pos < 0) return;
   const chips = cell.querySelectorAll('.block-chip');
-  const order = getBlockOrder(key) || [0,1,2,3];
-  const pos   = order.indexOf(b);
-  if (pos === -1) return;
-  const chip = chips[pos];
+  const chip  = chips[pos];
   if (!chip) return;
-  const txt = data[key]?.[b]?.title || data[key]?.[b]?.subject || '';
-  chip.classList.toggle('empty', !txt);
-  let label = chip.querySelector('.chip-label');
-  if (txt) {
-    if (!label) { chip.innerHTML = `<span class="dot"></span><span class="chip-label">${escHtml(txt)}</span>`; }
-    else label.textContent = txt;
-  } else { label?.remove(); }
+  const lbl = chip.querySelector('.chip-label');
+  if (lbl) lbl.textContent = txt;
 }
 
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    localStorage.setItem('lp2_data', JSON.stringify(data));
-    const b = document.getElementById('save-badge');
-    b.classList.add('show');
-    setTimeout(() => b.classList.remove('show'), 1500);
-  }, 500);
+function toggleDetail(bid) {
+  blockDetailOpen[bid] = !blockDetailOpen[bid];
+  const sec = document.getElementById(`detail-${bid}`);
+  const btn = sec?.previousElementSibling;
+  sec?.classList.toggle('closed', !blockDetailOpen[bid]);
+  btn?.classList.toggle('open', !!blockDetailOpen[bid]);
 }
 
-// ── Settings panel ────────────────────────────────────────
+// ── Field helpers ─────────────────────────────────────────────────────
+function fInput(key, bid, field, val, label, ph, extra='') {
+  return `<div class="field-group"><div class="field-label">${label}</div>
+    <input class="field-input" type="text" placeholder="${ph}" value="${escAttr(val)}" ${extra}
+      oninput="updateLesson('${key}','${bid}','${field}',this.value)" /></div>`;
+}
+function fTA(key, bid, field, val, label, ph, cls='') {
+  return `<div class="field-group"><div class="field-label">${label}</div>
+    <textarea class="field-ta${cls?' '+cls:''}" placeholder="${ph}"
+      oninput="updateLesson('${key}','${bid}','${field}',this.value)">${escHtml(val)}</textarea></div>`;
+}
+
+// ── Settings panel ────────────────────────────────────────────────────
 function openSettings() {
   document.getElementById('settings-backdrop').classList.add('open');
   document.getElementById('settings-panel').classList.add('open');
@@ -776,261 +781,252 @@ function closeSettings() {
 }
 function switchTab(tab) {
   settingsTab = tab;
-  document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.s-tab').forEach(t => { if (t.textContent.toLowerCase().startsWith(tab)) t.classList.add('active'); });
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().startsWith(tab)));
   renderSettingsBody();
 }
-
 function renderSettingsBody() {
-  const body = document.getElementById('settings-body');
-  if (settingsTab === 'appearance') body.innerHTML = tabAppearance();
-  else if (settingsTab === 'schedule') body.innerHTML = tabSchedule();
-  else if (settingsTab === 'subjects') body.innerHTML = tabSubjects();
-  else if (settingsTab === 'rotation') body.innerHTML = tabRotation();
+  const body = document.getElementById('s-body');
+  body.innerHTML = settingsTab === 'appearance' ? tabAppearance()
+                 : settingsTab === 'blocks'     ? tabBlocks()
+                 : settingsTab === 'schedule'   ? tabSchedule()
+                 :                               tabRotation();
 }
 
-// ── Tab: Appearance ───────────────────────────────────────
+// ── Tab: Appearance ───────────────────────────────────────────────────
 function tabAppearance() {
-  return `
-    <div class="s-section">
-      <div class="s-section-title">Display</div>
-      ${sToggleRow('Dark mode', 'Easier on the eyes in low light', 'settings.darkMode', settings.darkMode, 'toggleDarkMode()')}
-      ${sToggleRow('Show weekends', 'Include Saturday and Sunday on the calendar', 'settings.showWeekends', settings.showWeekends, 'toggleShowWeekends()')}
-      ${sToggleRow('Start week on Monday', 'Calendar week begins on Monday instead of Sunday', 'settings.weekStartMonday', settings.weekStartMonday, 'toggleWeekStart()')}
-    </div>`;
-}
-
-function sToggleRow(label, desc, _, checked, onchange) {
-  return `<div class="s-row">
-    <div><div class="s-row-label">${label}</div><div class="s-row-desc">${desc}</div></div>
-    <label class="toggle toggle-wrap">
-      <input type="checkbox" ${checked?'checked':''} onchange="${onchange}" />
-      <span class="toggle-track"></span><span class="toggle-thumb"></span>
-    </label>
+  return `<div class="s-section">
+    ${sToggle('Dark mode','Easier on eyes in low light', settings.darkMode, 'toggleDarkMode()')}
+    ${sToggle('Show weekends','Include Saturday & Sunday on calendar', settings.showWeekends, 'toggleWeekends()')}
+    ${sToggle('Week starts Monday','Calendar week begins on Monday', settings.weekStartMonday, 'toggleWeekStart()')}
   </div>`;
 }
+function sToggle(label, desc, checked, fn) {
+  return `<div class="s-row"><div><div class="s-row-label">${label}</div><div class="s-row-desc">${desc}</div></div>
+    <label class="toggle"><input type="checkbox" ${checked?'checked':''} onchange="${fn}" />
+    <span class="tog-track"></span><span class="tog-thumb"></span></label></div>`;
+}
+function toggleDarkMode()  { settings.darkMode = !settings.darkMode; saveSettings(); applyDarkMode(); }
+function toggleWeekends()  { settings.showWeekends = !settings.showWeekends; saveSettings(); renderDOW(); renderCalendar(); renderSettingsBody(); }
+function toggleWeekStart() { settings.weekStartMonday = !settings.weekStartMonday; saveSettings(); renderDOW(); renderCalendar(); renderSettingsBody(); }
+function applyDarkMode()   { document.documentElement.classList.toggle('dark', !!settings.darkMode); }
 
-function toggleDarkMode() { settings.darkMode = !settings.darkMode; saveSettings(); applySettings(); }
-function toggleShowWeekends() { settings.showWeekends = !settings.showWeekends; saveSettings(); applySettings(); renderDOW(); renderCalendar(); }
-function toggleWeekStart() { settings.weekStartMonday = !settings.weekStartMonday; saveSettings(); applySettings(); renderDOW(); renderCalendar(); }
-
-// ── Tab: Schedule ─────────────────────────────────────────
-function tabSchedule() {
-  let rows = settings.blockNames.map((name, i) => `
-    <div class="timetable-row">
-      <div class="t-dot ${BLOCK_CLS[i]}"></div>
-      <input class="s-input wide" type="text" value="${escAttr(name)}" placeholder="Block ${i+1} name"
-        oninput="updateBlockName(${i}, this.value)" />
-      <input class="s-input time" type="time" value="${escAttr(settings.blockTimes[i]?.start||'')}"
-        onchange="updateBlockTime(${i},'start',this.value)" />
-      <input class="s-input time" type="time" value="${escAttr(settings.blockTimes[i]?.end||'')}"
-        onchange="updateBlockTime(${i},'end',this.value)" />
-      <span style="font-size:0.72rem;color:var(--muted);white-space:nowrap">&nbsp;</span>
+// ── Tab: Blocks ───────────────────────────────────────────────────────
+function tabBlocks() {
+  const rows = settings.blocks.map((b,i) => `
+    <div class="block-row">
+      <input type="color" class="color-swatch" value="${escAttr(b.color)}" title="Block color"
+        onchange="updateBlock(${i},'color',this.value)" />
+      <span style="font-size:.8rem;font-weight:700;${labelStyle(b.color)}">Block ${escHtml(b.id)}</span>
+      <input class="s-input" type="text" value="${escAttr(b.subject)}" placeholder="Subject name"
+        oninput="updateBlock(${i},'subject',this.value)" list="subjects-dl" />
     </div>`).join('');
 
-  return `
-    <div class="s-section">
-      <div class="s-section-title">Block Names &amp; Times</div>
-      <div style="display:grid;grid-template-columns:14px 1fr 90px 90px auto;gap:6px 8px;padding:4px 0 8px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">
-        <div></div><div>Name</div><div>Start</div><div>End</div><div></div>
-      </div>
-      ${rows}
-    </div>`;
+  return `<div class="s-section">
+    <div class="s-section-title">8 Blocks — set each block's default subject</div>
+    <div style="display:grid;grid-template-columns:28px 60px 1fr;gap:4px 8px;padding:2px 0 6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">
+      <div>Color</div><div>Block</div><div>Default Subject</div></div>
+    ${rows}
+  </div>`;
 }
-
-function updateBlockName(i, val) { settings.blockNames[i] = val; saveSettings(); }
-function updateBlockTime(i, field, val) { settings.blockTimes[i][field] = val; saveSettings(); }
-
-// ── Tab: Subjects ─────────────────────────────────────────
-function tabSubjects() {
-  const items = settings.subjects.map((s, i) => `
-    <div class="subject-item">
-      <input type="color" class="subject-color" value="${escAttr(s.color)}" title="Pick color"
-        onchange="updateSubjectColor(${i}, this.value)" />
-      <input class="s-input" style="flex:1" type="text" value="${escAttr(s.name)}" placeholder="Subject name"
-        oninput="updateSubjectName(${i}, this.value)" />
-      <button class="s-btn sm danger" onclick="removeSubject(${i})">Remove</button>
-    </div>`).join('');
-
-  return `
-    <div class="s-section">
-      <div class="s-section-title">Subjects</div>
-      <div style="font-size:0.82rem;color:var(--muted)">Subjects appear as autocomplete suggestions in the calendar.</div>
-      <div id="subjects-list">${items || '<div style="color:var(--muted);font-size:0.85rem;padding:6px 0">No subjects yet.</div>'}</div>
-      <button class="s-btn primary" onclick="addSubject()">+ Add Subject</button>
-    </div>`;
+function updateBlock(i, field, val) {
+  settings.blocks[i][field] = val;
+  saveSettings();
+  updateSubjectsDL();
+  if (field === 'color') renderSettingsBody();
 }
-
-function addSubject() {
-  const colors = ['#4361ee','#0ea5e9','#10b981','#f59e0b','#8b5cf6','#ef4444','#ec4899','#14b8a6'];
-  settings.subjects.push({ name: '', color: colors[settings.subjects.length % colors.length] });
-  saveSettings(); updateSubjectsDL(); renderSettingsBody();
-}
-function removeSubject(i) { settings.subjects.splice(i, 1); saveSettings(); updateSubjectsDL(); renderSettingsBody(); }
-function updateSubjectName(i, val) { settings.subjects[i].name = val; saveSettings(); updateSubjectsDL(); }
-function updateSubjectColor(i, val) { settings.subjects[i].color = val; saveSettings(); }
-
 function updateSubjectsDL() {
-  document.getElementById('subjects-dl').innerHTML = settings.subjects
-    .filter(s => s.name).map(s => `<option value="${escAttr(s.name)}">`).join('');
+  document.getElementById('subjects-dl').innerHTML = settings.blocks
+    .map(b => `<option value="${escAttr(b.subject)}">`).join('');
 }
 
-// ── Tab: Rotation ─────────────────────────────────────────
-function tabRotation() {
-  const rot = settings.rotation;
-  const names = settings.blockNames;
-
-  // Day type cards
-  let dtCards = rot.dayTypes.map((dt, ti) => {
-    const orderRows = dt.order.map((b, pos) => `
-      <div class="order-row">
-        <span class="order-pos">${pos+1}.</span>
-        <span class="order-pill ${BLOCK_CLS[b]}">${escHtml(names[b] || `Block ${b+1}`)}</span>
-        ${pos > 0 ? `<button class="s-btn sm icon" onclick="moveBlock(${ti},${pos},-1)">↑</button>` : '<span style="width:28px"></span>'}
-        ${pos < 3 ? `<button class="s-btn sm icon" onclick="moveBlock(${ti},${pos},1)">↓</button>`  : '<span style="width:28px"></span>'}
-      </div>`).join('');
-    return `
-      <div class="day-type-card">
-        <div class="day-type-header">
-          <input class="s-input" style="flex:1" type="text" value="${escAttr(dt.name)}" placeholder="Day type name"
-            oninput="updateDayTypeName(${ti}, this.value)" />
-          ${rot.dayTypes.length > 1 ? `<button class="s-btn sm danger" onclick="removeDayType(${ti})">Remove</button>` : ''}
-        </div>
-        <div class="day-type-body">${orderRows}</div>
+// ── Tab: Schedule ─────────────────────────────────────────────────────
+function tabSchedule() {
+  let blockSlotIdx = 0;
+  const rows = settings.timetable.map((item, i) => {
+    if (item.type === 'block') {
+      const n = ++blockSlotIdx;
+      return `<div class="tt-slot-row">
+        <div class="slot-label" style="color:var(--primary)">Period ${n}</div>
+        <input class="time-input" type="time" value="${escAttr(item.start)}" onchange="updateTTSlot(${i},'start',this.value)" />
+        <span style="color:var(--muted);font-size:.8rem">–</span>
+        <input class="time-input" type="time" value="${escAttr(item.end)}" onchange="updateTTSlot(${i},'end',this.value)" />
+        <button class="s-btn sm" onclick="moveTTSlot(${i},-1)">↑</button>
+        <button class="s-btn sm" onclick="moveTTSlot(${i},1)">↓</button>
       </div>`;
+    } else {
+      return `<div class="tt-slot-row">
+        <input class="color-swatch tt-break-color" type="color" value="${escAttr(item.color||'#9ca3af')}" onchange="updateTTSlot(${i},'color',this.value)" />
+        <input class="s-input" style="flex:1;font-size:.82rem;padding:4px 7px" type="text" value="${escAttr(item.name)}" placeholder="Break name" oninput="updateTTSlot(${i},'name',this.value)" />
+        <input class="time-input" type="time" value="${escAttr(item.start)}" onchange="updateTTSlot(${i},'start',this.value)" />
+        <span style="color:var(--muted);font-size:.8rem">–</span>
+        <input class="time-input" type="time" value="${escAttr(item.end)}" onchange="updateTTSlot(${i},'end',this.value)" />
+        <button class="s-btn sm" onclick="moveTTSlot(${i},-1)">↑</button>
+        <button class="s-btn sm" onclick="moveTTSlot(${i},1)">↓</button>
+        <button class="s-btn sm danger" onclick="removeTTSlot(${i})">✕</button>
+      </div>`;
+    }
   }).join('');
 
-  // Weekly pattern
-  let patternRows = '';
-  const dayLabels = rot.mode === 'weekly' ? (settings.weekStartMonday
-    ? ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-    : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']) : [];
+  return `<div class="s-section">
+    <div class="s-section-title">Daily Timetable — 4 fixed periods + configurable breaks</div>
+    <div style="display:flex;gap:6px;align-items:center;padding:2px 0 6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">
+      <span style="width:64px">Slot</span><span style="width:78px">Start</span><span style="width:10px"></span><span style="width:78px">End</span>
+    </div>
+    ${rows}
+    <button class="s-btn" onclick="addBreak()" style="margin-top:6px">+ Add Break / Fixed Slot</button>
+  </div>`;
+}
+function updateTTSlot(i, field, val) { settings.timetable[i][field] = val; saveSettings(); }
+function moveTTSlot(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= settings.timetable.length) return;
+  [settings.timetable[i], settings.timetable[j]] = [settings.timetable[j], settings.timetable[i]];
+  saveSettings(); renderSettingsBody(); renderCalendar();
+}
+function removeTTSlot(i) {
+  if (settings.timetable[i].type === 'block') return; // never remove block slots
+  settings.timetable.splice(i, 1); saveSettings(); renderSettingsBody(); renderCalendar();
+}
+function addBreak() {
+  settings.timetable.push({ type:'break', name:'Break', start:'10:00', end:'10:15', color:'#9ca3af' });
+  saveSettings(); renderSettingsBody();
+}
 
-  const dowIndices = settings.weekStartMonday
-    ? [1,2,3,4,5,6,0] : [0,1,2,3,4,5,6];
+// ── Tab: Rotation ─────────────────────────────────────────────────────
+function tabRotation() {
+  const rot = settings.rotation;
+  const dowLabels = ['Mon','Tue','Wed','Thu','Fri'];
+  const dowKeys   = ['1','2','3','4','5'];
 
-  if (rot.mode === 'weekly') {
-    patternRows = `<div class="pattern-grid">`;
-    dayLabels.forEach((label, li) => {
-      const dow = dowIndices[li];
-      const current = rot.weeklyPattern[dow];
-      const opts = [`<option value="null"${current===null||current===undefined?'selected':''}>— No school —</option>`]
-        .concat(rot.dayTypes.map((dt, i) => `<option value="${i}"${current===i?'selected':''}>${escHtml(dt.name)}</option>`))
-        .join('');
-      patternRows += `<span class="pattern-label">${label}</span><select class="s-select" onchange="setWeeklyPattern(${dow},this.value)">${opts}</select>`;
-    });
-    patternRows += `</div>`;
-  } else {
-    patternRows = `
-      <div class="s-row">
-        <div><div class="s-row-label">Start date</div><div class="s-row-desc">First day of the rotation cycle</div></div>
-        <input class="s-input" type="date" value="${escAttr(rot.rollingStart)}" onchange="setRollingStart(this.value)" />
+  // Week templates
+  let tmplCards = settings.weekTemplates.map((tmpl, ti) => {
+    // Grid: rows=periods, cols=days
+    let gridRows = ['','','',''].map((_, slot) => {
+      let row = `<div class="pg-label">P${slot+1}</div>`;
+      dowKeys.forEach(dow => {
+        const val = tmpl.days?.[dow]?.[slot] || '';
+        row += `<select class="pg-select" onchange="updateTemplateDay('${tmpl.id}','${dow}',${slot},this.value)">
+          <option value="">—</option>
+          ${settings.blocks.map(b => `<option value="${b.id}"${val===b.id?' selected':''}>${b.id} · ${escHtml(b.subject)}</option>`).join('')}
+        </select>`;
+      });
+      return `<div style="display:contents">${row}</div>`;
+    }).join('');
+
+    const headerRow = `<div></div>${dowLabels.map(l=>`<div class="pg-head">${l}</div>`).join('')}`;
+
+    return `<div class="wt-card">
+      <div class="wt-header">
+        <input class="s-input" style="flex:1" type="text" value="${escAttr(tmpl.name)}" placeholder="Week name"
+          oninput="updateTemplateName('${tmpl.id}',this.value)" />
+        ${settings.weekTemplates.length>1?`<button class="s-btn sm danger" onclick="removeTemplate('${tmpl.id}')">Remove</button>`:''}
       </div>
-      <div class="s-row">
-        <div><div class="s-row-label">Starting day type</div></div>
-        <select class="s-select" onchange="setRollingStartType(this.value)">
-          ${rot.dayTypes.map((dt,i) => `<option value="${i}"${rot.rollingStartType===i?'selected':''}>${escHtml(dt.name)}</option>`).join('')}
-        </select>
+      <div class="pattern-grid" style="grid-template-columns:30px repeat(5,1fr);gap:4px;padding:10px">
+        <div style="display:contents">${headerRow}</div>
+        ${gridRows}
       </div>
-      ${sToggleRow('Skip weekends', 'Weekends do not advance the rotation cycle', '', rot.skipWeekends, 'toggleSkipWeekends()')}`;
-  }
+    </div>`;
+  }).join('');
+
+  // Recurring events list
+  let reList = settings.recurringEvents.length
+    ? settings.recurringEvents.map(ev => {
+        const dayNames = (ev.repeat?.days||[]).map(d=>['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join(', ');
+        const repeatLabel = ev.repeat?.type==='weekly' ? `Weekly (${dayNames})`
+          : ev.repeat?.type==='biweekly' ? `Bi-weekly on ${ev.repeat.startTemplateId} (${dayNames})`
+          : '';
+        return `<div class="re-item">
+          <div class="re-dot" style="background:${ev.color||'#888'}"></div>
+          <div class="re-body">
+            <div class="re-name">${escHtml(ev.name)}</div>
+            <div class="re-detail">${ev.start||''}${ev.end?'–'+ev.end:''} · ${repeatLabel}</div>
+          </div>
+          <button class="s-btn sm danger" onclick="removeRecurringEvent('${ev.id}');renderSettingsBody()">✕</button>
+        </div>`;
+      }).join('')
+    : `<div style="color:var(--muted);font-size:.82rem;padding:4px 0">No recurring events. Add them from any day on the calendar.</div>`;
 
   return `
     <div class="s-section">
+      <div class="s-section-title">Rotation Start</div>
       <div class="s-row" style="padding-top:0">
-        <div><div class="s-row-label">Block rotation</div><div class="s-row-desc">Change the order blocks appear each day</div></div>
-        <label class="toggle toggle-wrap">
-          <input type="checkbox" ${rot.enabled?'checked':''} onchange="toggleRotation()" />
-          <span class="toggle-track"></span><span class="toggle-thumb"></span>
-        </label>
+        <div><div class="s-row-label">Start date</div><div class="s-row-desc">First day of the rotation cycle</div></div>
+        <input class="s-input" type="date" value="${escAttr(rot.startDate)}" onchange="setRotationStart(this.value)" />
+      </div>
+      <div class="s-row">
+        <div><div class="s-row-label">Starting with</div></div>
+        <select class="s-select" onchange="setRotationStartTmpl(this.value)">
+          ${settings.weekTemplates.map(t => `<option value="${t.id}"${rot.startTemplateId===t.id?' selected':''}>${escHtml(t.name)}</option>`).join('')}
+        </select>
       </div>
     </div>
-
-    ${rot.enabled ? `
     <div class="s-section">
-      <div class="s-section-title">Mode</div>
-      <div class="radio-group">
-        <label class="radio-opt"><input type="radio" name="rot-mode" value="weekly" ${rot.mode==='weekly'?'checked':''} onchange="setRotationMode('weekly')" />Weekly pattern</label>
-        <label class="radio-opt"><input type="radio" name="rot-mode" value="rolling" ${rot.mode==='rolling'?'checked':''} onchange="setRotationMode('rolling')" />Rolling cycle</label>
-      </div>
+      <div class="s-section-title">Week Templates</div>
+      ${tmplCards}
+      <button class="s-btn" onclick="addTemplate()">+ Add Week Template</button>
     </div>
-
     <div class="s-section">
-      <div class="s-section-title">Day types</div>
-      ${dtCards}
-      <button class="s-btn" onclick="addDayType()">+ Add day type</button>
-    </div>
-
-    <div class="s-section">
-      <div class="s-section-title">${rot.mode === 'weekly' ? 'Weekly pattern' : 'Cycle settings'}</div>
-      ${patternRows}
-    </div>` : ''}`;
+      <div class="s-section-title">Recurring Events</div>
+      ${reList}
+    </div>`;
 }
 
-function toggleRotation() { settings.rotation.enabled = !settings.rotation.enabled; saveSettings(); renderCalendar(); renderSettingsBody(); }
-function setRotationMode(m) { settings.rotation.mode = m; saveSettings(); renderCalendar(); renderSettingsBody(); }
-function addDayType() {
-  const n = settings.rotation.dayTypes.length;
-  settings.rotation.dayTypes.push({ name: `Day ${String.fromCharCode(65+n)}`, order: [0,1,2,3] });
-  saveSettings(); renderSettingsBody();
+function setRotationStart(val)     { settings.rotation.startDate = val; saveSettings(); renderCalendar(); }
+function setRotationStartTmpl(val) { settings.rotation.startTemplateId = val; saveSettings(); renderCalendar(); }
+function updateTemplateName(id, val) {
+  const t = settings.weekTemplates.find(t => t.id === id);
+  if (t) t.name = val; saveSettings(); renderCalendar();
 }
-function removeDayType(i) {
-  settings.rotation.dayTypes.splice(i, 1);
-  // Fix weekly pattern refs
-  settings.rotation.weeklyPattern = settings.rotation.weeklyPattern.map(v => {
-    if (v === null || v === undefined) return null;
-    if (v === i) return null;
-    return v > i ? v - 1 : v;
-  });
-  saveSettings(); renderCalendar(); renderSettingsBody();
-}
-function updateDayTypeName(i, val) { settings.rotation.dayTypes[i].name = val; saveSettings(); }
-function moveBlock(typeIdx, pos, dir) {
-  const order = settings.rotation.dayTypes[typeIdx].order;
-  const other = pos + dir;
-  if (other < 0 || other > 3) return;
-  [order[pos], order[other]] = [order[other], order[pos]];
-  saveSettings(); renderCalendar(); renderSettingsBody();
-}
-function setWeeklyPattern(dow, val) {
-  settings.rotation.weeklyPattern[dow] = val === 'null' ? null : parseInt(val);
+function updateTemplateDay(id, dow, slot, blockId) {
+  const t = settings.weekTemplates.find(t => t.id === id);
+  if (!t) return;
+  if (!t.days[dow]) t.days[dow] = ['','','',''];
+  t.days[dow][slot] = blockId;
   saveSettings(); renderCalendar();
 }
-function setRollingStart(val) { settings.rotation.rollingStart = val; saveSettings(); renderCalendar(); }
-function setRollingStartType(val) { settings.rotation.rollingStartType = parseInt(val); saveSettings(); renderCalendar(); }
-function toggleSkipWeekends() { settings.rotation.skipWeekends = !settings.rotation.skipWeekends; saveSettings(); renderCalendar(); renderSettingsBody(); }
-
-// ── Apply & save settings ─────────────────────────────────
-function applySettings(rerender = true) {
-  document.documentElement.classList.toggle('dark', !!settings.darkMode);
-  updateSubjectsDL();
-  if (rerender) { renderDOW(); renderCalendar(); }
+function addTemplate() {
+  const n = settings.weekTemplates.length + 1;
+  settings.weekTemplates.push({ id: genId(), name: `Week ${n}`, days: { '1':['A','B','C','D'],'2':['E','F','G','H'],'3':['A','B','C','D'],'4':['E','F','G','H'],'5':['A','B','C','D'] } });
+  saveSettings(); renderSettingsBody();
+}
+function removeTemplate(id) {
+  if (settings.weekTemplates.length <= 1) return;
+  settings.weekTemplates = settings.weekTemplates.filter(t => t.id !== id);
+  saveSettings(); renderCalendar(); renderSettingsBody();
 }
 
+// ── Persistence ───────────────────────────────────────────────────────
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem('lp3_data', JSON.stringify(data));
+    const b = document.getElementById('save-badge');
+    b.classList.add('show');
+    setTimeout(() => b.classList.remove('show'), 1500);
+  }, 500);
+}
 function saveSettings() {
-  localStorage.setItem('lp2_settings', JSON.stringify(settings));
+  localStorage.setItem('lp3_settings', JSON.stringify(settings));
 }
 
-// ── Helpers ───────────────────────────────────────────────
+// ── Data helpers ──────────────────────────────────────────────────────
 function ensureDay(key) {
-  if (!data[key]) data[key] = Array.from({length:4}, emptyBlock);
+  if (!data[key]) data[key] = {};
 }
-function emptyBlock() { return { title:'', subject:'', topic:'', objectives:'', activities:'', materials:'', notes:'' }; }
 
+// ── Utilities ─────────────────────────────────────────────────────────
 function dateKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
+function genId()    { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function deepMerge(target, source) {
   const out = Object.assign({}, target);
-  for (const key of Object.keys(source)) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      out[key] = deepMerge(target[key] || {}, source[key]);
-    } else if (source[key] !== undefined) {
-      out[key] = source[key];
-    }
+  for (const k of Object.keys(source)) {
+    if (source[k] && typeof source[k]==='object' && !Array.isArray(source[k])) {
+      out[k] = deepMerge(target[k]||{}, source[k]);
+    } else if (source[k] !== undefined) { out[k] = source[k]; }
   }
   return out;
 }
