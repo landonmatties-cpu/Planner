@@ -8,793 +8,556 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f7f8fa;
+      --bg: #f7f8fc;
       --surface: #ffffff;
-      --border: #e2e6ea;
+      --border: #e4e7ec;
+      --text: #111827;
+      --muted: #9ca3af;
       --primary: #4a6cf7;
       --primary-dark: #3a5ce5;
-      --primary-light: #eef1fe;
-      --danger: #e74c3c;
-      --danger-light: #fdecea;
-      --text: #1a1f36;
-      --muted: #6b7280;
-      --tag-bg: #e8f0fe;
-      --tag-text: #3a5ce5;
-      --radius: 10px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --primary-light: #eef2ff;
+      --header-h: 56px;
+      --dow-h: 34px;
+      --b1: #4361ee; --b1-light: #eef1fe; --b1-text: #1e3a8a;
+      --b2: #0ea5e9; --b2-light: #e0f2fe; --b2-text: #075985;
+      --b3: #10b981; --b3-light: #d1fae5; --b3-text: #065f46;
+      --b4: #f59e0b; --b4-light: #fef3c7; --b4-text: #78350f;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
 
     /* ── Header ── */
     header {
+      height: var(--header-h);
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; position: relative; z-index: 5;
     }
-    header h1 { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-    header .header-right { display: flex; align-items: center; gap: 12px; }
+    .logo { font-size: 1.05rem; font-weight: 700; color: var(--primary); }
+    .nav { display: flex; align-items: center; gap: 6px; }
+    .nav-btn {
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 7px; padding: 5px 12px; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: background 0.12s;
+    }
+    .nav-btn:hover { background: var(--bg); }
+    .nav-arrow { padding: 5px 9px; font-size: 1rem; }
+    .month-label { font-size: 1rem; font-weight: 700; min-width: 175px; text-align: center; }
+    .save-badge {
+      font-size: 0.75rem; color: var(--muted); padding: 3px 8px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .save-badge.show { opacity: 1; }
 
-    /* ── Layout ── */
-    .app { display: flex; height: calc(100vh - 60px); }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      background: var(--surface);
+    /* ── Calendar wrapper ── */
+    .cal-wrapper {
+      height: calc(100vh - var(--header-h));
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .cal-dow {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      height: var(--dow-h); background: var(--surface);
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .cal-dow-cell {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted);
       border-right: 1px solid var(--border);
-      padding: 16px 0;
-      overflow-y: auto;
     }
-    .sidebar-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      padding: 0 16px 8px;
-    }
-    .topic-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 16px;
+    .cal-dow-cell:last-child { border-right: none; }
+    .cal-dow-cell.weekend { color: #d1d5db; }
+
+    .cal-scroll { flex: 1; overflow-y: auto; }
+
+    /* ── Rows & cells ── */
+    .cal-row { display: grid; grid-template-columns: repeat(7, 1fr); }
+
+    .cal-cell {
+      min-height: 110px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 6px 4px;
       cursor: pointer;
-      border-radius: 0;
-      font-size: 0.9rem;
-      color: var(--text);
-      transition: background 0.15s;
-    }
-    .topic-item:hover { background: var(--bg); }
-    .topic-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
-    .topic-item .count {
-      background: var(--border);
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 1px 7px;
-      border-radius: 999px;
-    }
-    .topic-item.active .count { background: var(--primary); color: #fff; }
-
-    /* ── Main content ── */
-    .main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .search-box {
-      flex: 1;
-      min-width: 200px;
-      padding: 8px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
       background: var(--surface);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .search-box:focus { border-color: var(--primary); }
-
-    /* ── Buttons ── */
-    .btn {
-      padding: 8px 16px;
-      border-radius: var(--radius);
-      border: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-    .btn-ghost:hover { background: var(--bg); color: var(--text); }
-    .btn-danger { background: var(--danger-light); color: var(--danger); border: none; }
-    .btn-danger:hover { background: #f8d7da; }
-    .btn-sm { padding: 5px 11px; font-size: 0.8rem; }
-    .btn-icon {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--muted);
-      padding: 4px 6px;
-      border-radius: 6px;
-      font-size: 1rem;
-      line-height: 1;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-icon:hover { background: var(--bg); color: var(--text); }
-
-    /* ── Lesson cards ── */
-    .lessons-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .card:hover { border-color: var(--primary); box-shadow: 0 4px 20px rgba(74,108,247,0.1); }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .card-title { font-size: 1rem; font-weight: 700; flex: 1; }
-    .card-actions { display: flex; gap: 4px; flex-shrink: 0; }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 9px;
-      border-radius: 999px;
-    }
-    .tag-subject { background: #fef3c7; color: #92400e; }
-    .tag-duration { background: #d1fae5; color: #065f46; }
-
-    .card-objectives {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
-    .empty-state p { font-size: 1rem; margin-bottom: 16px; }
-
-    /* ── Modal ── */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 100;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 30px 16px;
-      overflow-y: auto;
-    }
-    .overlay.open { display: flex; }
-
-    .modal {
-      background: var(--surface);
-      border-radius: 14px;
-      width: 100%;
-      max-width: 680px;
-      padding: 28px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      transition: background 0.1s;
+      display: flex; flex-direction: column; gap: 3px;
       position: relative;
     }
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell:hover { background: #f3f4f8; }
+    .cal-cell.other-month { background: #fafbfc; }
+    .cal-cell.other-month .date-num { color: #d1d5db; }
+    .cal-cell.today .date-num {
+      background: var(--primary); color: #fff;
+      border-radius: 50%; width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .modal-title { font-size: 1.15rem; font-weight: 700; }
+    .cal-cell.selected { background: var(--primary-light); }
+    .cal-cell.selected .date-num { color: var(--primary); font-weight: 800; }
 
-    .form-grid { display: grid; gap: 16px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
-
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-family: inherit;
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus { border-color: var(--primary); }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ── Detail view ── */
-    .detail-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 100;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 30px 16px;
-      overflow-y: auto;
-    }
-    .detail-overlay.open { display: flex; }
-
-    .detail-modal {
-      background: var(--surface);
-      border-radius: 14px;
-      width: 100%;
-      max-width: 720px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-      overflow: hidden;
-    }
-
-    .detail-hero {
-      background: var(--primary);
-      padding: 28px 28px 22px;
-      color: #fff;
-    }
-    .detail-hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .detail-hero h2 { font-size: 1.4rem; font-weight: 700; }
-    .detail-hero-close {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .date-num {
+      font-size: 0.8rem; font-weight: 600; line-height: 1;
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: background 0.15s;
-    }
-    .detail-hero-close:hover { background: rgba(255,255,255,0.35); }
-    .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .detail-tag {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 999px;
     }
 
-    .detail-body { padding: 24px 28px; }
-    .detail-section { margin-bottom: 22px; }
-    .detail-section:last-child { margin-bottom: 0; }
-    .detail-section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-    .detail-section-content {
-      font-size: 0.9rem;
-      line-height: 1.65;
-      color: var(--text);
-      white-space: pre-wrap;
-    }
-    .detail-section-content.muted { color: var(--muted); font-style: italic; }
+    .cell-blocks { display: flex; flex-direction: column; gap: 2px; flex: 1; min-height: 0; }
 
-    .detail-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      padding: 16px 28px;
-      border-top: 1px solid var(--border);
+    .block-chip {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 0.69rem; line-height: 1; font-weight: 500;
+      padding: 2px 5px; border-radius: 4px;
+      overflow: hidden; white-space: nowrap;
     }
+    .block-chip .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .block-chip .chip-label { overflow: hidden; text-overflow: ellipsis; }
+    .block-chip.b1 { background: var(--b1-light); color: var(--b1-text); }
+    .block-chip.b2 { background: var(--b2-light); color: var(--b2-text); }
+    .block-chip.b3 { background: var(--b3-light); color: var(--b3-text); }
+    .block-chip.b4 { background: var(--b4-light); color: var(--b4-text); }
+    .block-chip.b1 .dot { background: var(--b1); }
+    .block-chip.b2 .dot { background: var(--b2); }
+    .block-chip.b3 .dot { background: var(--b3); }
+    .block-chip.b4 .dot { background: var(--b4); }
+    .block-chip.empty { opacity: 0.28; }
 
-    /* ── Confirm dialog ── */
-    .confirm-overlay {
+    /* ── Expander (inline row expansion) ── */
+    .cal-expander {
       display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
+      border-top: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      background: var(--primary-light);
+      animation: expandIn 0.2s ease;
     }
-    .confirm-overlay.open { display: flex; }
-    .confirm-box {
-      background: var(--surface);
-      border-radius: 14px;
-      padding: 28px;
-      max-width: 360px;
-      width: 90%;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
-      text-align: center;
-    }
-    .confirm-box h3 { font-size: 1.05rem; margin-bottom: 10px; }
-    .confirm-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
-    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+    .cal-expander.open { display: block; }
 
-    .sort-select {
-      padding: 7px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.85rem;
+    @keyframes expandIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .expander-inner { padding: 18px 16px 20px; }
+
+    .expander-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .expander-date { font-size: 1rem; font-weight: 700; color: var(--primary); }
+    .expander-close {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      font-size: 1rem; padding: 4px 8px; border-radius: 6px;
+      transition: background 0.12s, color 0.12s;
+    }
+    .expander-close:hover { background: #dde3fd; color: var(--text); }
+
+    .expander-blocks {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 1000px) { .expander-blocks { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .expander-blocks { grid-template-columns: 1fr; } }
+
+    /* ── Block card (inside expander) ── */
+    .block-card {
       background: var(--surface);
-      color: var(--text);
-      cursor: pointer;
-      outline: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    .block-card-top {
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .block-card.b1 .block-card-top { border-top: 3px solid var(--b1); }
+    .block-card.b2 .block-card-top { border-top: 3px solid var(--b2); }
+    .block-card.b3 .block-card-top { border-top: 3px solid var(--b3); }
+    .block-card.b4 .block-card-top { border-top: 3px solid var(--b4); }
+
+    .block-period-label {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; margin-bottom: 5px;
+    }
+    .block-card.b1 .block-period-label { color: var(--b1); }
+    .block-card.b2 .block-period-label { color: var(--b2); }
+    .block-card.b3 .block-period-label { color: var(--b3); }
+    .block-card.b4 .block-period-label { color: var(--b4); }
+
+    .block-title-input {
+      width: 100%; border: none; outline: none; background: transparent;
+      font-size: 0.92rem; font-weight: 700; color: var(--text);
+      font-family: inherit; padding: 0;
+    }
+    .block-title-input::placeholder { color: #c9cdd4; font-weight: 400; }
+
+    .block-card-body {
+      padding: 10px 12px 12px;
+      display: flex; flex-direction: column; gap: 8px;
+      flex: 1;
+    }
+
+    .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .field-group { display: flex; flex-direction: column; gap: 3px; }
+    .field-label {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted);
+    }
+    .field-input, .field-ta {
+      width: 100%; padding: 5px 8px;
+      border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.83rem; font-family: inherit; color: var(--text);
+      background: var(--bg); outline: none;
+      transition: border-color 0.14s, background 0.14s;
+    }
+    .field-input:focus, .field-ta:focus {
+      border-color: var(--primary); background: var(--surface);
+    }
+    .field-ta { resize: vertical; min-height: 60px; }
+    .field-ta.short { min-height: 44px; }
+
+    /* ── Section toggle ── */
+    .detail-toggle {
+      display: flex; align-items: center; gap: 5px;
+      cursor: pointer; padding: 4px 0;
+      font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--muted);
+      user-select: none; border: none; background: none;
+      width: 100%; text-align: left;
+    }
+    .detail-toggle:hover { color: var(--text); }
+    .detail-toggle .arrow { transition: transform 0.18s; font-size: 0.65rem; }
+    .detail-toggle.open .arrow { transform: rotate(90deg); }
+    .detail-section { overflow: hidden; }
+    .detail-section.closed { display: none; }
+    .detail-fields { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; }
+
+    /* ── Empty state ── */
+    .cal-empty {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 40px 20px;
+      color: var(--muted); font-size: 0.85rem; gap: 6px;
+      border-bottom: 1px solid var(--border);
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>📚 Lesson Planner</h1>
-  <div class="header-right">
-    <select class="sort-select" id="sort-select" onchange="renderLessons()">
-      <option value="date-desc">Newest first</option>
-      <option value="date-asc">Oldest first</option>
-      <option value="title">Title A–Z</option>
-    </select>
-    <button class="btn btn-primary" onclick="openForm()">+ New Lesson</button>
+  <div class="logo">📚 Lesson Planner</div>
+  <div class="nav">
+    <button class="nav-btn nav-arrow" onclick="navigate(-1)">‹</button>
+    <span class="month-label" id="month-label"></span>
+    <button class="nav-btn nav-arrow" onclick="navigate(1)">›</button>
+    <button class="nav-btn" onclick="goToday()">Today</button>
   </div>
+  <span class="save-badge" id="save-badge">Saved</span>
 </header>
 
-<div class="app">
-  <!-- Sidebar -->
-  <nav class="sidebar">
-    <div class="sidebar-label">Topics</div>
-    <div id="topic-list"></div>
-  </nav>
-
-  <!-- Main -->
-  <main class="main">
-    <div class="toolbar">
-      <input class="search-box" type="search" id="search-input" placeholder="Search lessons…" oninput="renderLessons()" />
-    </div>
-    <div class="lessons-grid" id="lessons-grid"></div>
-  </main>
-</div>
-
-<!-- Form modal (create / edit) -->
-<div class="overlay" id="form-overlay" onclick="handleOverlayClick(event, 'form-overlay')">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title" id="form-title">New Lesson</span>
-      <button class="btn-icon" onclick="closeForm()" title="Close">✕</button>
-    </div>
-    <div class="form-grid">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="f-title">Title *</label>
-          <input id="f-title" type="text" placeholder="e.g. Introduction to Fractions" />
-        </div>
-        <div class="form-group">
-          <label for="f-subject">Subject *</label>
-          <input id="f-subject" type="text" placeholder="e.g. Math" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="f-topic">Topic / Category</label>
-        <input id="f-topic" type="text" placeholder="e.g. Number Sense" list="topic-datalist" />
-        <datalist id="topic-datalist"></datalist>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="f-date">Date</label>
-          <input id="f-date" type="date" />
-        </div>
-        <div class="form-group">
-          <label for="f-duration">Duration (mins)</label>
-          <input id="f-duration" type="number" min="1" placeholder="e.g. 45" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="f-objectives">Learning Objectives</label>
-        <textarea id="f-objectives" placeholder="What will students be able to do by the end of this lesson?"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="f-activities">Activities</label>
-        <textarea id="f-activities" placeholder="Describe the activities planned for this lesson…"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="f-materials">Materials</label>
-        <textarea id="f-materials" style="min-height:60px" placeholder="List any materials or resources needed…"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="f-notes">Lesson Notes / Reflections</label>
-        <textarea id="f-notes" placeholder="How did it go? Any observations or things to improve?"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeForm()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveLesson()">Save Lesson</button>
-    </div>
-  </div>
-</div>
-
-<!-- Detail modal -->
-<div class="detail-overlay" id="detail-overlay" onclick="handleOverlayClick(event, 'detail-overlay')">
-  <div class="detail-modal">
-    <div class="detail-hero" id="detail-hero">
-      <div class="detail-hero-top">
-        <h2 id="d-title"></h2>
-        <button class="detail-hero-close" onclick="closeDetail()">✕</button>
-      </div>
-      <div class="detail-tags" id="d-tags"></div>
-    </div>
-    <div class="detail-body">
-      <div class="detail-section" id="ds-objectives">
-        <div class="detail-section-title">Learning Objectives</div>
-        <div class="detail-section-content" id="d-objectives"></div>
-      </div>
-      <div class="detail-section" id="ds-activities">
-        <div class="detail-section-title">Activities</div>
-        <div class="detail-section-content" id="d-activities"></div>
-      </div>
-      <div class="detail-section" id="ds-materials">
-        <div class="detail-section-title">Materials</div>
-        <div class="detail-section-content" id="d-materials"></div>
-      </div>
-      <div class="detail-section" id="ds-notes">
-        <div class="detail-section-title">Notes & Reflections</div>
-        <div class="detail-section-content" id="d-notes"></div>
-      </div>
-    </div>
-    <div class="detail-footer">
-      <button class="btn btn-danger btn-sm" id="d-delete-btn">Delete</button>
-      <button class="btn btn-ghost btn-sm" onclick="closeDetail()">Close</button>
-      <button class="btn btn-primary btn-sm" id="d-edit-btn">Edit</button>
-    </div>
-  </div>
-</div>
-
-<!-- Confirm delete dialog -->
-<div class="confirm-overlay" id="confirm-overlay">
-  <div class="confirm-box">
-    <h3>Delete this lesson?</h3>
-    <p>This action cannot be undone.</p>
-    <div class="confirm-actions">
-      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
-    </div>
+<div class="cal-wrapper">
+  <div class="cal-dow" id="cal-dow"></div>
+  <div class="cal-scroll" id="cal-scroll">
+    <!-- rows injected by JS -->
   </div>
 </div>
 
 <script>
-  // ── State ──────────────────────────────────────────────────────
-  let lessons = JSON.parse(localStorage.getItem('lessonPlanner_lessons') || '[]');
-  let editingId = null;
-  let activeTopicFilter = 'all';
-  let pendingDeleteId = null;
-  let viewingId = null;
+  const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const BLOCK_CLS    = ['b1','b2','b3','b4'];
+  const BLOCK_LABELS = ['Block 1','Block 2','Block 3','Block 4'];
 
-  function save() {
-    localStorage.setItem('lessonPlanner_lessons', JSON.stringify(lessons));
+  // ── State ──────────────────────────────────────────────
+  let viewYear, viewMonth;
+  let openKey = null; // currently expanded day key
+  let saveTimer = null;
+
+  // data: { "YYYY-MM-DD": [ {title,subject,topic,objectives,activities,materials,notes}, ... ] }
+  let data = JSON.parse(localStorage.getItem('lp2_data') || '{}');
+
+  // Per-block "detail section open" state (UI only)
+  let blockDetailOpen = [false, false, false, false];
+
+  function init() {
+    const now = new Date();
+    viewYear  = now.getFullYear();
+    viewMonth = now.getMonth();
+    renderDOW();
+    renderCalendar();
   }
 
-  function genId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  // ── DOW header ─────────────────────────────────────────
+  function renderDOW() {
+    document.getElementById('cal-dow').innerHTML = DAYS.map((d, i) =>
+      `<div class="cal-dow-cell${i===0||i===6?' weekend':''}">${d}</div>`
+    ).join('');
   }
 
-  // ── Topic sidebar ──────────────────────────────────────────────
-  function renderSidebar() {
-    const list = document.getElementById('topic-list');
-    const allCount = lessons.length;
-    const topics = {};
-    lessons.forEach(l => {
-      const t = (l.topic || '').trim() || 'Uncategorized';
-      topics[t] = (topics[t] || 0) + 1;
-    });
-
-    let html = `
-      <div class="topic-item ${activeTopicFilter === 'all' ? 'active' : ''}" onclick="setTopic('all')">
-        All Lessons <span class="count">${allCount}</span>
-      </div>`;
-
-    Object.keys(topics).sort().forEach(t => {
-      const active = activeTopicFilter === t ? 'active' : '';
-      html += `<div class="topic-item ${active}" onclick="setTopic('${escHtml(t)}')">${escHtml(t)}<span class="count">${topics[t]}</span></div>`;
-    });
-
-    list.innerHTML = html;
-
-    // update datalist for topic input
-    const dl = document.getElementById('topic-datalist');
-    dl.innerHTML = Object.keys(topics).filter(t => t !== 'Uncategorized').map(t => `<option value="${escHtml(t)}">`).join('');
+  // ── Navigation ─────────────────────────────────────────
+  function navigate(dir) {
+    viewMonth += dir;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
+    openKey = null;
+    renderCalendar();
   }
 
-  function setTopic(t) {
-    activeTopicFilter = t;
-    renderSidebar();
-    renderLessons();
+  function goToday() {
+    const now = new Date();
+    viewYear  = now.getFullYear();
+    viewMonth = now.getMonth();
+    openKey   = null;
+    renderCalendar();
   }
 
-  // ── Lesson cards ───────────────────────────────────────────────
-  function getFilteredLessons() {
-    const q = document.getElementById('search-input').value.toLowerCase();
-    const sort = document.getElementById('sort-select').value;
+  // ── Calendar render ────────────────────────────────────
+  function renderCalendar() {
+    document.getElementById('month-label').textContent = `${MONTHS[viewMonth]} ${viewYear}`;
 
-    let list = lessons.filter(l => {
-      const matchTopic = activeTopicFilter === 'all' ||
-        (l.topic || '').trim() === activeTopicFilter ||
-        (activeTopicFilter === 'Uncategorized' && !(l.topic || '').trim());
-      if (!matchTopic) return false;
-      if (!q) return true;
-      return [l.title, l.subject, l.topic, l.objectives, l.activities, l.materials, l.notes]
-        .some(f => (f || '').toLowerCase().includes(q));
-    });
+    const firstDay  = new Date(viewYear, viewMonth, 1);
+    const lastDay   = new Date(viewYear, viewMonth + 1, 0);
+    const startOff  = firstDay.getDay();
+    const totalDays = startOff + lastDay.getDate();
+    const numWeeks  = Math.ceil(totalDays / 7);
 
-    list = [...list].sort((a, b) => {
-      if (sort === 'date-asc') return (a.date || '') < (b.date || '') ? -1 : 1;
-      if (sort === 'date-desc') return (a.date || '') > (b.date || '') ? -1 : 1;
-      return (a.title || '').localeCompare(b.title || '');
-    });
+    const todayKey  = dateKey(new Date());
+    const scroll    = document.getElementById('cal-scroll');
+    let html = '';
 
-    return list;
-  }
+    for (let w = 0; w < numWeeks; w++) {
+      html += `<div class="cal-row">`;
+      for (let d = 0; d < 7; d++) {
+        const dayOffset = w * 7 + d - startOff;
+        const cellDate  = new Date(viewYear, viewMonth, dayOffset + 1);
+        const key       = dateKey(cellDate);
+        const inMonth   = cellDate.getMonth() === viewMonth;
 
-  function renderLessons() {
-    renderSidebar();
-    const grid = document.getElementById('lessons-grid');
-    const list = getFilteredLessons();
+        let cls = 'cal-cell';
+        if (!inMonth)         cls += ' other-month';
+        if (key === todayKey) cls += ' today';
+        if (key === openKey)  cls += ' selected';
 
-    if (!list.length) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">📝</div>
-          <p>${lessons.length === 0 ? 'No lessons yet — create your first one!' : 'No lessons match your filter.'}</p>
-          ${lessons.length === 0 ? '<button class="btn btn-primary" onclick="openForm()">+ New Lesson</button>' : ''}
-        </div>`;
-      return;
+        const blocks = data[key] || null;
+
+        html += `<div class="${cls}" data-key="${key}" onclick="toggleDay('${key}')">`;
+        html += `<div class="date-num">${cellDate.getDate()}</div>`;
+        html += `<div class="cell-blocks">`;
+        for (let b = 0; b < 4; b++) {
+          const blk = blocks?.[b];
+          const txt = blk?.title || blk?.subject || '';
+          if (txt) {
+            html += `<div class="block-chip ${BLOCK_CLS[b]}"><span class="dot"></span><span class="chip-label">${escHtml(txt)}</span></div>`;
+          } else if (inMonth) {
+            html += `<div class="block-chip ${BLOCK_CLS[b]} empty"><span class="dot"></span></div>`;
+          }
+        }
+        html += `</div></div>`;
+      }
+      html += `</div>`;
+
+      // Expander after this row (shown if openKey is in this week)
+      const expanderOpen = openKey && isKeyInWeek(openKey, w);
+      html += `<div class="cal-expander${expanderOpen ? ' open' : ''}" id="expander-row-${w}">`;
+      if (expanderOpen) html += buildExpanderHTML(openKey);
+      html += `</div>`;
     }
 
-    grid.innerHTML = list.map(l => {
-      const topic = (l.topic || '').trim() || 'Uncategorized';
-      const dateStr = l.date ? new Date(l.date + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-      return `
-        <div class="card" onclick="openDetail('${l.id}')">
-          <div class="card-header">
-            <div class="card-title">${escHtml(l.title || 'Untitled')}</div>
-            <div class="card-actions" onclick="event.stopPropagation()">
-              <button class="btn-icon" title="Edit" onclick="openForm('${l.id}')">✏️</button>
-              <button class="btn-icon" title="Delete" onclick="confirmDelete('${l.id}')">🗑️</button>
-            </div>
-          </div>
-          <div class="card-meta">
-            <span class="tag tag-subject">${escHtml(l.subject || 'No subject')}</span>
-            <span class="tag">${escHtml(topic)}</span>
-            ${l.duration ? `<span class="tag tag-duration">${l.duration} min</span>` : ''}
-            ${dateStr ? `<span style="color:var(--muted);font-size:0.8rem">${dateStr}</span>` : ''}
-          </div>
-          ${l.objectives ? `<div class="card-objectives">${escHtml(l.objectives)}</div>` : ''}
-        </div>`;
-    }).join('');
+    scroll.innerHTML = html;
+
+    // Scroll selected day into view
+    if (openKey) {
+      const expander = document.querySelector('.cal-expander.open');
+      if (expander) expander.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }
 
-  // ── Form ───────────────────────────────────────────────────────
-  function openForm(id) {
-    editingId = id || null;
-    const lesson = id ? lessons.find(l => l.id === id) : null;
-    document.getElementById('form-title').textContent = id ? 'Edit Lesson' : 'New Lesson';
-    document.getElementById('f-title').value = lesson?.title || '';
-    document.getElementById('f-subject').value = lesson?.subject || '';
-    document.getElementById('f-topic').value = lesson?.topic || '';
-    document.getElementById('f-date').value = lesson?.date || '';
-    document.getElementById('f-duration').value = lesson?.duration || '';
-    document.getElementById('f-objectives').value = lesson?.objectives || '';
-    document.getElementById('f-activities').value = lesson?.activities || '';
-    document.getElementById('f-materials').value = lesson?.materials || '';
-    document.getElementById('f-notes').value = lesson?.notes || '';
-    document.getElementById('form-overlay').classList.add('open');
-    setTimeout(() => document.getElementById('f-title').focus(), 50);
-    closeDetail();
+  function isKeyInWeek(key, weekIndex) {
+    const firstDay = new Date(viewYear, viewMonth, 1);
+    const startOff = firstDay.getDay();
+    const d        = new Date(key + 'T00:00:00');
+    if (d.getFullYear() !== viewYear) return false;
+    const mOffset  = (d.getMonth() - viewMonth);
+    if (mOffset < -1 || mOffset > 1) return false;
+    // compute cell index
+    const dMonth   = new Date(viewYear, viewMonth, 1);
+    const diff     = Math.round((d - dMonth) / 86400000);
+    const cellIdx  = startOff + diff;
+    return Math.floor(cellIdx / 7) === weekIndex;
   }
 
-  function closeForm() {
-    document.getElementById('form-overlay').classList.remove('open');
-    editingId = null;
-  }
-
-  function saveLesson() {
-    const title = document.getElementById('f-title').value.trim();
-    const subject = document.getElementById('f-subject').value.trim();
-    if (!title) { alert('Please enter a lesson title.'); return; }
-    if (!subject) { alert('Please enter a subject.'); return; }
-
-    const data = {
-      title,
-      subject,
-      topic: document.getElementById('f-topic').value.trim(),
-      date: document.getElementById('f-date').value,
-      duration: document.getElementById('f-duration').value,
-      objectives: document.getElementById('f-objectives').value.trim(),
-      activities: document.getElementById('f-activities').value.trim(),
-      materials: document.getElementById('f-materials').value.trim(),
-      notes: document.getElementById('f-notes').value.trim(),
-    };
-
-    if (editingId) {
-      const idx = lessons.findIndex(l => l.id === editingId);
-      lessons[idx] = { ...lessons[idx], ...data };
+  // ── Toggle day open/close ──────────────────────────────
+  function toggleDay(key) {
+    if (openKey === key) {
+      openKey = null;
     } else {
-      lessons.unshift({ id: genId(), createdAt: Date.now(), ...data });
+      openKey = key;
+      blockDetailOpen = [false, false, false, false];
+      ensureDay(key);
+    }
+    renderCalendar();
+  }
+
+  function closeExpander() {
+    openKey = null;
+    renderCalendar();
+  }
+
+  // ── Expander HTML ──────────────────────────────────────
+  function buildExpanderHTML(key) {
+    const d = new Date(key + 'T00:00:00');
+    const label = d.toLocaleDateString(undefined, { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    const blocks = data[key] || Array.from({length:4}, emptyBlock);
+
+    let html = `<div class="expander-inner">`;
+    html += `<div class="expander-header">`;
+    html += `<span class="expander-date">${label}</span>`;
+    html += `<button class="expander-close" onclick="closeExpander()">✕ Close</button>`;
+    html += `</div>`;
+    html += `<div class="expander-blocks">`;
+
+    for (let b = 0; b < 4; b++) {
+      const blk = blocks[b] || emptyBlock();
+      const cls = BLOCK_CLS[b];
+      const detailOpen = blockDetailOpen[b];
+
+      html += `<div class="block-card ${cls}">`;
+      html += `<div class="block-card-top">`;
+      html += `<div class="block-period-label">${BLOCK_LABELS[b]}</div>`;
+      html += `<input class="block-title-input" type="text" placeholder="Lesson title…" `;
+      html += `value="${escAttr(blk.title)}" `;
+      html += `oninput="updateField('${key}',${b},'title',this.value)" />`;
+      html += `</div>`;
+
+      html += `<div class="block-card-body">`;
+      html += `<div class="field-row-2">`;
+      html += fieldInput(key, b, 'subject', blk.subject, 'Subject', 'e.g. Math');
+      html += fieldInput(key, b, 'topic',   blk.topic,   'Topic',   'e.g. Fractions');
+      html += `</div>`;
+
+      // Detail toggle
+      html += `<button class="detail-toggle${detailOpen?' open':''}" onclick="toggleDetail('${key}',${b})">`;
+      html += `<span class="arrow">▶</span> Details`;
+      html += `</button>`;
+      html += `<div class="detail-section${detailOpen?'':' closed'}" id="detail-${b}">`;
+      html += `<div class="detail-fields">`;
+      html += fieldTextarea(key, b, 'objectives', blk.objectives, 'Objectives', 'What will students be able to do?');
+      html += fieldTextarea(key, b, 'activities', blk.activities, 'Activities',  'Planned activities…');
+      html += fieldTextarea(key, b, 'materials',  blk.materials,  'Materials',   'Required materials…', 'short');
+      html += fieldTextarea(key, b, 'notes',      blk.notes,      'Notes & Reflections', 'How did it go?');
+      html += `</div></div>`;
+
+      html += `</div></div>`;
     }
 
-    save();
-    closeForm();
-    renderLessons();
+    html += `</div></div>`;
+    return html;
   }
 
-  // ── Detail view ────────────────────────────────────────────────
-  function openDetail(id) {
-    const l = lessons.find(x => x.id === id);
-    if (!l) return;
-    viewingId = id;
-
-    const topic = (l.topic || '').trim() || 'Uncategorized';
-    const dateStr = l.date ? new Date(l.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '';
-
-    document.getElementById('d-title').textContent = l.title || 'Untitled';
-
-    let tags = `<span class="detail-tag">${escHtml(l.subject || 'No subject')}</span>
-                <span class="detail-tag">${escHtml(topic)}</span>`;
-    if (l.duration) tags += `<span class="detail-tag">${l.duration} min</span>`;
-    if (dateStr) tags += `<span class="detail-tag">${dateStr}</span>`;
-    document.getElementById('d-tags').innerHTML = tags;
-
-    setSection('objectives', l.objectives);
-    setSection('activities', l.activities);
-    setSection('materials', l.materials);
-    setSection('notes', l.notes);
-
-    document.getElementById('d-edit-btn').onclick = () => openForm(id);
-    document.getElementById('d-delete-btn').onclick = () => { closeDetail(); confirmDelete(id); };
-
-    document.getElementById('detail-overlay').classList.add('open');
+  function fieldInput(key, b, field, value, label, placeholder) {
+    return `<div class="field-group">
+      <div class="field-label">${label}</div>
+      <input class="field-input" type="text" placeholder="${placeholder}"
+        value="${escAttr(value)}"
+        oninput="updateField('${key}',${b},'${field}',this.value)" />
+    </div>`;
   }
 
-  function setSection(key, value) {
-    const section = document.getElementById(`ds-${key}`);
-    const content = document.getElementById(`d-${key}`);
-    if (value) {
-      section.style.display = '';
-      content.textContent = value;
-      content.classList.remove('muted');
+  function fieldTextarea(key, b, field, value, label, placeholder, extra='') {
+    return `<div class="field-group">
+      <div class="field-label">${label}</div>
+      <textarea class="field-ta${extra?' '+extra:''}" placeholder="${placeholder}"
+        oninput="updateField('${key}',${b},'${field}',this.value)">${escHtml(value)}</textarea>
+    </div>`;
+  }
+
+  // ── Detail section toggle ──────────────────────────────
+  function toggleDetail(key, blockIdx) {
+    blockDetailOpen[blockIdx] = !blockDetailOpen[blockIdx];
+    const section = document.getElementById(`detail-${blockIdx}`);
+    const btn = section?.previousElementSibling;
+    if (blockDetailOpen[blockIdx]) {
+      section?.classList.remove('closed');
+      btn?.classList.add('open');
     } else {
-      section.style.display = 'none';
+      section?.classList.add('closed');
+      btn?.classList.remove('open');
     }
   }
 
-  function closeDetail() {
-    document.getElementById('detail-overlay').classList.remove('open');
-    viewingId = null;
-  }
+  // ── Data updates ───────────────────────────────────────
+  function updateField(key, blockIdx, field, value) {
+    ensureDay(key);
+    data[key][blockIdx][field] = value;
+    scheduleSave();
 
-  // ── Delete ─────────────────────────────────────────────────────
-  function confirmDelete(id) {
-    pendingDeleteId = id;
-    document.getElementById('confirm-overlay').classList.add('open');
-    document.getElementById('confirm-delete-btn').onclick = () => {
-      lessons = lessons.filter(l => l.id !== pendingDeleteId);
-      save();
-      renderLessons();
-      closeConfirm();
-      closeDetail();
-    };
-  }
-
-  function closeConfirm() {
-    document.getElementById('confirm-overlay').classList.remove('open');
-    pendingDeleteId = null;
-  }
-
-  // ── Helpers ────────────────────────────────────────────────────
-  function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function handleOverlayClick(e, id) {
-    if (e.target.id === id) {
-      if (id === 'form-overlay') closeForm();
-      if (id === 'detail-overlay') closeDetail();
+    // Update calendar chip without full re-render (preserve focus)
+    if (field === 'title' || field === 'subject') {
+      updateChip(key, blockIdx);
     }
   }
 
-  // Keyboard shortcuts
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeForm(); closeDetail(); closeConfirm(); }
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      if (document.getElementById('form-overlay').classList.contains('open')) saveLesson();
+  function updateChip(key, blockIdx) {
+    const cell = document.querySelector(`.cal-cell[data-key="${key}"]`);
+    if (!cell) return;
+    const chips = cell.querySelectorAll('.block-chip');
+    const chip  = chips[blockIdx];
+    if (!chip) return;
+    const blk   = data[key]?.[blockIdx];
+    const txt   = blk?.title || blk?.subject || '';
+    let label   = chip.querySelector('.chip-label');
+    if (txt) {
+      chip.classList.remove('empty');
+      if (!label) {
+        chip.innerHTML = `<span class="dot"></span><span class="chip-label">${escHtml(txt)}</span>`;
+      } else {
+        label.textContent = txt;
+      }
+    } else {
+      chip.classList.add('empty');
+      if (label) label.remove();
     }
-  });
+  }
 
-  // ── Init ───────────────────────────────────────────────────────
-  renderLessons();
+  // ── Helpers ────────────────────────────────────────────
+  function ensureDay(key) {
+    if (!data[key]) {
+      data[key] = Array.from({length:4}, emptyBlock);
+    }
+  }
+
+  function emptyBlock() {
+    return { title:'', subject:'', topic:'', objectives:'', activities:'', materials:'', notes:'' };
+  }
+
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem('lp2_data', JSON.stringify(data));
+      const badge = document.getElementById('save-badge');
+      badge.classList.add('show');
+      setTimeout(() => badge.classList.remove('show'), 1500);
+    }, 500);
+  }
+
+  function dateKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escAttr(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { openKey = null; renderCalendar(); } });
+
+  init();
 </script>
 </body>
 </html>
