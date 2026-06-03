@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Report Card Comments</title>
+  <title>Report Card Comments — Grade 7</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
@@ -13,8 +13,7 @@
       --text: #111827; --text2: #374151; --muted: #9ca3af;
       --primary: #4a6cf7; --primary-dark: #3a5ce5; --primary-light: #eef2ff;
       --danger: #ef4444; --danger-light: #fef2f2; --success: #10b981;
-      --warn: #f59e0b;
-      --header-h: 56px;
+      --warn: #f59e0b; --header-h: 56px;
     }
     html.dark {
       --bg: #0f1117; --surface: #1a1d27; --border: #272a3a; --border2: #343848;
@@ -23,129 +22,138 @@
       --danger: #f87171; --danger-light: #2d1c1c; color-scheme: dark;
     }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
-    header { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; position: sticky; top: 0; z-index: 10; }
-    .logo { font-size: 1.05rem; font-weight: 700; color: var(--primary); }
-    .hdr-right { display: flex; align-items: center; gap: 8px; }
-    .btn { padding: 6px 13px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: background 0.12s; white-space: nowrap; font-family: inherit; }
+    header { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; position: sticky; top: 0; z-index: 10; gap: 10px; }
+    .logo { font-size: 1rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
+    .hdr-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .btn { padding: 6px 12px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background .12s; white-space: nowrap; font-family: inherit; }
     .btn:hover { background: var(--bg); }
     .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     .btn.primary:hover { background: var(--primary-dark); }
-    .btn.success { background: var(--success); color: #fff; border-color: var(--success); }
-    .btn.sm { padding: 4px 9px; font-size: 0.76rem; }
+    .btn.sm { padding: 4px 9px; font-size: 0.74rem; }
     .btn.danger { color: var(--danger); border-color: var(--danger-light); background: var(--danger-light); }
     .btn.danger:hover { background: var(--danger); color: #fff; }
-    .icon-btn { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); cursor: pointer; padding: 5px 9px; font-size: 1rem; transition: background 0.12s; line-height: 1; }
+    .icon-btn { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); cursor: pointer; padding: 5px 9px; font-size: 1rem; line-height: 1; }
     .icon-btn:hover { background: var(--bg); color: var(--text); }
 
-    /* Layout */
     .app-body { display: flex; height: calc(100vh - var(--header-h)); overflow: hidden; }
 
     /* Student panel */
-    .student-panel { width: 230px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .panel-head { padding: 12px 12px 8px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 7px; }
-    .panel-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+    .student-panel { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .panel-head { padding: 10px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+    .panel-title { font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+    .upload-zone { border: 2px dashed var(--border2); border-radius: 7px; padding: 9px; text-align: center; cursor: pointer; font-size: .79rem; color: var(--muted); transition: border-color .14s,color .14s; line-height: 1.4; }
+    .upload-zone:hover { border-color: var(--primary); color: var(--primary); }
     .student-list { flex: 1; overflow-y: auto; padding: 4px 0; }
-    .student-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.86rem; font-weight: 500; transition: background 0.1s; }
+    .student-item { display: flex; align-items: center; gap: 7px; padding: 7px 10px; cursor: pointer; font-size: .84rem; font-weight: 500; transition: background .1s; }
     .student-item:hover { background: var(--bg); }
     .student-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
-    .student-item .s-del { margin-left: auto; opacity: 0; background: none; border: none; cursor: pointer; color: var(--muted); font-size: 0.8rem; padding: 1px 4px; border-radius: 3px; }
+    .student-item .s-del { margin-left: auto; opacity: 0; background: none; border: none; cursor: pointer; color: var(--muted); font-size: .75rem; padding: 1px 4px; border-radius: 3px; }
     .student-item:hover .s-del { opacity: 1; }
     .student-item .s-del:hover { background: var(--danger-light); color: var(--danger); }
-    .student-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .student-item.active .student-avatar { background: var(--primary); color: #fff; }
-    .empty-students { padding: 20px 12px; text-align: center; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
-    .upload-zone { border: 2px dashed var(--border2); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; font-size: 0.8rem; color: var(--muted); transition: border-color .14s, color .14s; }
-    .upload-zone:hover { border-color: var(--primary); color: var(--primary); }
+    .s-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: .7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .student-item.active .s-avatar { background: var(--primary); color: #fff; }
+    .empty-panel { padding: 16px 10px; text-align: center; color: var(--muted); font-size: .8rem; line-height: 1.5; }
 
-    /* Editor panel */
-    .editor-panel { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 0; min-width: 0; }
+    /* Editor */
+    .editor-panel { flex: 1; overflow-y: auto; padding: 18px 22px 80px; min-width: 0; }
     .editor-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted); text-align: center; gap: 10px; }
     .editor-empty .ei { font-size: 3rem; }
 
-    /* Student header */
-    .student-hdr { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .student-hdr-name { font-size: 1.1rem; font-weight: 700; }
-    .pronouns-select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
-    .pronouns-select:focus { border-color: var(--primary); }
+    .student-hdr { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .student-hdr-name { font-size: 1.05rem; font-weight: 700; }
+    .student-hdr-sub { font-size: .77rem; color: var(--muted); margin-top: 1px; }
+    .s-select { padding: 4px 7px; border: 1px solid var(--border); border-radius: 6px; font-size: .81rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
+    .s-select:focus { border-color: var(--primary); }
 
     /* Subject tabs */
-    .subj-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 18px; gap: 0; overflow-x: auto; }
-    .subj-tab { padding: 9px 16px; font-size: 0.84rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .14s, border-color .14s; white-space: nowrap; font-family: inherit; }
+    .subj-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 16px; gap: 0; overflow-x: auto; flex-shrink: 0; }
+    .subj-tab { padding: 8px 14px; font-size: .82rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .14s; white-space: nowrap; font-family: inherit; }
     .subj-tab:hover { color: var(--text); }
     .subj-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-    .subj-tab .prof-chip { display: inline-block; margin-left: 6px; font-size: .65rem; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+    .prof-chip-sm { display: inline-block; margin-left: 5px; font-size: .63rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; vertical-align: middle; }
 
-    /* Subject editor */
-    .subj-editor { display: flex; flex-direction: column; gap: 16px; }
-
-    /* Section card */
-    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 8px; border-bottom: 1px solid var(--border); background: var(--bg); }
-    .section-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text2); }
+    /* Cards */
+    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .section-title { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text2); }
+    .section-badge { font-size: .68rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
     .section-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
 
-    /* Proficiency selector */
-    .prof-selector { display: flex; gap: 6px; flex-wrap: wrap; }
-    .prof-btn { padding: 5px 14px; border-radius: 20px; border: 2px solid var(--border); background: var(--surface); font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all .14s; font-family: inherit; color: var(--text2); }
-    .prof-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .prof-btn.active-E { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
-    .prof-btn.active-D { border-color: #f59e0b; background: #fffbeb; color: #d97706; }
-    .prof-btn.active-P { border-color: #10b981; background: #ecfdf5; color: #059669; }
-    .prof-btn.active-Ex { border-color: #6366f1; background: #eef2ff; color: #6366f1; }
+    /* Info note */
+    .note { font-size: .78rem; color: var(--text2); background: var(--primary-light); border-radius: 6px; padding: 8px 10px; line-height: 1.5; }
+    .note-warn { background: #fffbeb; color: #92400e; }
 
-    /* Competencies */
-    .comp-grid { display: flex; flex-direction: column; gap: 6px; }
-    .comp-item { display: flex; align-items: flex-start; gap: 8px; }
-    .comp-item input[type="checkbox"] { margin-top: 3px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
-    .comp-item label { font-size: 0.83rem; cursor: pointer; line-height: 1.4; color: var(--text2); }
-    .comp-count { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
-    .comp-count.warn { color: var(--warn); }
-    .comp-count.ok { color: var(--success); }
-
-    /* Phrase picker */
-    .phrase-row { display: flex; gap: 7px; align-items: center; }
-    .phrase-select { flex: 1; padding: 6px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.83rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
-    .phrase-select:focus { border-color: var(--primary); }
-
-    /* Comment textarea */
-    .comment-ta { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; resize: vertical; min-height: 100px; line-height: 1.6; transition: border-color .14s; }
-    .comment-ta:focus { border-color: var(--primary); background: var(--surface); }
-    .comment-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .char-count { font-size: 0.73rem; color: var(--muted); }
-    .copy-confirm { font-size: 0.73rem; color: var(--success); opacity: 0; transition: opacity .3s; }
-    .copy-confirm.show { opacity: 1; }
-
-    /* Field */
-    .field-group { display: flex; flex-direction: column; gap: 5px; }
-    .field-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-    .field-input { width: 100%; padding: 6px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.84rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color .14s; }
-    .field-input:focus { border-color: var(--primary); background: var(--surface); }
-
-    /* ELA subsection tabs */
-    .ela-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
-    .ela-tab { padding: 7px 14px; font-size: 0.82rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; transition: color .14s; }
+    /* ELA sub-tabs */
+    .ela-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .ela-tab { padding: 6px 13px; font-size: .8rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; }
     .ela-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
     .ela-tab:hover { color: var(--text); }
 
-    /* Export summary */
-    .export-bar { position: sticky; bottom: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 5; }
-    .export-info { font-size: 0.83rem; color: var(--muted); }
+    /* Proficiency buttons */
+    .prof-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .prof-btn { padding: 5px 13px; border-radius: 20px; border: 2px solid var(--border); background: var(--surface); font-size: .8rem; font-weight: 700; cursor: pointer; font-family: inherit; color: var(--text2); transition: all .14s; }
+    .prof-btn.active-E { border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+    .prof-btn.active-D { border-color: #f59e0b; background: #fffbeb; color: #b45309; }
+    .prof-btn.active-P { border-color: #10b981; background: #ecfdf5; color: #059669; }
+    .prof-btn.active-Ex { border-color: #6366f1; background: #eef2ff; color: #4f46e5; }
 
-    /* Add student modal */
-    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 100; align-items: center; justify-content: center; }
-    .modal-backdrop.open { display: flex; }
-    .modal { background: var(--surface); border-radius: 12px; padding: 24px; width: 340px; max-width: 95vw; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.18); }
-    .modal-title { font-size: 1rem; font-weight: 700; }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    /* Competencies */
+    .comp-list { display: flex; flex-direction: column; gap: 5px; }
+    .comp-item { display: flex; align-items: flex-start; gap: 7px; }
+    .comp-item input { margin-top: 3px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+    .comp-item label { font-size: .82rem; cursor: pointer; line-height: 1.4; color: var(--text2); }
+    .comp-hint { font-size: .7rem; margin-top: 3px; }
+    .comp-hint.ok { color: var(--success); }
+    .comp-hint.warn { color: var(--warn); }
+
+    /* Phrase picker */
+    .phrase-row { display: flex; gap: 7px; }
+    .phrase-sel { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 7px; font-size: .82rem; font-family: inherit; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
+    .phrase-sel:focus { border-color: var(--primary); }
+    .tag-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 5px; }
+    .tag { display: flex; align-items: center; gap: 6px; font-size: .8rem; border-radius: 5px; padding: 3px 8px; }
+    .tag.str { background: var(--primary-light); color: var(--primary); }
+    .tag.grw { background: #ecfdf5; color: #059669; }
+    html.dark .tag.grw { background: #052e1a; color: #34d399; }
+    .tag span { flex: 1; line-height: 1.35; }
+    .tag button { background: none; border: none; cursor: pointer; color: currentColor; opacity: .6; font-size: .75rem; padding: 0 2px; flex-shrink: 0; }
+    .tag button:hover { opacity: 1; }
+
+    /* Field */
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
+    .field-label { font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .field-input { width: 100%; padding: 6px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: .83rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; }
+    .field-input:focus { border-color: var(--primary); background: var(--surface); }
+    .field-ta { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: .85rem; font-family: inherit; color: var(--text); background: var(--bg); outline: none; resize: vertical; line-height: 1.6; }
+    .field-ta:focus { border-color: var(--primary); background: var(--surface); }
+    .field-ta.preview { min-height: 140px; border-color: var(--primary); background: var(--surface); }
+    .field-ta.context { min-height: 80px; }
+    .field-ta.short { min-height: 60px; }
+
+    .comment-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+    .char-count { font-size: .72rem; color: var(--muted); }
+    .copy-ok { font-size: .72rem; color: var(--success); opacity: 0; transition: opacity .3s; }
+    .copy-ok.show { opacity: 1; }
+
+    /* Special circumstances */
+    .special-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .special-check { display: flex; align-items: center; gap: 5px; font-size: .8rem; cursor: pointer; }
+    .special-check input { accent-color: var(--primary); cursor: pointer; }
+
+    /* Export bar */
+    .export-bar { position: fixed; bottom: 0; left: 220px; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 5; }
+    .export-info { font-size: .81rem; color: var(--muted); }
+
+    /* Modal */
+    .modal-back { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 100; align-items: center; justify-content: center; }
+    .modal-back.open { display: flex; }
+    .modal { background: var(--surface); border-radius: 12px; padding: 22px; width: 340px; max-width: 95vw; display: flex; flex-direction: column; gap: 13px; box-shadow: 0 8px 40px rgba(0,0,0,.2); }
+    .modal-title { font-size: .98rem; font-weight: 700; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
-
-    /* Progress & Growth card colours */
-    .pg-note { font-size: 0.78rem; color: var(--muted); background: var(--primary-light); border-radius: 6px; padding: 8px 10px; line-height: 1.5; }
-
-    @media print { header, .student-panel, .export-bar, .s-del { display: none !important; } }
   </style>
 </head>
 <body>
@@ -153,50 +161,48 @@
 <header>
   <div class="logo">📝 Report Card Comments — Grade 7</div>
   <div class="hdr-right">
-    <a href="index.html" style="text-decoration:none"><button class="btn">📅 Lesson Planner</button></a>
-    <button class="icon-btn" onclick="toggleDark()" title="Toggle dark mode">◑</button>
+    <button class="btn" onclick="downloadTemplate()">⬇ Excel Template</button>
+    <a href="index.html" style="text-decoration:none"><button class="btn">📅 Planner</button></a>
+    <button class="icon-btn" onclick="toggleDark()" title="Dark mode">◑</button>
   </div>
 </header>
 
 <div class="app-body">
 
-  <!-- Student sidebar -->
   <div class="student-panel">
     <div class="panel-head">
       <div class="panel-title">Students</div>
       <div class="upload-zone" onclick="document.getElementById('xl-input').click()">
-        📂 Import from Excel (.xlsx)
+        📂 Import from Excel
+        <div style="font-size:.72rem;margin-top:2px;opacity:.8">Upload roster or template</div>
       </div>
       <input type="file" id="xl-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(this)" />
       <button class="btn sm" onclick="openAddStudent()">+ Add student</button>
     </div>
     <div class="student-list" id="student-list">
-      <div class="empty-students">Upload an Excel file or add students manually to get started.</div>
+      <div class="empty-panel">Import your class list or add students manually.</div>
     </div>
   </div>
 
-  <!-- Editor main -->
   <div class="editor-panel" id="editor-panel">
     <div class="editor-empty">
       <div class="ei">📋</div>
       <div style="font-weight:700;font-size:1rem">Select a student to begin</div>
-      <div style="font-size:.85rem">Import your class list or add students manually.</div>
+      <div style="font-size:.85rem;max-width:320px;line-height:1.5">Download the Excel template, fill in your class list with proficiency levels, then import it here.</div>
     </div>
   </div>
 
 </div>
 
-<!-- Export bar -->
 <div class="export-bar" id="export-bar" style="display:none">
   <span class="export-info" id="export-info"></span>
-  <div style="display:flex;gap:8px">
-    <button class="btn" onclick="exportSubject()">⬇ Export Current Subject (.doc)</button>
-    <button class="btn primary" onclick="exportAll()">⬇ Export All Students (.doc)</button>
+  <div style="display:flex;gap:7px">
+    <button class="btn" onclick="exportCurrentStudent()">⬇ This Student (.doc)</button>
+    <button class="btn primary" onclick="exportAll()">⬇ All Students (.doc)</button>
   </div>
 </div>
 
-<!-- Add student modal -->
-<div class="modal-backdrop" id="add-modal">
+<div class="modal-back" id="add-modal">
   <div class="modal">
     <div class="modal-title">Add Student</div>
     <div class="field-group">
@@ -209,10 +215,10 @@
     </div>
     <div class="field-group">
       <div class="field-label">Pronouns</div>
-      <select class="field-input" id="add-pronouns" style="cursor:pointer">
-        <option value="they">They/Them</option>
-        <option value="she">She/Her</option>
-        <option value="he">He/Him</option>
+      <select class="field-input s-select" id="add-pronouns">
+        <option value="they">They / Them</option>
+        <option value="she">She / Her</option>
+        <option value="he">He / Him</option>
       </select>
     </div>
     <div class="modal-actions">
@@ -223,391 +229,436 @@
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const PRONOUNS = {
-  he:   { sub:'He',   obj:'him',  pos:'his',  posabs:'his',  ref:'himself' },
-  she:  { sub:'She',  obj:'her',  pos:'her',  posabs:'hers', ref:'herself' },
-  they: { sub:'They', obj:'them', pos:'their',posabs:'theirs',ref:'themselves' },
+// ─── Pronouns ──────────────────────────────────────────────────────────────
+const PR = {
+  he:   { sub:'He',   obj:'him',  pos:'his',  lsub:'he'  },
+  she:  { sub:'She',  obj:'her',  pos:'her',  lsub:'she' },
+  they: { sub:'They', obj:'them', pos:'their',lsub:'they'},
 };
 
-const PROF_LABELS = {
-  E: 'Emerging', D: 'Developing', P: 'Proficient', Ex: 'Extending'
-};
-const PROF_COLORS = {
-  E: '#ef4444', D: '#f59e0b', P: '#10b981', Ex: '#6366f1'
-};
+// ─── Proficiency ───────────────────────────────────────────────────────────
+const PROF = { E:'Emerging', D:'Developing', P:'Proficient', Ex:'Extending' };
+const PROF_COL = { E:'#ef4444', D:'#f59e0b', P:'#10b981', Ex:'#6366f1' };
 
-// ── Phrase banks ──────────────────────────────────────────────────────────────
+// Proficiency sentence definitions (matches guide verbatim)
+function profSentence(name, prof, subjectLabel) {
+  const n = name;
+  const s = subjectLabel;
+  if (prof === 'Ex') return `${n} demonstrated an extending understanding of the ${s} competencies covered this term. "Extending" is a student demonstrating learning, in relation to Learning Standards, with increasing depth and complexity.`;
+  if (prof === 'P')  return `${n} demonstrated a proficient understanding of the ${s} competencies covered this term. "Proficient" is the standard goal for all students. It is when a student demonstrates the expected learning in relation to the Learning Standards of the curriculum.`;
+  if (prof === 'D')  return `${n} demonstrated a developing understanding of the ${s} competencies covered this term. "Developing" indicates that a student is demonstrating learning in relation to the Learning Standards with growing consistency. ${n} is showing initial understanding but is still in the process of developing ${n}'s competency in relation to the Learning Standards of the curriculum.`;
+  if (prof === 'E')  return `${n} demonstrated an emerging understanding of the ${s} competencies covered this term. "Emerging" indicates that a student is just beginning to demonstrate learning in relation to the Learning Standards of the curriculum, but is not yet doing so consistently.`;
+  return '';
+}
 
-const SUBJECTS_DATA = {
-
+// ─── Subject Data ──────────────────────────────────────────────────────────
+const SUBJECTS = {
   ela_reading: {
-    label: 'Reading',
+    label: 'ELA 7 — Reading',
+    shortLabel: 'English Language Arts',
+    tabLabel: 'ELA 7',
+    isEla: true, elaTab: 'reading',
     competencies: [
-      'Using comprehension strategies to understand a variety of texts',
-      'Identifying themes, central ideas, and supporting details',
-      'Analyzing an author\'s craft, word choice, and literary devices',
-      'Making text-to-self, text-to-text, and text-to-world connections',
-      'Reading with fluency and expression across genres',
-      'Drawing inferences and conclusions using textual evidence',
-      'Evaluating the credibility and perspective of texts',
+      'Construct meaningful personal connections between self, text, and world',
+      'Apply appropriate strategies to comprehend written, oral, and visual texts, guide inquiry, and extend thinking',
+      'Think critically, creatively, and reflectively to explore ideas within, between, and beyond texts',
+      'Recognize and appreciate the role of story, narrative, and oral tradition in expressing First Peoples perspectives',
+      'Understand how literary elements, techniques, and devices enhance and shape meaning',
+      'Identify how different texts reflect different purposes and audiences',
     ],
     strengths: [
-      'identifies the main idea and key details across a variety of texts',
-      'uses context clues effectively to determine the meaning of unfamiliar words',
-      'makes thoughtful and meaningful connections to prior knowledge and experiences',
-      'demonstrates strong ability to identify themes and explain their significance',
-      'analyses how an author\'s word choice and literary devices contribute to meaning',
+      'identifies main ideas and supporting details across a variety of texts with confidence',
+      'makes thoughtful text-to-self, text-to-text, and text-to-world connections',
+      'uses context clues and vocabulary strategies to make meaning from challenging texts',
+      'analyses how literary devices contribute to meaning and the reader\'s experience',
       'draws well-supported inferences from evidence in the text',
-      'reads a variety of genres fluently and with comprehension',
-      'asks thoughtful questions to deepen understanding of texts',
+      'reads fluently and with expression across a range of genres',
+      'asks perceptive questions that deepen understanding of texts',
+      'demonstrates strong comprehension when reading both narrative and informational texts',
     ],
     growth: [
-      'continue developing strategies for reading and interpreting more complex texts independently',
-      'practise making and justifying inferences using specific evidence from the text',
-      'work on identifying and explaining the author\'s purpose and point of view in a wider range of texts',
-      'build vocabulary through wide reading and focused vocabulary study',
-      'deepen comprehension by pausing to summarize, question, and reflect while reading',
-      'develop skills in analysing how literary devices create meaning and effect',
+      'continue developing strategies for reading and independently interpreting more complex and challenging texts',
+      'practise making and justifying inferences by citing specific evidence from the text',
+      'work on identifying and explaining the author\'s purpose, point of view, and craft across different text forms',
+      'build vocabulary through wide and varied reading, and by exploring word roots and context',
+      'deepen comprehension by pausing regularly to summarize, question, and make connections while reading',
     ],
+    contextPlaceholder: 'Describe what the class studied in Reading this term (e.g. novel studies, short stories, comprehension strategies)…',
   },
 
   ela_writing: {
-    label: 'Writing',
+    label: 'ELA 7 — Writing',
+    shortLabel: 'English Language Arts',
+    tabLabel: 'ELA 7',
+    isEla: true, elaTab: 'writing',
     competencies: [
-      'Writing for a variety of purposes and audiences',
-      'Applying the stages of the writing process effectively',
-      'Developing ideas with relevant detail and supporting evidence',
-      'Using voice, word choice, and sentence variety',
-      'Applying conventions of grammar, spelling, and punctuation',
-      'Organizing writing with a clear structure and logical flow',
-      'Revising and editing to improve clarity and quality',
+      'Use writing and design processes to plan, develop, and create engaging and meaningful texts',
+      'Express and support personal opinions and ideas through a variety of writing forms',
+      'Develop and apply knowledge of language features, forms, and conventions',
+      'Transform ideas and information to create original texts',
+      'Think critically, creatively, and reflectively to explore ideas in writing',
     ],
     strengths: [
-      'crafts writing that is organized, focused, and purposeful',
-      'uses descriptive and precise language to engage the reader',
-      'develops ideas with specific details and supporting evidence',
+      'crafts writing that is purposeful, organized, and clearly focused',
+      'uses vivid, precise language and strong word choice to engage the reader',
+      'develops ideas with specific details, examples, and supporting evidence',
       'demonstrates a distinct and authentic voice in personal and creative writing',
-      'applies writing conventions including punctuation, grammar, and spelling accurately',
-      'structures writing with clear introductions, well-developed body paragraphs, and conclusions',
-      'effectively revises and edits writing to improve clarity and detail',
-      'demonstrates strong command of sentence variety and fluency',
+      'applies grammar, punctuation, and spelling conventions accurately and consistently',
+      'structures writing with clear introductions, well-developed paragraphs, and effective conclusions',
+      'revises and edits writing thoughtfully to improve clarity, detail, and expression',
+      'shows strong command of sentence variety and fluency in written work',
     ],
     growth: [
-      'continue developing elaboration by adding specific details and explanation to ideas',
-      'work on varying sentence structure to improve writing fluency and engagement',
-      'practise applying grammar and spelling conventions more consistently across all writing',
-      'focus on strengthening the organizational structure and transitions in writing',
-      'develop revision strategies to improve clarity, voice, and depth of ideas',
-      'build skills in crafting writing for different purposes and audiences',
+      'continue developing elaboration skills by adding specific details, examples, and explanation to ideas',
+      'work on varying sentence structure and length to improve the flow and impact of writing',
+      'practise applying grammar, spelling, and punctuation conventions more consistently across all writing tasks',
+      'strengthen organizational structure by focusing on effective transitions and logical flow between ideas',
+      'develop revision strategies to improve clarity, voice, and the depth of ideas expressed',
     ],
+    contextPlaceholder: 'Describe what the class worked on in Writing this term (e.g. paragraph writing, persuasive essays, creative writing)…',
   },
 
   ela_oral: {
-    label: 'Oral Language',
+    label: 'ELA 7 — Oral Language',
+    shortLabel: 'English Language Arts',
+    tabLabel: 'ELA 7',
+    isEla: true, elaTab: 'oral',
     competencies: [
-      'Communicating ideas clearly and effectively in speaking',
-      'Listening actively and responding thoughtfully to others',
-      'Participating constructively in collaborative discussions',
-      'Using speaking strategies to engage and inform an audience',
-      'Presenting information with confidence and organization',
+      'Communicate clearly and purposefully for a range of purposes and audiences',
+      'Listen actively and respectfully to understand others\' perspectives',
+      'Collaborate constructively in discussions and group work',
+      'Select and use strategies for effective spoken communication',
+      'Speak with increasing confidence, fluency, and expression',
     ],
     strengths: [
-      'communicates ideas clearly and with confidence in class discussions',
-      'listens attentively and responds thoughtfully to peers\'s ideas',
-      'contributes meaningfully to collaborative discussions and group activities',
-      'presents information in a well-organized and engaging manner',
-      'uses effective listening skills and builds respectfully on others\' contributions',
-      'demonstrates growing confidence in sharing ideas with larger groups',
+      'communicates ideas clearly, confidently, and with a strong sense of audience',
+      'listens attentively and responds thoughtfully, building respectfully on peers\' ideas',
+      'contributes meaningfully and consistently to collaborative discussions and group activities',
+      'presents information in a well-organized, engaging, and confident manner',
+      'demonstrates strong active listening skills and asks thoughtful follow-up questions',
+      'uses an expressive voice, appropriate pace, and clear articulation when speaking',
     ],
     growth: [
-      'continue building confidence in sharing and elaborating on ideas with the class',
-      'work on expanding responses to include more specific detail and reasoning',
-      'practise active listening strategies, including paraphrasing and asking follow-up questions',
-      'develop skills in presenting information clearly, with organization and confidence',
-      'continue working on using a clear voice and appropriate pace when presenting',
+      'continue building confidence in sharing and elaborating on ideas in whole-class and small-group settings',
+      'work on expanding responses to include more specific detail, reasoning, and evidence',
+      'practise active listening strategies — including paraphrasing, questioning, and responding with empathy',
+      'develop skills in organizing and presenting ideas clearly and with greater confidence to an audience',
     ],
+    contextPlaceholder: 'Describe oral language activities this term (e.g. Socratic seminars, presentations, drama, reader\'s theatre)…',
   },
 
   math: {
     label: 'Math 7',
+    shortLabel: 'Mathematics',
     competencies: [
-      'Reasoning and analysing to make sense of mathematical situations',
-      'Understanding and solving multi-step problems',
-      'Communicating mathematical thinking clearly using appropriate vocabulary',
-      'Connecting mathematical concepts to real-world situations',
-      'Using mental math and estimation strategies',
-      'Applying operations with rational numbers fluently',
-      'Working with ratios, rates, and proportional reasoning',
-      'Solving and representing algebraic expressions and equations',
-      'Applying concepts of geometry and measurement',
+      'Demonstrate and apply mental math strategies',
+      'Develop, demonstrate, and apply mathematical understanding through play, inquiry, and problem solving',
+      'Use reasoning and logic to explore, analyze, and apply mathematical ideas',
+      'Model mathematics in contextualized experiences',
+      'Estimate reasonably and demonstrate fluent, flexible thinking about number',
+      'Use mathematical vocabulary and language to contribute to mathematical discussions',
+      'Engage in problem-solving experiences that are connected to place, story, and cultural practices',
     ],
     strengths: [
-      'applies mathematical operations accurately to solve multi-step problems',
-      'demonstrates a strong understanding of proportional reasoning and ratios',
-      'uses a variety of problem-solving strategies effectively',
-      'communicates mathematical thinking clearly using precise vocabulary',
-      'connects mathematical concepts to meaningful real-world situations',
+      'applies number operations accurately and efficiently to solve multi-step problems',
+      'demonstrates strong proportional reasoning skills and applies them flexibly to new situations',
+      'uses a variety of problem-solving strategies with persistence and flexibility',
+      'communicates mathematical thinking clearly and precisely using appropriate vocabulary',
+      'connects mathematical concepts to real-world and personally relevant situations',
       'demonstrates strong mental math and estimation skills',
-      'shows solid understanding of algebraic expressions and equations',
-      'applies geometric and measurement concepts accurately',
-      'shows persistence and flexibility when approaching new mathematical challenges',
+      'shows solid understanding of algebraic expressions and equations, and applies them with confidence',
+      'applies geometric and measurement concepts accurately and with a clear understanding of relationships',
     ],
     growth: [
-      'continue developing fluency with operations involving rational numbers',
-      'work on communicating mathematical reasoning in full sentences using precise vocabulary',
-      'practise applying problem-solving strategies to multi-step and unfamiliar problems',
-      'focus on connecting algebraic thinking to real-world contexts',
-      'develop strategies for checking the reasonableness of answers',
-      'continue building confidence with proportional reasoning and unit rates',
-      'work on accurately applying geometric formulas and measurement concepts',
+      'continue developing fluency and flexibility with operations involving rational numbers',
+      'work on communicating mathematical reasoning clearly in full sentences, using precise vocabulary',
+      'practise applying a variety of problem-solving strategies to multi-step and unfamiliar problems',
+      'focus on connecting algebraic thinking to real-world and contextual situations',
+      'develop habits of checking the reasonableness of answers and reflecting on problem-solving processes',
+      'continue building confidence and fluency with proportional reasoning and unit rate problems',
     ],
+    contextPlaceholder: 'Describe the math content covered this term (e.g. integers, fractions, ratios, expressions, data analysis)…',
   },
 
   ss: {
     label: 'Social Studies 7',
+    shortLabel: 'Social Studies',
     competencies: [
-      'Using inquiry and critical thinking to investigate historical questions',
-      'Analysing cause-and-consequence relationships in historical events',
-      'Using primary and secondary sources to gather and evaluate evidence',
-      'Understanding and appreciating diverse historical and cultural perspectives',
-      'Making connections between historical events and contemporary issues',
-      'Communicating findings through written and oral responses',
-      'Applying geographic thinking to understand historical and contemporary issues',
+      'Use Social Studies inquiry processes and skills to ask questions, gather, interpret, and analyse data, and communicate findings',
+      'Analyze the causes and consequences of significant historical events',
+      'Assess the significance of people, places, events, or developments and their lasting legacy',
+      'Explain different perspectives on past and present people, places, issues, and events',
+      'Make reasoned ethical judgements about events and decisions from the past',
+      'Construct arguments defending the significance of individuals or groups',
     ],
     strengths: [
-      'demonstrates a strong understanding of the historical and cultural concepts studied this term',
-      'uses evidence from primary and secondary sources to support and justify thinking',
-      'makes thoughtful connections between historical events and present-day issues',
-      'considers multiple perspectives and voices when analysing historical events',
-      'communicates ideas clearly and effectively in written and oral responses',
-      'shows genuine curiosity and engagement in exploring historical questions',
-      'demonstrates geographic awareness and uses it to understand historical contexts',
-      'constructs well-supported arguments using relevant evidence and reasoning',
+      'demonstrates a genuine curiosity and deep engagement with the historical concepts and events studied this term',
+      'uses evidence from primary and secondary sources effectively to support and justify thinking',
+      'makes insightful connections between historical events and contemporary issues and perspectives',
+      'considers and appreciates multiple and diverse perspectives when analysing historical events and decisions',
+      'communicates ideas confidently and clearly in both written and oral responses',
+      'constructs well-developed arguments supported by specific and relevant historical evidence',
+      'demonstrates geographic awareness and applies spatial thinking to understand historical and current events',
     ],
     growth: [
-      'continue developing skills in supporting arguments with specific historical evidence',
-      'work on analysing events from multiple and diverse perspectives',
-      'practise constructing well-organized written responses with clear arguments',
-      'develop deeper connections between historical events and contemporary issues',
-      'continue building geographic literacy and spatial thinking skills',
-      'work on evaluating the credibility and bias of historical sources',
+      'continue developing skills in constructing strong arguments with specific and well-chosen historical evidence',
+      'work on examining historical events from multiple and underrepresented perspectives',
+      'practise writing well-organized, clear, and evidence-based responses with a strong argument',
+      'develop deeper and more nuanced connections between historical events and today\'s world',
+      'continue building geographic literacy, including map reading and spatial analysis skills',
     ],
+    contextPlaceholder: 'Describe the topics and content covered in Social Studies this term…',
+  },
+
+  science: {
+    label: 'Science 7',
+    shortLabel: 'Science',
+    competencies: [
+      'Demonstrate a sustained curiosity about a scientific topic or problem of personal interest',
+      'Make observations in familiar or unfamiliar contexts',
+      'Make predictions and develop fair tests to investigate',
+      'Reflect on their investigation methods, including whether their tests were fair',
+      'Analyse cause-and-effect relationships and demonstrate understanding of scientific concepts',
+      'Communicate ideas, explanations, and processes in a variety of ways',
+    ],
+    strengths: [
+      'participates actively and with genuine curiosity in scientific investigations and inquiry activities',
+      'makes careful, detailed observations and records findings accurately and clearly',
+      'demonstrates a strong conceptual understanding of the science topics explored this term',
+      'applies scientific thinking and reasoning to design tests and draw evidence-based conclusions',
+      'makes meaningful connections between scientific concepts and real-world phenomena',
+      'communicates scientific ideas clearly using appropriate scientific vocabulary',
+      'approaches challenges and experiments with persistence, flexibility, and an open mind',
+    ],
+    growth: [
+      'continue developing skills in designing and conducting fair tests with increasing independence',
+      'work on using precise scientific vocabulary to communicate observations and conclusions more clearly',
+      'practise analysing data carefully to identify patterns and draw well-reasoned, evidence-based conclusions',
+      'continue deepening connections between scientific concepts and the real world and personal experiences',
+      'build habits of questioning, wondering, and exploring scientific ideas with curiosity and creativity',
+    ],
+    contextPlaceholder: 'Describe the science topics covered this term (e.g. biology, chemistry, earth science, lab investigations)…',
   },
 
   french: {
     label: 'French 7',
+    shortLabel: 'French',
     competencies: [
-      'Communicating in French for a variety of purposes and audiences',
-      'Reading and comprehending French texts with growing confidence',
-      'Writing in French using appropriate vocabulary and grammar structures',
-      'Speaking and listening in French with growing fluency',
-      'Applying knowledge of French language structures and conventions',
-      'Making connections to Francophone cultures and communities',
+      'Construct meaning from French language texts for a variety of purposes and audiences',
+      'Communicate in French for a variety of purposes and audiences',
+      'Develop and apply knowledge of French language features, forms, and conventions',
+      'Exchange ideas and information in French',
+      'Engage in listening and speaking activities to enhance oral fluency',
     ],
     strengths: [
-      'communicates basic ideas in French using familiar vocabulary and structures',
-      'demonstrates growing ability to read and understand French texts',
-      'writes in French using vocabulary and grammar structures accurately',
-      'participates in French conversations and activities with growing confidence',
-      'applies knowledge of French grammar to write in complete, meaningful sentences',
-      'shows enthusiasm and a positive attitude towards the French language and Francophone culture',
-      'demonstrates improving listening comprehension in French',
+      'communicates ideas in French using familiar vocabulary and language structures with growing confidence',
+      'demonstrates improving ability to read and comprehend a variety of French texts',
+      'writes in French using vocabulary and grammar structures accurately and with growing complexity',
+      'participates with enthusiasm and a positive attitude in French conversations, activities, and tasks',
+      'applies knowledge of French grammar to craft meaningful and complete sentences',
+      'shows genuine curiosity and enthusiasm for the French language and Francophone cultures',
+      'demonstrates improving listening comprehension when engaging with spoken French',
     ],
     growth: [
-      'continue building French vocabulary through reading, listening, and speaking practice',
-      'work on applying French grammar conventions more consistently in writing',
-      'practise speaking French with greater confidence and fluency',
-      'develop strategies for reading longer French texts with comprehension',
-      'continue making meaningful connections between the French language and Francophone cultures',
-      'work on expanding the range of vocabulary and sentence structures used in communication',
+      'continue building French vocabulary through daily reading, listening, and speaking practice',
+      'work on applying French grammar conventions more accurately and consistently in all written work',
+      'practise speaking French more often and with greater confidence in class and beyond',
+      'develop strategies for reading and understanding longer and more complex French texts',
+      'continue exploring connections between the French language and diverse Francophone cultures around the world',
     ],
+    contextPlaceholder: 'Describe the French content and activities covered this term…',
+  },
+
+  careers: {
+    label: 'Careers 7',
+    shortLabel: 'Careers Education',
+    competencies: [
+      'Recognize their personal preferences, skills, strengths, and abilities and connect them to possible careers and life paths',
+      'Develop and apply personal and social competencies in various settings',
+      'Question self and others about how their personal public identity can have both positive and negative implications',
+      'Recognize and apply safe and responsible use of digital technology and social media',
+      'Apply goal-setting strategies and personal planning processes',
+    ],
+    strengths: [
+      'demonstrates strong self-awareness and a growing understanding of personal strengths, interests, and values',
+      'makes thoughtful and meaningful connections between personal interests, strengths, and potential career pathways',
+      'applies SMART goal-setting strategies to set realistic and achievable personal and academic goals',
+      'engages thoughtfully and actively with career exploration activities, discussions, and research tasks',
+      'reflects with depth and honesty on personal values and how they shape choices and future directions',
+      'demonstrates a solid understanding of diverse post-secondary pathways and opportunities',
+    ],
+    growth: [
+      'continue exploring a wider range of career pathways and educational options with curiosity and an open mind',
+      'work on setting more specific, actionable personal goals and following through with a plan',
+      'practise making explicit connections between current skills and interests and future career possibilities',
+      'develop deeper self-awareness by reflecting regularly on personal values, strengths, and areas for growth',
+      'continue building skills in personal planning, time management, and self-advocacy',
+    ],
+    contextPlaceholder: 'Describe the Careers content covered this term (e.g. SMART goals, career exploration, digital literacy, identity)…',
   },
 
   phe: {
     label: 'PHE 7',
+    shortLabel: 'Physical and Health Education',
     competencies: [
-      'Demonstrating a variety of movement skills and strategies',
-      'Developing and maintaining physical fitness and health-related fitness',
-      'Applying safety practices in all physical activities',
-      'Demonstrating cooperation, fair play, and respect for all participants',
-      'Setting and working towards personal wellness goals',
-      'Understanding and applying health and wellness concepts',
+      'Develop, refine, and apply fundamental movement skills in a variety of physical activities and environments',
+      'Apply methods of monitoring and adjusting exertion levels in physical activity',
+      'Describe and assess strategies for responding to discrimination, stereotyping, and bullying',
+      'Develop and demonstrate respectful behaviour in physical activity and health contexts',
+      'Demonstrate a commitment to personal health and wellness goals',
     ],
     strengths: [
-      'demonstrates strong movement skills and applies them effectively across a range of activities',
-      'participates actively and with enthusiasm in all physical education activities',
-      'shows excellent cooperation, sportsmanship, and respect for peers and opponents',
-      'applies safety practices consistently and responsibly during physical activities',
-      'demonstrates a solid understanding of health and wellness concepts',
-      'shows genuine commitment to personal fitness and well-being goals',
-      'applies effective movement strategies in both individual and team contexts',
-      'contributes positively to a supportive and inclusive class environment',
+      'demonstrates strong movement skills and applies them effectively and creatively in a range of activities',
+      'participates with consistent energy, enthusiasm, and a positive attitude in all physical education activities',
+      'exemplifies outstanding sportsmanship, cooperation, fairness, and respect for all participants',
+      'applies safety practices responsibly and consistently throughout all physical activities',
+      'demonstrates solid understanding of health and wellness concepts and applies them thoughtfully',
+      'shows genuine commitment to personal fitness goals and works hard to achieve them',
+      'contributes positively to a safe, inclusive, and welcoming class environment for all',
     ],
     growth: [
-      'continue developing movement skills and sport-specific strategies through regular practice',
-      'work on applying cooperative strategies and communication skills during team activities',
-      'focus on setting and consistently working towards personal wellness and fitness goals',
-      'develop a deeper understanding of how physical activity connects to overall health and well-being',
-      'continue building cardiovascular endurance and overall physical fitness',
-      'work on applying tactical thinking and decision-making in game situations',
+      'continue developing sport-specific movement skills and strategies through regular, focused practice',
+      'work on applying cooperative communication and leadership strategies to enhance team performance',
+      'focus on setting specific, challenging personal wellness goals and creating a plan to achieve them',
+      'develop a deeper understanding of the connection between regular physical activity and overall well-being',
+      'continue building cardiovascular endurance, strength, and overall physical fitness over time',
     ],
+    contextPlaceholder: 'Describe the PHE units and health topics covered this term (e.g. Bocce, Soccer, health discussions, fitness)…',
   },
 
-};
-
-// Proficiency opening phrase templates
-// Use {name}, {sub}, {pos}
-const PROF_OPENERS = {
-  E: {
-    doing:    '{name} is beginning to explore',
-    bridge:   '{sub} is developing foundational understanding in this area.',
-    growth:   '{name} is working towards',
-  },
-  D: {
-    doing:    '{name} is developing',
-    bridge:   '{sub} shows growing understanding and confidence.',
-    growth:   '{name} is continuing to work on',
-  },
-  P: {
-    doing:    '{name} demonstrates',
-    bridge:   '{sub} shows a solid and consistent understanding in this area.',
-    growth:   '{name} is working to extend',
-  },
-  Ex: {
-    doing:    '{name} demonstrates an advanced understanding of',
-    bridge:   '{sub} consistently extends {pos} learning and shows exceptional depth of understanding.',
-    growth:   '{name} is exploring',
+  adst: {
+    label: 'ADST / Art',
+    shortLabel: 'Applied Design, Skills, and Technologies',
+    noCompetencies: true,
+    contextPlaceholder: 'Name the Explorations covered (e.g. Woodwork, Digital Literacy, Foods, Art, Drama)…',
+    defaultComment: 'ADST skills are covered through a variety of activities across the curriculum. Please see your child\'s Explorations for feedback and further information on their development of these skills.',
   },
 };
 
-// ── App State ─────────────────────────────────────────────────────────────────
+// Subject tab order and grouping
+const SUBJECT_TABS = ['ela','math','ss','science','french','careers','phe','adst'];
+const ELA_SUBS = ['reading','writing','oral'];
 
-let students = JSON.parse(localStorage.getItem('rc_students') || '[]');
-let comments = JSON.parse(localStorage.getItem('rc_comments') || '{}');
-let activeId  = null;
-let activeSubj = 'ela';
-let activeElaTab = 'reading';
-let darkMode  = localStorage.getItem('rc_dark') === '1';
+// ─── State ────────────────────────────────────────────────────────────────
+let students    = JSON.parse(localStorage.getItem('rc_students') || '[]');
+let comments    = JSON.parse(localStorage.getItem('rc_comments')  || '{}');
+let classCtx    = JSON.parse(localStorage.getItem('rc_context')   || '{}');
+let activeId    = null;
+let activeSubj  = 'ela';
+let activeEla   = 'reading';
+let darkMode    = localStorage.getItem('rc_dark') === '1';
 
 if (darkMode) document.documentElement.classList.add('dark');
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
-function save() {
-  localStorage.setItem('rc_students', JSON.stringify(students));
-  localStorage.setItem('rc_comments', JSON.stringify(comments));
+function save()    { localStorage.setItem('rc_students', JSON.stringify(students)); localStorage.setItem('rc_comments', JSON.stringify(comments)); }
+function saveCtx() { localStorage.setItem('rc_context', JSON.stringify(classCtx)); }
+
+function getStudent(id) { return students.find(s => s.id === id); }
+function pr(sid) { const s = getStudent(sid); return PR[s?.pronouns] || PR.they; }
+
+function activeKey() {
+  if (activeSubj === 'ela') return 'ela_' + activeEla;
+  return activeSubj;
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-function initComment(sid) {
+function initStudent(sid) {
   if (!comments[sid]) comments[sid] = {};
-  const c = comments[sid];
-  const subs = ['ela_reading','ela_writing','ela_oral','math','ss','french','phe'];
-  subs.forEach(k => {
-    if (!c[k]) c[k] = { proficiency:'', competencies:[], customText:'', adaptations:'' };
+  const keys = ['ela_reading','ela_writing','ela_oral','math','ss','science','french','careers','phe','adst','_pg','_support'];
+  keys.forEach(k => {
+    if (!comments[sid][k]) comments[sid][k] = { proficiency:'', competencies:[], strengthPhrases:[], growthPhrases:[], adaptations:'', customText:'', special:'' };
   });
 }
 
-function getStudent(id) { return students.find(s => s.id === id); }
-function getComment(sid, key) {
-  initComment(sid);
-  return comments[sid][key];
-}
-
-function pr(sid) {
-  const s = getStudent(sid);
-  if (!s) return PRONOUNS.they;
-  return PRONOUNS[s.pronouns] || PRONOUNS.they;
-}
-
-function displayName(s) {
-  return s.firstName + ' ' + s.lastName;
-}
-
-// ── Comment assembly ──────────────────────────────────────────────────────────
-
+// ─── Comment assembly ─────────────────────────────────────────────────────
 function assembleComment(sid, key) {
-  const s = getStudent(sid);
+  const s   = getStudent(sid);
   if (!s) return '';
-  const c = comments[sid][key];
-  const p  = pr(sid);
-  const name = s.firstName;
-  const prof = c.proficiency || 'P';
-  const tmpl = PROF_OPENERS[prof] || PROF_OPENERS['P'];
-  const bank = SUBJECTS_DATA[key];
-  if (!bank) return '';
+  const c   = comments[sid]?.[key] || {};
+  const p   = pr(sid);
+  const sub = SUBJECTS[key];
+  if (!sub) return c.customText || '';
 
-  const comps = (c.competencies || []).filter(Boolean);
-  const growthPhrases = c.growthPhrases || [];
-  const strengthPhrases = c.strengthPhrases || [];
-
-  // Build opening
-  let parts = [];
-
-  // Opening: "Name demonstrates/is developing..."
-  let opening = tmpl.doing
-    .replace('{name}', name)
-    .replace('{sub}', p.sub)
-    .replace('{pos}', p.pos);
-
-  // Incorporate competency areas into opening sentence naturally
-  if (comps.length > 0) {
-    const compText = comps.length === 1
-      ? comps[0].toLowerCase()
-      : comps.slice(0,-1).map(c=>c.toLowerCase()).join(', ') + ', and ' + comps[comps.length-1].toLowerCase();
-    opening += ' ' + compText + '.';
-  } else {
-    opening += ' key concepts and skills in this subject.';
+  // ADST gets a fixed template
+  if (sub.noCompetencies) {
+    const ctx = (classCtx[key] || '').trim();
+    const base = sub.defaultComment;
+    if (!ctx) return base;
+    return base.replace('Explorations', ctx);
   }
-  parts.push(opening);
 
-  // Strength sentences
-  if (strengthPhrases.length > 0) {
-    const strSentences = strengthPhrases.map((phrase, i) => {
+  const name  = s.firstName;
+  const comps = (c.competencies || []);
+  const prof  = c.proficiency || '';
+  const strs  = c.strengthPhrases || [];
+  const grws  = c.growthPhrases   || [];
+  const adapt = (c.adaptations || '').trim();
+  const ctx   = (classCtx[key] || '').trim();
+  const special = (c.special || '').trim();
+
+  const parts = [];
+
+  // 1. Competency list
+  if (comps.length) {
+    parts.push(comps.map(comp => `(Curricular Competency) ${comp}`).join('\n'));
+  }
+
+  // 2. Class context paragraph
+  if (ctx) parts.push(ctx);
+
+  // 3. Proficiency sentence + definition
+  if (prof) {
+    parts.push(profSentence(name, prof, sub.shortLabel || sub.label));
+  }
+
+  // 4. Strength sentences — personable, first-person teacher voice
+  if (strs.length) {
+    const strSentences = strs.map((ph, i) => {
       const subj = i === 0 ? p.sub : name;
-      return subj + ' ' + phrase + '.';
+      return `${subj} ${ph}.`;
     });
     parts.push(strSentences.join(' '));
   }
 
-  // Growth sentence
-  if (growthPhrases.length > 0) {
-    const growthText = growthPhrases.map(g => g.toLowerCase()).join(', and ');
-    const growthSentence = tmpl.growth
-      .replace('{name}', name)
-      .replace('{sub}', p.sub)
-      .replace('{pos}', p.pos)
-      + ' ' + growthText + '.';
-    parts.push(growthSentence);
+  // 5. Growth / support
+  if (grws.length) {
+    const grwList = grws.length === 1
+      ? grws[0]
+      : grws.slice(0,-1).join(', ') + ', and ' + grws[grws.length-1];
+    parts.push(`To further support ${name}'s growth in ${sub.shortLabel || sub.label}, I encourage ${p.obj} to ${grwList}.`);
   }
 
-  // Adaptations
-  if (c.adaptations && c.adaptations.trim()) {
-    parts.push(c.adaptations.trim());
-  }
+  // 6. Adaptations
+  if (adapt) parts.push(adapt);
 
-  return parts.join(' ');
+  // 7. Special circumstances
+  if (special) parts.push(special);
+
+  return parts.join('\n\n');
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
-
+// ─── Render ───────────────────────────────────────────────────────────────
 function renderStudentList() {
   const el = document.getElementById('student-list');
   if (!students.length) {
-    el.innerHTML = '<div class="empty-students">Upload an Excel file or add students manually to get started.</div>';
+    el.innerHTML = '<div class="empty-panel">Import your class list or add students manually.</div>';
     return;
   }
   el.innerHTML = students.map(s => {
     const initials = (s.firstName[0]||'') + (s.lastName[0]||'');
+    // Count filled subjects
+    const c = comments[s.id] || {};
+    const filled = ['ela_reading','ela_writing','ela_oral','math','ss','science','french','careers','phe'].filter(k => c[k]?.proficiency).length;
     return `<div class="student-item${activeId===s.id?' active':''}" onclick="selectStudent('${s.id}')">
-      <div class="student-avatar">${esc(initials.toUpperCase())}</div>
-      <span>${esc(s.firstName + ' ' + s.lastName)}</span>
-      <button class="s-del" onclick="deleteStudent(event,'${s.id}')" title="Remove">✕</button>
+      <div class="s-avatar">${esc(initials.toUpperCase())}</div>
+      <div style="flex:1;min-width:0">
+        <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.firstName + ' ' + s.lastName)}</div>
+        ${filled?`<div style="font-size:.68rem;color:var(--success);font-weight:600">${filled}/9 subjects</div>`:''}
+      </div>
+      <button class="s-del" onclick="deleteStudent(event,'${s.id}')">✕</button>
     </div>`;
   }).join('');
 }
@@ -616,332 +667,367 @@ function renderEditor() {
   const panel = document.getElementById('editor-panel');
   const bar   = document.getElementById('export-bar');
   if (!activeId) {
-    panel.innerHTML = `<div class="editor-empty"><div class="ei">📋</div><div style="font-weight:700;font-size:1rem">Select a student to begin</div><div style="font-size:.85rem">Import your class list or add students manually.</div></div>`;
+    panel.innerHTML = `<div class="editor-empty"><div class="ei">📋</div><div style="font-weight:700;font-size:1rem">Select a student to begin</div><div style="font-size:.85rem;max-width:320px;line-height:1.5">Download the Excel template, fill in your class list with proficiency levels, then import it here.</div></div>`;
     bar.style.display = 'none';
     return;
   }
-
   const s = getStudent(activeId);
-  initComment(activeId);
+  initStudent(activeId);
   bar.style.display = '';
-  updateExportInfo();
+  document.getElementById('export-info').textContent = `${students.length} student${students.length===1?'':'s'} · ${s.firstName} ${s.lastName} selected`;
 
-  // Subject tab chips
-  const subjKeys = ['ela','math','ss','french','phe'];
-  const subjLabels = { ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'PHE 7' };
-
-  function profChip(k) {
-    let prof = '';
+  // Build tabs
+  const tabGroups = {
+    ela: 'ELA 7',
+    math: 'Math 7',
+    ss: 'Social Studies 7',
+    science: 'Science 7',
+    french: 'French 7',
+    careers: 'Careers 7',
+    phe: 'PHE 7',
+    adst: 'ADST / Art',
+  };
+  const tabs = Object.entries(tabGroups).map(([k, label]) => {
+    let chip = '';
     if (k === 'ela') {
       const profs = ['ela_reading','ela_writing','ela_oral'].map(ek => comments[activeId]?.[ek]?.proficiency).filter(Boolean);
-      if (profs.length) prof = profs[0];
+      if (profs.length === 3) chip = `<span class="prof-chip-sm" style="background:${PROF_COL[profs[0]]}22;color:${PROF_COL[profs[0]]}">R/W/O</span>`;
     } else {
-      prof = comments[activeId]?.[k]?.proficiency || '';
+      const prof = comments[activeId]?.[k]?.proficiency;
+      if (prof) chip = `<span class="prof-chip-sm" style="background:${PROF_COL[prof]}22;color:${PROF_COL[prof]}">${PROF[prof]}</span>`;
     }
-    if (!prof) return '';
-    const col = PROF_COLORS[prof] || '#9ca3af';
-    return `<span class="prof-chip" style="background:${col}22;color:${col}">${prof}</span>`;
-  }
-
-  const tabsHtml = subjKeys.map(k =>
-    `<button class="subj-tab${activeSubj===k?' active':''}" onclick="switchSubj('${k}')">${subjLabels[k]}${profChip(k)}</button>`
-  ).join('');
+    return `<button class="subj-tab${activeSubj===k?' active':''}" onclick="switchSubj('${k}')">${label}${chip}</button>`;
+  }).join('');
 
   panel.innerHTML = `
     <div class="student-hdr">
       <div style="font-size:2rem">👤</div>
       <div style="flex:1">
-        <div class="student-hdr-name">${esc(displayName(s))}</div>
-        <div style="font-size:.78rem;color:var(--muted);margin-top:2px">Pronouns: ${esc(s.pronouns)}/them</div>
+        <div class="student-hdr-name">${esc(s.firstName + ' ' + s.lastName)}</div>
+        <div class="student-hdr-sub">Pronouns: ${esc(s.pronouns === 'they' ? 'They/Them' : s.pronouns === 'she' ? 'She/Her' : 'He/Him')}</div>
       </div>
-      <select class="pronouns-select" onchange="updatePronouns('${s.id}',this.value)">
-        <option value="they"${s.pronouns==='they'?' selected':''}>They/Them</option>
-        <option value="she"${s.pronouns==='she'?' selected':''}>She/Her</option>
-        <option value="he"${s.pronouns==='he'?' selected':''}>He/Him</option>
+      <select class="s-select" onchange="updatePronouns('${s.id}',this.value)">
+        <option value="they"${s.pronouns==='they'?' selected':''}>They / Them</option>
+        <option value="she"${s.pronouns==='she'?' selected':''}>She / Her</option>
+        <option value="he"${s.pronouns==='he'?' selected':''}>He / Him</option>
       </select>
     </div>
-    <div class="subj-tabs" id="subj-tabs">${tabsHtml}</div>
-    <div class="subj-editor" id="subj-editor"></div>
-    <div style="height:60px"></div>
+    <div class="subj-tabs">${tabs}</div>
+    <div id="subj-body"></div>
+    <div style="height:20px"></div>
   `;
-
-  renderSubjectEditor();
+  renderSubjectBody();
 }
 
-function renderSubjectEditor() {
-  const el = document.getElementById('subj-editor');
+function renderSubjectBody() {
+  const el = document.getElementById('subj-body');
   if (!el) return;
-  if (activeSubj === 'ela') {
-    el.innerHTML = renderELA();
-  } else {
-    el.innerHTML = renderSingleSubject(activeSubj);
-  }
+  if (activeSubj === 'ela') el.innerHTML = buildELA();
+  else el.innerHTML = buildSubject(activeSubj);
 }
 
-function renderELA() {
-  const elaTabsHtml = ['reading','writing','oral'].map(t =>
-    `<button class="ela-tab${activeElaTab===t?' active':''}" onclick="switchElaTab('${t}')">${
-      t==='reading'?'Reading':t==='writing'?'Writing':'Oral Language'
-    }</button>`
-  ).join('');
+function buildELA() {
+  const elaTabs = ELA_SUBS.map(t => {
+    const key  = 'ela_' + t;
+    const prof = comments[activeId]?.[key]?.proficiency;
+    const chip = prof ? `<span class="prof-chip-sm" style="background:${PROF_COL[prof]}22;color:${PROF_COL[prof]}">${PROF[prof]}</span>` : '';
+    const label = {reading:'Reading',writing:'Writing',oral:'Oral Language'}[t];
+    return `<button class="ela-tab${activeEla===t?' active':''}" onclick="switchEla('${t}')">${label}${chip}</button>`;
+  }).join('');
 
-  const key = 'ela_' + activeElaTab;
+  const key = 'ela_' + activeEla;
   return `
     <div class="section-card">
       <div class="section-head">
         <div class="section-title">ELA 7 — Descriptive Feedback</div>
+        <div class="note" style="background:none;padding:0;font-size:.73rem;color:var(--muted)">Separate comments required for Reading, Writing & Oral Language</div>
       </div>
       <div class="section-body">
-        <div class="pg-note">📌 A comment is required for <strong>Reading, Writing, and Oral Language</strong> separately, even if brief. Use the tabs below. Comments should describe what the student <em>can do</em> and what they are <em>working towards</em>.</div>
-        <div class="ela-tabs">${elaTabsHtml}</div>
-        ${renderCommentSection(activeId, key)}
+        <div class="ela-tabs">${elaTabs}</div>
+        ${buildCommentSection(activeId, key)}
       </div>
     </div>
-    ${renderProgressGrowth()}
+    ${buildProgressGrowth()}
   `;
 }
 
-function renderSingleSubject(subj) {
-  const key = subj;
-  const labels = { math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7' };
+function buildSubject(subj) {
+  const sub = SUBJECTS[subj];
+  if (!sub) return '';
   return `
     <div class="section-card">
       <div class="section-head">
-        <div class="section-title">${labels[subj] || subj} — Descriptive Feedback</div>
+        <div class="section-title">${sub.label}</div>
       </div>
       <div class="section-body">
-        ${renderCommentSection(activeId, key)}
+        ${buildCommentSection(activeId, subj)}
       </div>
     </div>
-    ${renderProgressGrowth()}
+    ${buildProgressGrowth()}
+    ${buildSupportSection()}
   `;
 }
 
-function renderProgressGrowth() {
+function buildProgressGrowth() {
   const sid = activeId;
-  const c   = getComment(sid, '_pg') || {};
-  if (!comments[sid]['_pg']) comments[sid]['_pg'] = { customText:'' };
+  const c   = comments[sid]['_pg'];
   return `
     <div class="section-card">
-      <div class="section-head">
-        <div class="section-title">Progress &amp; Growth (Social/Emotional &amp; Work Habits)</div>
-      </div>
+      <div class="section-head"><div class="section-title">Progress &amp; Growth</div></div>
       <div class="section-body">
-        <div class="pg-note">📌 This section covers social/emotional learning, work habits, behaviour, and Core Competency reflection. Academic marks do <strong>not</strong> go here. This section appears on every term's report.</div>
+        <div class="note">📌 Social/emotional learning, work habits, behaviour, and Core Competency reflection go here — <strong>not</strong> academic marks. Add a reference to student Spaces portfolios if applicable.</div>
         <div class="field-group">
-          <div class="field-label">Comment (work habits, effort, Core Competencies)</div>
-          <textarea class="comment-ta" style="min-height:80px" placeholder="e.g. [Name] demonstrates a strong work ethic and consistently meets deadlines. [He/She/They] shows curiosity and engages thoughtfully with new learning. Students have been collecting evidence of their learning through the Core Competencies — please see [Name]'s digital portfolio for further information." oninput="updatePG('${sid}',this.value)">${esc(comments[sid]['_pg'].customText)}</textarea>
+          <div class="field-label">Comment</div>
+          <textarea class="field-ta short" id="pg-ta-${sid}" placeholder="e.g. ${getStudent(sid)?.firstName||'[Name]'} demonstrates strong work habits and consistently approaches tasks with curiosity and care. It has been a pleasure getting to know ${getStudent(sid)?.firstName||'[Name]'} this term, and I look forward to supporting ${pr(sid).pos} continued growth. Please see ${getStudent(sid)?.firstName||'[Name]'}'s Spaces portfolio for Core Competency reflections." oninput="updateField('${sid}','_pg','customText',this.value)">${esc(c.customText)}</textarea>
         </div>
         <div class="comment-actions">
-          <span class="char-count">${(comments[sid]['_pg'].customText||'').length} characters</span>
-          <button class="btn sm" onclick="copyText(this, document.querySelector('#subj-editor .section-card:last-child textarea').value)">📋 Copy</button>
+          <span class="char-count">${(c.customText||'').length} chars</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="copy-ok" id="cp-pg">✓ Copied</span><button class="btn sm" onclick="copyField('pg-ta-${sid}','cp-pg')">📋 Copy</button></div>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-function renderCommentSection(sid, key) {
-  const c    = getComment(sid, key);
-  const bank = SUBJECTS_DATA[key];
-  if (!bank) return '';
+function buildSupportSection() {
+  const sid = activeId;
+  const c   = comments[sid]['_support'];
+  return `
+    <div class="section-card">
+      <div class="section-head"><div class="section-title">Ways to Support at Home</div></div>
+      <div class="section-body">
+        <div class="note">📌 Include 2–3 specific suggestions for families. Can reference reading, math practice, or subject-specific activities.</div>
+        <div class="field-group">
+          <div class="field-label">Comment</div>
+          <textarea class="field-ta short" id="sup-ta-${sid}" placeholder="e.g. To support ${getStudent(sid)?.firstName||'[Name]'}'s learning, I encourage reading for pleasure for at least 20 minutes daily, practising math facts using Reflex or Mathletics, and continuing to explore topics of personal interest." oninput="updateField('${sid}','_support','customText',this.value)">${esc(c.customText)}</textarea>
+        </div>
+        <div class="comment-actions">
+          <span class="char-count">${(c.customText||'').length} chars</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="copy-ok" id="cp-sup">✓ Copied</span><button class="btn sm" onclick="copyField('sup-ta-${sid}','cp-sup')">📋 Copy</button></div>
+        </div>
+      </div>
+    </div>`;
+}
 
-  const profHtml = ['E','D','P','Ex'].map(p =>
-    `<button class="prof-btn${c.proficiency===p?' active-'+p:''}" onclick="setProficiency('${sid}','${key}','${p}')">${PROF_LABELS[p]}</button>`
-  ).join('');
+function buildCommentSection(sid, key) {
+  const sub  = SUBJECTS[key];
+  const c    = comments[sid][key];
+  const p    = pr(sid);
+
+  // ADST has simplified view
+  if (sub.noCompetencies) {
+    const ctx  = classCtx[key] || '';
+    const text = c.customText || sub.defaultComment;
+    return `
+      <div class="field-group">
+        <div class="field-label">Explorations Covered <span style="color:var(--muted);font-weight:400">(shared for all students)</span></div>
+        <input class="field-input" type="text" value="${esc(ctx)}" placeholder="${esc(sub.contextPlaceholder||'')}" oninput="updateCtx('${key}',this.value)" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">Comment</div>
+        <textarea class="field-ta preview" id="ta-${key}" oninput="updateCustomText('${sid}','${key}',this.value)">${esc(text)}</textarea>
+      </div>
+      <div class="comment-actions">
+        <span class="char-count" id="cc-${key}">${text.length} chars</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="copy-ok" id="cp-${key}">✓ Copied</span><button class="btn sm" onclick="copyField('ta-${key}','cp-${key}')">📋 Copy</button></div>
+      </div>`;
+  }
 
   const selComps = c.competencies || [];
-  const selStr   = c.strengthPhrases || [];
-  const selGrw   = c.growthPhrases   || [];
-  const selCount = selComps.length;
-  const countCls = selCount === 0 ? '' : selCount < 2 ? 'warn' : selCount <= 5 ? 'ok' : 'warn';
-
-  const compsHtml = bank.competencies.map((comp, i) => {
-    const checked = selComps.includes(comp) ? 'checked' : '';
-    return `<div class="comp-item">
-      <input type="checkbox" id="comp-${key}-${i}" ${checked} onchange="toggleComp('${sid}','${key}',${JSON.stringify(comp)},this.checked)" />
-      <label for="comp-${key}-${i}">${esc(comp)}</label>
-    </div>`;
-  }).join('');
-
-  // Strength phrases NOT yet selected
-  const availStr = bank.strengths.filter(x => !selStr.includes(x));
-  const availGrw = bank.growth.filter(x => !selGrw.includes(x));
-
-  const selectedStrHtml = selStr.map((ph, i) =>
-    `<div style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--primary-light);border-radius:5px;padding:3px 8px;">
-      <span style="flex:1;color:var(--primary)">${esc(ph)}</span>
-      <button class="btn sm danger" style="padding:1px 5px;font-size:.72rem" onclick="removePhrase('${sid}','${key}','strength',${JSON.stringify(ph)})">✕</button>
-    </div>`
-  ).join('');
-
-  const selectedGrwHtml = selGrw.map((ph, i) =>
-    `<div style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:#ecfdf5;border-radius:5px;padding:3px 8px;">
-      <span style="flex:1;color:#059669">${esc(ph)}</span>
-      <button class="btn sm danger" style="padding:1px 5px;font-size:.72rem" onclick="removePhrase('${sid}','${key}','growth',${JSON.stringify(ph)})">✕</button>
-    </div>`
-  ).join('');
-
+  const selStrs  = c.strengthPhrases || [];
+  const selGrws  = c.growthPhrases   || [];
+  const ctx      = classCtx[key] || '';
   const assembled = c.customText || assembleComment(sid, key);
-  const charCount = assembled.length;
+
+  const profBtns = Object.entries(PROF).map(([code, label]) =>
+    `<button class="prof-btn${c.proficiency===code?' active-'+code:''}" onclick="setProficiency('${sid}','${key}','${code}')">${label}</button>`
+  ).join('');
+
+  const compCnt = selComps.length;
+  const compHint = compCnt === 0 ? '' : compCnt < 2 ? 'warn' : compCnt <= 5 ? 'ok' : 'warn';
+  const compMsg  = compCnt === 0 ? 'None selected' : compCnt + ' selected' + (compCnt < 2 ? ' — select at least 2' : compCnt > 5 ? ' — aim for 5 or fewer' : ' ✓');
+
+  const compHtml = sub.competencies.map((comp, i) =>
+    `<div class="comp-item"><input type="checkbox" id="c${key}${i}" ${selComps.includes(comp)?'checked':''} onchange="toggleComp('${sid}','${key}',${JSON.stringify(comp)},this.checked)"/><label for="c${key}${i}">${esc(comp)}</label></div>`
+  ).join('');
+
+  const strTagHtml = selStrs.map(ph =>
+    `<div class="tag str"><span>${esc(ph)}</span><button onclick="removePhrase('${sid}','${key}','str',${JSON.stringify(ph)})">✕</button></div>`
+  ).join('');
+
+  const grwTagHtml = selGrws.map(ph =>
+    `<div class="tag grw"><span>${esc(ph)}</span><button onclick="removePhrase('${sid}','${key}','grw',${JSON.stringify(ph)})">✕</button></div>`
+  ).join('');
+
+  const availStrs = sub.strengths.filter(x => !selStrs.includes(x));
+  const availGrws = sub.growth.filter(x => !selGrws.includes(x));
 
   return `
     <div class="field-group">
+      <div class="field-label">Class Context <span style="color:var(--muted);font-weight:400">(shared for all students in this subject)</span></div>
+      <textarea class="field-ta context" placeholder="${esc(sub.contextPlaceholder||'')}" oninput="updateCtx('${key}',this.value)">${esc(ctx)}</textarea>
+    </div>
+
+    <div class="field-group">
       <div class="field-label">Proficiency Level</div>
-      <div class="prof-selector">${profHtml}</div>
+      <div class="prof-row">${profBtns}</div>
     </div>
 
     <div class="field-group">
-      <div class="field-label">Curricular Competencies <span style="font-weight:400;color:var(--muted)">(select 2–5)</span></div>
-      <div class="comp-grid">${compsHtml}</div>
-      <div class="comp-count ${countCls}">${selCount === 0 ? 'None selected' : selCount + ' selected' + (selCount < 2 ? ' — select at least 2' : selCount > 5 ? ' — try to keep to 5 or fewer' : ' ✓')}</div>
+      <div class="field-label">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
+      <div class="comp-list">${compHtml}</div>
+      <div class="comp-hint ${compHint}">${compMsg}</div>
     </div>
 
     <div class="field-group">
-      <div class="field-label">Strength Phrases <span style="font-weight:400;color:var(--muted)">(add one or more)</span></div>
-      ${selectedStrHtml ? `<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:6px">${selectedStrHtml}</div>` : ''}
+      <div class="field-label">Strengths <span style="color:var(--muted);font-weight:400">(adds personalized sentences)</span></div>
+      ${strTagHtml ? `<div class="tag-list">${strTagHtml}</div>` : ''}
       <div class="phrase-row">
-        <select class="phrase-select" id="str-sel-${key}">
-          <option value="">— choose a phrase to add —</option>
-          ${availStr.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('')}
+        <select class="phrase-sel" id="ss-${key}">
+          <option value="">— pick a strength phrase —</option>
+          ${availStrs.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('')}
         </select>
-        <button class="btn sm" onclick="addPhrase('${sid}','${key}','strength','str-sel-${key}')">+ Add</button>
+        <button class="btn sm" onclick="addPhrase('${sid}','${key}','str','ss-${key}')">+ Add</button>
       </div>
     </div>
 
     <div class="field-group">
-      <div class="field-label">Growth / Next Steps <span style="font-weight:400;color:var(--muted)">(add one or more)</span></div>
-      ${selectedGrwHtml ? `<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:6px">${selectedGrwHtml}</div>` : ''}
+      <div class="field-label">Growth / Next Steps</div>
+      ${grwTagHtml ? `<div class="tag-list">${grwTagHtml}</div>` : ''}
       <div class="phrase-row">
-        <select class="phrase-select" id="grw-sel-${key}">
-          <option value="">— choose a phrase to add —</option>
-          ${availGrw.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('')}
+        <select class="phrase-sel" id="gs-${key}">
+          <option value="">— pick a growth phrase —</option>
+          ${availGrws.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('')}
         </select>
-        <button class="btn sm" onclick="addPhrase('${sid}','${key}','growth','grw-sel-${key}')">+ Add</button>
+        <button class="btn sm" onclick="addPhrase('${sid}','${key}','grw','gs-${key}')">+ Add</button>
       </div>
     </div>
 
     <div class="field-group">
-      <div class="field-label">Adaptations &amp; Supports <span style="font-weight:400;color:var(--muted)">(optional, list any)</span></div>
-      <input class="field-input" type="text" placeholder="e.g. access to text-to-speech tools; extended time on assessments" value="${esc(c.adaptations||'')}" oninput="updateField('${sid}','${key}','adaptations',this.value)" />
+      <div class="field-label">Adaptations &amp; Supports</div>
+      <input class="field-input" type="text" value="${esc(c.adaptations||'')}" placeholder="e.g. access to text-to-speech; extended time on assessments" oninput="updateField('${sid}','${key}','adaptations',this.value)" />
     </div>
 
     <div class="field-group">
-      <div class="field-label">Comment Preview <span style="font-weight:400;color:var(--muted)">(auto-assembled — edit directly or <button style="background:none;border:none;color:var(--primary);cursor:pointer;font-size:inherit;padding:0;font-family:inherit" onclick="regenerate('${sid}','${key}')">regenerate</button>)</span></div>
-      <textarea class="comment-ta" id="ta-${key}" oninput="updateCustomText('${sid}','${key}',this.value)">${esc(assembled)}</textarea>
+      <div class="field-label">Special Circumstances</div>
+      <select class="s-select" style="width:100%" onchange="setSpecial('${sid}','${key}',this.value)">
+        <option value="">— None —</option>
+        <option value="iep">IEP Student</option>
+        <option value="ell">ELL Student</option>
+        <option value="new">New Student (Insufficient Evidence)</option>
+      </select>
+      ${c.special ? `<div style="font-size:.78rem;color:var(--muted);margin-top:3px;font-style:italic">${esc(c.special.slice(0,120))}…</div>` : ''}
+    </div>
+
+    <div class="field-group">
+      <div class="field-label" style="display:flex;justify-content:space-between;align-items:center">
+        Assembled Comment
+        <button class="btn sm" onclick="regenerate('${sid}','${key}')">↺ Regenerate</button>
+      </div>
+      <textarea class="field-ta preview" id="ta-${key}" oninput="updateCustomText('${sid}','${key}',this.value)">${esc(assembled)}</textarea>
       <div class="comment-actions">
-        <span class="char-count" id="cc-${key}">${charCount} characters</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <span class="copy-confirm" id="copied-${key}">✓ Copied!</span>
-          <button class="btn sm" onclick="copyComment('${sid}','${key}')">📋 Copy</button>
-        </div>
+        <span class="char-count" id="cc-${key}">${assembled.length} chars</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="copy-ok" id="cp-${key}">✓ Copied</span><button class="btn sm" onclick="copyField('ta-${key}','cp-${key}')">📋 Copy</button></div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ── Actions ───────────────────────────────────────────────────────────────────
-
+// ─── Actions ──────────────────────────────────────────────────────────────
 function selectStudent(id) {
-  activeId   = id;
+  activeId  = id;
   activeSubj = 'ela';
-  activeElaTab = 'reading';
+  activeEla  = 'reading';
   renderStudentList();
   renderEditor();
   save();
 }
 
-function switchSubj(k) {
-  activeSubj = k;
+function switchSubj(k)  { activeSubj = k; renderEditor(); }
+function switchEla(t)   { activeEla  = t; renderSubjectBody(); }
+
+function setProficiency(sid, key, prof) {
+  comments[sid][key].proficiency = prof;
+  comments[sid][key].customText  = '';
+  save();
   renderEditor();
 }
 
-function switchElaTab(t) {
-  activeElaTab = t;
-  renderSubjectEditor();
-}
-
-function setProficiency(sid, key, prof) {
-  getComment(sid, key).proficiency = prof;
-  getComment(sid, key).customText = '';  // reset so it regenerates
-  save();
-  renderSubjectEditor();
-}
-
 function toggleComp(sid, key, comp, checked) {
-  const c = getComment(sid, key);
-  if (!c.competencies) c.competencies = [];
-  if (checked) { if (!c.competencies.includes(comp)) c.competencies.push(comp); }
-  else { c.competencies = c.competencies.filter(x => x !== comp); }
-  c.customText = '';  // reset
+  const comps = comments[sid][key].competencies;
+  if (checked) { if (!comps.includes(comp)) comps.push(comp); }
+  else { comments[sid][key].competencies = comps.filter(x => x !== comp); }
+  comments[sid][key].customText = '';
   save();
-  // Refresh just the count & preview without full re-render
-  const countEl = document.querySelector(`#subj-editor .comp-count`);
-  const selCount = c.competencies.length;
-  const countCls = selCount === 0 ? '' : selCount < 2 ? 'warn' : selCount <= 5 ? 'ok' : 'warn';
-  if (countEl) {
-    countEl.className = 'comp-count ' + countCls;
-    countEl.textContent = selCount === 0 ? 'None selected' : selCount + ' selected' + (selCount < 2 ? ' — select at least 2' : selCount > 5 ? ' — try to keep to 5 or fewer' : ' ✓');
-  }
   refreshPreview(sid, key);
+  // update count hint
+  const cnt = comments[sid][key].competencies.length;
+  const el  = document.querySelector(`#subj-body .comp-hint`);
+  if (el) {
+    const cls = cnt === 0 ? '' : cnt < 2 ? 'warn' : cnt <= 5 ? 'ok' : 'warn';
+    el.className = 'comp-hint ' + cls;
+    el.textContent = cnt === 0 ? 'None selected' : cnt + ' selected' + (cnt < 2 ? ' — select at least 2' : cnt > 5 ? ' — aim for 5 or fewer' : ' ✓');
+  }
 }
 
 function addPhrase(sid, key, type, selId) {
   const sel = document.getElementById(selId);
-  if (!sel || !sel.value) return;
-  const phrase = sel.value;
-  const c = getComment(sid, key);
-  const field = type === 'strength' ? 'strengthPhrases' : 'growthPhrases';
-  if (!c[field]) c[field] = [];
-  if (!c[field].includes(phrase)) c[field].push(phrase);
-  c.customText = '';
+  if (!sel?.value) return;
+  const field = type === 'str' ? 'strengthPhrases' : 'growthPhrases';
+  const arr   = comments[sid][key][field];
+  if (!arr.includes(sel.value)) arr.push(sel.value);
+  comments[sid][key].customText = '';
   save();
-  renderSubjectEditor();
+  renderSubjectBody();
 }
 
 function removePhrase(sid, key, type, phrase) {
-  const c = getComment(sid, key);
-  const field = type === 'strength' ? 'strengthPhrases' : 'growthPhrases';
-  if (c[field]) c[field] = c[field].filter(x => x !== phrase);
-  c.customText = '';
+  const field = type === 'str' ? 'strengthPhrases' : 'growthPhrases';
+  comments[sid][key][field] = comments[sid][key][field].filter(x => x !== phrase);
+  comments[sid][key].customText = '';
   save();
-  renderSubjectEditor();
+  renderSubjectBody();
 }
 
 function updateField(sid, key, field, value) {
-  getComment(sid, key)[field] = value;
+  comments[sid][key][field] = value;
   save();
+}
+
+function updateCtx(key, value) {
+  classCtx[key] = value;
+  saveCtx();
+  if (activeId) refreshPreview(activeId, key);
 }
 
 function updateCustomText(sid, key, value) {
-  getComment(sid, key).customText = value;
+  comments[sid][key].customText = value;
   const cc = document.getElementById('cc-' + key);
-  if (cc) cc.textContent = value.length + ' characters';
-  save();
-}
-
-function updatePG(sid, value) {
-  if (!comments[sid]) comments[sid] = {};
-  if (!comments[sid]['_pg']) comments[sid]['_pg'] = {};
-  comments[sid]['_pg'].customText = value;
-  // update char count
-  const ta = document.querySelector('#subj-editor .section-card:last-child textarea');
-  const cc = ta?.parentElement?.nextElementSibling?.querySelector('.char-count');
-  if (cc) cc.textContent = value.length + ' characters';
+  if (cc) cc.textContent = value.length + ' chars';
   save();
 }
 
 function updatePronouns(sid, val) {
   const s = getStudent(sid);
   if (s) s.pronouns = val;
-  // Regenerate all comments for this student
-  if (comments[sid]) {
-    Object.keys(comments[sid]).forEach(k => {
-      if (comments[sid][k]) comments[sid][k].customText = '';
-    });
-  }
+  // clear all customText so comments regenerate with new pronouns
+  if (comments[sid]) Object.keys(comments[sid]).forEach(k => { if (comments[sid][k]) comments[sid][k].customText = ''; });
   save();
-  renderSubjectEditor();
+  renderSubjectBody();
+}
+
+function setSpecial(sid, key, val) {
+  const s    = getStudent(sid);
+  const name = s?.firstName || 'The student';
+  const p    = pr(sid);
+  const specials = {
+    iep:  `Please see ${name}'s Individualized Education Plan for further details on ${p.pos} progress and growth this term.`,
+    ell:  `${name} is learning English as an additional language. ${p.sub} participates in English Language Learning (ELL) support, which may impact the range of evidence available for this subject. ${name} is making meaningful progress and demonstrates growing confidence in English communication.`,
+    new:  `${name} recently joined our class this term. It has been a pleasure getting to know ${p.obj}, but there has not been sufficient evidence to provide a full proficiency assessment for this subject. I look forward to working with ${p.obj} next term and supporting ${p.pos} learning journey.`,
+    '':   '',
+  };
+  comments[sid][key].special     = specials[val] || '';
+  comments[sid][key].customText  = '';
+  save();
+  renderSubjectBody();
 }
 
 function refreshPreview(sid, key) {
@@ -950,151 +1036,179 @@ function refreshPreview(sid, key) {
   if (!ta) return;
   const text = assembleComment(sid, key);
   ta.value = text;
-  if (cc) cc.textContent = text.length + ' characters';
+  if (cc) cc.textContent = text.length + ' chars';
 }
 
 function regenerate(sid, key) {
-  getComment(sid, key).customText = '';
+  comments[sid][key].customText = '';
   save();
-  renderSubjectEditor();
+  renderSubjectBody();
 }
 
-function copyComment(sid, key) {
-  const ta = document.getElementById('ta-' + key);
-  if (!ta) return;
-  copyText(null, ta.value, 'copied-' + key);
-}
-
-function copyText(btn, text, confirmedId) {
+function copyField(taId, confirmId) {
+  const el = document.getElementById(taId);
+  const text = el ? (el.value || el.textContent) : '';
   navigator.clipboard.writeText(text).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
+    const t = document.createElement('textarea');
+    t.value = text; document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t);
   });
-  const id = confirmedId || 'copied-' + (btn?.dataset?.key || '');
-  const el = document.getElementById(id);
-  if (el) { el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1600); }
+  const c = document.getElementById(confirmId);
+  if (c) { c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 1600); }
 }
 
-// ── Student CRUD ──────────────────────────────────────────────────────────────
-
+// ─── Student CRUD ─────────────────────────────────────────────────────────
 function openAddStudent() {
   document.getElementById('add-first').value = '';
   document.getElementById('add-last').value  = '';
   document.getElementById('add-modal').classList.add('open');
   setTimeout(() => document.getElementById('add-first').focus(), 50);
 }
-
-function closeModal() {
-  document.getElementById('add-modal').classList.remove('open');
-}
-
+function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
 function confirmAddStudent() {
   const first = document.getElementById('add-first').value.trim();
   const last  = document.getElementById('add-last').value.trim();
   const pron  = document.getElementById('add-pronouns').value;
   if (!first) return;
   students.push({ id: genId(), firstName: first, lastName: last, pronouns: pron });
-  save();
-  renderStudentList();
-  closeModal();
+  save(); renderStudentList(); closeModal();
 }
-
 function deleteStudent(e, id) {
   e.stopPropagation();
   if (!confirm('Remove this student and all their comments?')) return;
   students = students.filter(s => s.id !== id);
   delete comments[id];
   if (activeId === id) activeId = null;
-  save();
-  renderStudentList();
-  renderEditor();
+  save(); renderStudentList(); renderEditor();
 }
 
-// ── Excel import ──────────────────────────────────────────────────────────────
+// ─── Excel Import ─────────────────────────────────────────────────────────
+const PROF_MAP = { // normalize import values
+  'emerging':'E','e':'E',
+  'developing':'D','d':'D',
+  'proficient':'P','p':'P',
+  'extending':'Ex','ex':'Ex','extending':'Ex',
+};
+
+const COL_PROF = {
+  'ela reading':   'ela_reading',  'ela_r':   'ela_reading',  'reading':      'ela_reading',
+  'ela writing':   'ela_writing',  'ela_w':   'ela_writing',  'writing':      'ela_writing',
+  'ela oral':      'ela_oral',     'oral':    'ela_oral',     'oral language':'ela_oral',
+  'math':          'math',         'mathematics':'math',
+  'social studies':'ss',           'ss':      'ss',           'social':'ss',
+  'science':       'science',      'sci':     'science',
+  'french':        'french',       'fr':      'french',       'français':'french',
+  'careers':       'careers',      'career':  'careers',
+  'phe':           'phe',          'physical':'phe',          'physical and health education':'phe',
+  'adst':          'adst',         'art':     'adst',
+};
 
 function importExcel(input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = e => {
     try {
-      const wb = XLSX.read(e.target.result, { type: 'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-      if (!rows.length) return alert('No data found in spreadsheet.');
+      const wb   = XLSX.read(e.target.result, { type:'array' });
+      const ws   = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+      if (!rows.length) return alert('No data found.');
 
-      // Try to auto-detect columns
       const header = rows[0].map(h => String(h).toLowerCase().trim());
       let firstCol = -1, lastCol = -1, nameCol = -1, pronCol = -1;
+      const profCols = {};
 
       header.forEach((h, i) => {
         if (h.includes('first') || h.includes('given') || h.includes('preferred')) firstCol = i;
-        if (h.includes('last') || h.includes('surname') || h.includes('family')) lastCol = i;
-        if (h.includes('name') && !h.includes('last') && !h.includes('first')) nameCol = i;
+        if (h.includes('last')  || h.includes('surname') || h.includes('family'))  lastCol  = i;
+        if (h === 'name' || h === 'student name' || h === 'student') nameCol = i;
         if (h.includes('pronoun')) pronCol = i;
+        if (COL_PROF[h]) profCols[COL_PROF[h]] = i;
       });
 
       let added = 0;
       const dataRows = rows.slice(1).filter(r => r.some(c => String(c).trim()));
-
       dataRows.forEach(row => {
         let firstName = '', lastName = '', pronouns = 'they';
-
-        if (firstCol >= 0) firstName = String(row[firstCol] || '').trim();
-        if (lastCol >= 0)  lastName  = String(row[lastCol]  || '').trim();
-
-        // Fallback: single name column or col 0
+        if (firstCol >= 0) firstName = String(row[firstCol]||'').trim();
+        if (lastCol  >= 0) lastName  = String(row[lastCol] ||'').trim();
         if (!firstName && !lastName) {
-          const raw = String(row[nameCol >= 0 ? nameCol : 0] || '').trim();
+          const raw = String(row[nameCol >= 0 ? nameCol : 0]||'').trim();
           if (!raw) return;
           const parts = raw.split(/\s+/);
-          if (parts.length >= 2) { firstName = parts[0]; lastName = parts.slice(1).join(' '); }
-          else { firstName = raw; }
+          firstName = parts[0]; lastName = parts.slice(1).join(' ');
         }
         if (!firstName) return;
-
-        // Pronouns detection
         if (pronCol >= 0) {
-          const pv = String(row[pronCol] || '').toLowerCase();
+          const pv = String(row[pronCol]||'').toLowerCase();
           if (pv.includes('she') || pv.includes('her')) pronouns = 'she';
           else if (pv.includes('he') || pv.includes('him')) pronouns = 'he';
           else pronouns = 'they';
         }
-
-        // Avoid duplicates
         if (students.find(s => s.firstName === firstName && s.lastName === lastName)) return;
-
-        students.push({ id: genId(), firstName, lastName, pronouns });
+        const sid = genId();
+        students.push({ id: sid, firstName, lastName, pronouns });
+        initStudent(sid);
+        // Load proficiency levels
+        Object.entries(profCols).forEach(([subKey, colIdx]) => {
+          const raw = String(row[colIdx]||'').trim().toLowerCase();
+          const prof = PROF_MAP[raw];
+          if (prof && comments[sid]?.[subKey]) {
+            comments[sid][subKey].proficiency = prof;
+          }
+        });
         added++;
       });
 
-      save();
-      renderStudentList();
-      alert(`Imported ${added} student${added===1?'':'s'}.`);
-    } catch(err) {
-      alert('Could not read file: ' + err.message);
-    }
+      save(); renderStudentList();
+      alert(`Imported ${added} student${added===1?'':'s'}${Object.keys(profCols).length ? ' with proficiency data' : ''}. ${Object.keys(profCols).length ? '' : 'No proficiency columns detected — download the template to include proficiency data.'}`);
+    } catch(err) { alert('Could not read file: ' + err.message); }
   };
   reader.readAsArrayBuffer(file);
   input.value = '';
 }
 
-// ── Export ────────────────────────────────────────────────────────────────────
+// ─── Excel Template Download ───────────────────────────────────────────────
+function downloadTemplate() {
+  const headers = [
+    'First Name','Last Name','Pronouns (he/she/they)',
+    'ELA Reading','ELA Writing','ELA Oral',
+    'Math','Social Studies','Science','French','Careers','PHE','ADST',
+  ];
+  const example = [
+    'Jordan','Smith','they',
+    'P','P','D',
+    'P','D','P','P','E','P','',
+  ];
+  const note = [
+    'Enter student first names here →','Enter last names here →','Enter: he, she, or they',
+    '↓ Enter E (Emerging), D (Developing), P (Proficient), or Ex (Extending) for each subject ↓',
+    '','','','','','','','','',
+  ];
 
-function updateExportInfo() {
-  const el = document.getElementById('export-info');
-  if (!el) return;
-  const filled = students.filter(s => {
-    const c = comments[s.id];
-    if (!c) return false;
-    return ['ela_reading','ela_writing','ela_oral','math','ss','french','phe'].some(k => c[k]?.proficiency);
-  });
-  el.textContent = `${students.length} student${students.length===1?'':'s'} · ${filled.length} with comments started`;
+  const ws = XLSX.utils.aoa_to_sheet([headers, note, example]);
+  ws['!cols'] = headers.map((h, i) => ({ wch: i < 3 ? 18 : 14 }));
+
+  // Bold header row
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let C = range.s.c; C <= range.e.c; C++) {
+    const cell = ws[XLSX.utils.encode_cell({ r: 0, c: C })];
+    if (cell) cell.s = { font: { bold: true } };
+  }
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Class Roster');
+  XLSX.writeFile(wb, 'Grade7_Roster_Template.xlsx');
 }
+
+// ─── Export to Word ────────────────────────────────────────────────────────
+const SUBJ_ORDER = ['ela_reading','ela_writing','ela_oral','math','ss','science','french','careers','phe','adst','_pg','_support'];
+const SUBJ_NAMES = {
+  ela_reading:'ELA 7 — Reading', ela_writing:'ELA 7 — Writing', ela_oral:'ELA 7 — Oral Language',
+  math:'Math 7', ss:'Social Studies 7', science:'Science 7', french:'French 7',
+  careers:'Careers 7', phe:'Physical & Health Education 7', adst:'ADST / Art',
+  _pg:'Progress & Growth', _support:'Ways to Support at Home',
+};
 
 function getCommentText(sid, key) {
   const c = comments[sid]?.[key];
@@ -1102,99 +1216,66 @@ function getCommentText(sid, key) {
   return c.customText || assembleComment(sid, key);
 }
 
-function buildWordDoc(targetStudents, subjectFilter) {
-  const subjectMap = {
-    ela_reading: 'ELA 7 — Reading',
-    ela_writing: 'ELA 7 — Writing',
-    ela_oral:    'ELA 7 — Oral Language',
-    math:        'Math 7',
-    ss:          'Social Studies 7',
-    french:      'French 7',
-    phe:         'Physical & Health Education 7',
-    _pg:         'Progress & Growth',
-  };
-
-  const keys = subjectFilter
-    ? (subjectFilter === 'ela' ? ['ela_reading','ela_writing','ela_oral'] : [subjectFilter])
-    : ['ela_reading','ela_writing','ela_oral','math','ss','french','phe','_pg'];
-
+function buildDoc(targetStudents) {
   let body = '';
-
   targetStudents.forEach((s, si) => {
-    initComment(s.id);
-    const pageBreak = si > 0 ? 'page-break-before:always;' : '';
-    body += `<div style="${pageBreak}margin-bottom:20pt">`;
-    body += `<h1 style="font-size:14pt;color:#1a1a6e;border-bottom:1.5pt solid #1a1a6e;padding-bottom:4pt;margin-bottom:10pt">${s.firstName} ${s.lastName}</h1>`;
-
-    keys.forEach(key => {
-      const text = key === '_pg'
-        ? (comments[s.id]?.['_pg']?.customText || '')
-        : getCommentText(s.id, key);
+    initStudent(s.id);
+    const pb = si > 0 ? 'page-break-before:always;' : '';
+    body += `<div style="${pb}margin-bottom:20pt">`;
+    body += `<h1 style="font-size:14pt;font-weight:bold;color:#1e3a6e;border-bottom:1.5pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:10pt">${esc(s.firstName + ' ' + s.lastName)}</h1>`;
+    SUBJ_ORDER.forEach(key => {
+      const text = getCommentText(s.id, key);
       if (!text.trim()) return;
       const c    = comments[s.id]?.[key] || {};
-      const prof = c.proficiency ? ` — <span style="color:${PROF_COLORS[c.proficiency]||'#555'}">${PROF_LABELS[c.proficiency]||c.proficiency}</span>` : '';
-      body += `<div style="margin-bottom:12pt">`;
-      body += `<h2 style="font-size:11pt;font-weight:bold;color:#374151;margin-bottom:4pt">${subjectMap[key]||key}${prof}</h2>`;
-      body += `<p style="font-size:11pt;line-height:1.6;margin:0">${text.replace(/\n/g,'<br/>')}</p>`;
+      const prof = c.proficiency;
+      const pLabel = prof ? ` — <span style="color:${PROF_COL[prof]}">${PROF[prof]}</span>` : '';
+      body += `<div style="margin-bottom:14pt">`;
+      body += `<h2 style="font-size:11pt;font-weight:bold;color:#374151;margin-bottom:4pt">${SUBJ_NAMES[key]||key}${pLabel}</h2>`;
+      body += `<p style="font-size:11pt;line-height:1.6;margin:0;white-space:pre-wrap">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
       body += `</div>`;
     });
-
     body += `</div>`;
   });
 
-  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
 <head><meta charset="utf-8">
-<!--[if gte mso 9]><xml><w:WordDocument><w:View>Normal</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
-<style>
-  @page { margin: 1in; }
-  body { font-family: Calibri, sans-serif; font-size: 11pt; }
-  h1 { font-size: 14pt; }
-  h2 { font-size: 11pt; }
-  p { font-size: 11pt; line-height: 1.6; margin: 0 0 6pt; }
-</style>
-</head>
-<body>${body}</body></html>`;
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Normal</w:View></w:WordDocument></xml><![endif]-->
+<style>@page{margin:1in} body{font-family:Calibri,sans-serif;font-size:11pt} h1{font-size:14pt} h2{font-size:11pt} p{font-size:11pt;line-height:1.6}</style>
+</head><body>${body}</body></html>`;
+}
+
+function exportCurrentStudent() {
+  if (!activeId) return alert('Select a student first.');
+  const s    = getStudent(activeId);
+  const html = buildDoc([s]);
+  const blob = new Blob(['﻿', html], { type:'application/vnd.ms-word;charset=utf-8' });
+  saveAs(blob, `${s.lastName}_${s.firstName}_ReportCard.doc`);
 }
 
 function exportAll() {
   if (!students.length) return alert('No students to export.');
-  const html = buildWordDoc(students, null);
-  const blob = new Blob(['﻿', html], { type: 'application/vnd.ms-word;charset=utf-8' });
-  saveAs(blob, 'Report_Card_Comments_All.doc');
+  const html = buildDoc(students);
+  const blob = new Blob(['﻿', html], { type:'application/vnd.ms-word;charset=utf-8' });
+  saveAs(blob, `Grade7_Report_Card_Comments.doc`);
 }
 
-function exportSubject() {
-  if (!activeId) return alert('Select a student first.');
-  const s = getStudent(activeId);
-  const html = buildWordDoc([s], activeSubj);
-  const label = {ela:'ELA7',math:'Math7',ss:'SocialStudies7',french:'French7',phe:'PHE7'}[activeSubj]||activeSubj;
-  const blob = new Blob(['﻿', html], { type: 'application/vnd.ms-word;charset=utf-8' });
-  saveAs(blob, `${s.lastName}_${s.firstName}_${label}.doc`);
-}
-
-// ── Dark mode ─────────────────────────────────────────────────────────────────
-
+// ─── Dark mode ─────────────────────────────────────────────────────────────
 function toggleDark() {
   darkMode = !darkMode;
   document.documentElement.classList.toggle('dark', darkMode);
   localStorage.setItem('rc_dark', darkMode ? '1' : '0');
 }
 
-// ── Keyboard ──────────────────────────────────────────────────────────────────
-
+// ─── Keyboard ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
-  if (e.key === 'Enter' && document.getElementById('add-modal').classList.contains('open')) {
-    confirmAddStudent();
-  }
+  if (e.key === 'Enter' && document.getElementById('add-modal').classList.contains('open')) confirmAddStudent();
 });
-
 document.getElementById('add-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('add-modal')) closeModal();
+  if (e.target === e.currentTarget) closeModal();
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-
+// ─── Init ──────────────────────────────────────────────────────────────────
 renderStudentList();
 renderEditor();
 </script>
