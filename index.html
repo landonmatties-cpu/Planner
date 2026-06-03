@@ -204,13 +204,69 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
+
+    /* ── View toggle ── */
+    .view-toggle { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 2px; gap: 2px; }
+    .vtog-btn { padding: 5px 13px; border: none; border-radius: 6px; font-size: 0.83rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--muted); transition: background 0.14s, color 0.14s; white-space: nowrap; }
+    .vtog-btn:hover { color: var(--text); }
+    .vtog-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+    /* ── Notes view ── */
+    .notes-wrapper { height: calc(100vh - var(--header-h)); display: flex; overflow: hidden; }
+    .notes-sidebar { width: 210px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .notes-search-wrap { padding: 10px 10px 8px; border-bottom: 1px solid var(--border); }
+    .notes-search { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.82rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; }
+    .notes-search:focus { border-color: var(--primary); }
+    .notes-subject-list { overflow-y: auto; flex: 1; padding: 6px 0; }
+    .notes-subj-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; cursor: pointer; font-size: 0.84rem; font-weight: 500; border-radius: 0; transition: background 0.12s; gap: 6px; }
+    .notes-subj-item:hover { background: var(--bg); }
+    .notes-subj-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+    .notes-subj-item .subj-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .notes-subj-item .subj-count { font-size: 0.7rem; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--border); color: var(--muted); flex-shrink: 0; }
+    .notes-subj-item.active .subj-count { background: var(--primary); color: #fff; }
+    .notes-main { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 0; }
+    .notes-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: var(--muted); text-align: center; gap: 8px; padding: 60px 20px; }
+    .notes-empty .empty-icon { font-size: 2.5rem; }
+
+    /* Subject heading in "All" view */
+    .subj-heading { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); padding: 18px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .subj-heading:first-child { padding-top: 0; }
+
+    /* Topic section */
+    .topic-section { margin-bottom: 12px; }
+    .topic-header { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; cursor: pointer; user-select: none; transition: background 0.12s; }
+    .topic-header:hover { background: var(--primary-light); }
+    .topic-arr { font-size: 0.65rem; color: var(--muted); transition: transform 0.18s; flex-shrink: 0; }
+    .topic-arr.open { transform: rotate(90deg); }
+    .topic-meta { flex: 1; display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+    .topic-name { font-size: 0.88rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topic-subj-badge { font-size: 0.72rem; color: var(--muted); background: var(--bg); padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+    .topic-count { font-size: 0.73rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .topic-lessons { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding-left: 6px; }
+    .topic-lessons.closed { display: none; }
+
+    /* Lesson note card */
+    .lesson-note-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; cursor: pointer; transition: border-color 0.14s, box-shadow 0.14s; }
+    .lesson-note-card:hover { border-color: var(--primary); box-shadow: 0 2px 10px rgba(74,108,247,.1); }
+    .lnc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .lnc-date { font-size: 0.73rem; color: var(--muted); }
+    .lnc-block-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+    .lnc-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .lnc-notes { font-size: 0.82rem; color: var(--text2); line-height: 1.6; white-space: pre-wrap; margin-top: 4px; }
+    .lnc-objectives { font-size: 0.8rem; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+    .lnc-objectives strong { color: var(--text2); }
+    .lnc-empty { font-size: 0.8rem; color: var(--border2); font-style: italic; }
   </style>
 </head>
 <body>
 
 <header>
   <div class="logo">📚 Lesson Planner</div>
-  <div class="nav">
+  <div class="view-toggle">
+    <button class="vtog-btn active" id="vtog-cal" onclick="switchView('calendar')">📅 Calendar</button>
+    <button class="vtog-btn" id="vtog-notes" onclick="switchView('notes')">📓 Notes</button>
+  </div>
+  <div class="nav" id="cal-nav">
     <button class="nav-btn nav-arrow" onclick="navigate(-1)">‹</button>
     <span class="month-label" id="month-label"></span>
     <button class="nav-btn nav-arrow" onclick="navigate(1)">›</button>
@@ -222,9 +278,19 @@
   </div>
 </header>
 
-<div class="cal-wrapper">
+<div class="cal-wrapper" id="cal-wrapper">
   <div class="cal-dow" id="cal-dow"></div>
   <div class="cal-scroll" id="cal-scroll"></div>
+</div>
+
+<div class="notes-wrapper" id="notes-wrapper" style="display:none">
+  <nav class="notes-sidebar">
+    <div class="notes-search-wrap">
+      <input class="notes-search" id="notes-search" type="search" placeholder="Search notes…" oninput="onNotesSearch(this.value)" />
+    </div>
+    <div class="notes-subject-list" id="notes-sidebar-list"></div>
+  </nav>
+  <div class="notes-main" id="notes-main"></div>
 </div>
 
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
@@ -285,6 +351,9 @@ let viewYear, viewMonth, openKey = null, settingsTab = 'appearance';
 let blockDetailOpen = {}; // { blockId: bool }
 let showEventForm = false;
 let saveTimer = null;
+let currentView = 'calendar';
+let selectedSubject = null;
+let notesSearch = '';
 
 let settings = deepMerge(DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('lp3_settings') || '{}'));
 let data      = JSON.parse(localStorage.getItem('lp3_data') || '{}');
@@ -1029,6 +1098,163 @@ function deepMerge(target, source) {
     } else if (source[k] !== undefined) { out[k] = source[k]; }
   }
   return out;
+}
+
+// ── View switching ────────────────────────────────────────────────────
+function switchView(view) {
+  currentView = view;
+  document.getElementById('cal-wrapper').style.display   = view === 'calendar' ? '' : 'none';
+  document.getElementById('notes-wrapper').style.display = view === 'notes'    ? '' : 'none';
+  document.getElementById('cal-nav').style.display       = view === 'calendar' ? '' : 'none';
+  document.getElementById('vtog-cal').classList.toggle('active', view === 'calendar');
+  document.getElementById('vtog-notes').classList.toggle('active', view === 'notes');
+  if (view === 'notes') {
+    selectedSubject = null;
+    notesSearch = '';
+    const searchEl = document.getElementById('notes-search');
+    if (searchEl) searchEl.value = '';
+    renderNotesView();
+  }
+}
+
+// ── Notes aggregation ─────────────────────────────────────────────────
+function aggregateNotes() {
+  // Returns { subjectName: { topicName: [lessonEntry, ...] } }
+  const result = {};
+  for (const [dk, dayData] of Object.entries(data)) {
+    if (!dayData || typeof dayData !== 'object') continue;
+    for (const [bid, lesson] of Object.entries(dayData)) {
+      if (bid === '_events' || bid === 'templateOverride') continue;
+      if (!lesson || typeof lesson !== 'object') continue;
+      const hasContent = lesson.title || lesson.notes || lesson.objectives || lesson.activities || lesson.topic;
+      if (!hasContent) continue;
+      const blk     = blockByID(bid);
+      const subject = (lesson.subjectOverride || '').trim() || blk.subject || bid;
+      const topic   = (lesson.topic || '').trim() || 'General';
+      if (!result[subject])        result[subject] = {};
+      if (!result[subject][topic]) result[subject][topic] = [];
+      result[subject][topic].push({ dateKey: dk, blockId: bid, blk, subject, topic, ...lesson });
+    }
+  }
+  // Sort each topic's lessons chronologically
+  for (const subj of Object.values(result))
+    for (const lessons of Object.values(subj))
+      lessons.sort((a,b) => a.dateKey.localeCompare(b.dateKey));
+  return result;
+}
+
+// ── Notes render ──────────────────────────────────────────────────────
+function renderNotesView() {
+  const notes = aggregateNotes();
+  renderNotesSidebar(notes);
+  renderNotesMain(notes);
+}
+
+function renderNotesSidebar(notes) {
+  const subjects = Object.keys(notes).sort();
+  const total    = subjects.reduce((n, s) => n + Object.values(notes[s]).flat().length, 0);
+  let html = `<div class="notes-subj-item${!selectedSubject?' active':''}" onclick="selectSubject(null)">
+    <span class="subj-name">All subjects</span><span class="subj-count">${total}</span></div>`;
+  subjects.forEach(subj => {
+    const count = Object.values(notes[subj]).flat().length;
+    const active = selectedSubject === subj ? ' active' : '';
+    html += `<div class="notes-subj-item${active}" onclick="selectSubject(${JSON.stringify(subj)})">
+      <span class="subj-name">${escHtml(subj)}</span><span class="subj-count">${count}</span></div>`;
+  });
+  document.getElementById('notes-sidebar-list').innerHTML = html;
+}
+
+function renderNotesMain(notes) {
+  const q        = notesSearch.toLowerCase();
+  const subjects = selectedSubject ? [selectedSubject] : Object.keys(notes).sort();
+  let html = '';
+
+  for (const subj of subjects) {
+    const topicMap = notes[subj];
+    if (!topicMap) continue;
+    const topics = Object.keys(topicMap).sort();
+    let subjHtml = '';
+
+    for (const topic of topics) {
+      const raw      = topicMap[topic];
+      const filtered = q ? raw.filter(l =>
+        [l.title, l.notes, l.objectives, l.activities, l.topic, l.subject].some(f => (f||'').toLowerCase().includes(q))
+      ) : raw;
+      if (!filtered.length) continue;
+      subjHtml += buildTopicSection(subj, topic, filtered, !selectedSubject);
+    }
+
+    if (!subjHtml) continue;
+    if (!selectedSubject) html += `<div class="subj-heading">${escHtml(subj)}</div>`;
+    html += subjHtml;
+  }
+
+  if (!html) {
+    const msg = q ? 'No lessons match your search.'
+              : selectedSubject ? `No lessons with content for ${escHtml(selectedSubject)} yet.`
+              : 'No lesson notes yet — start planning on the calendar!';
+    html = `<div class="notes-empty"><div class="empty-icon">📝</div><p>${msg}</p></div>`;
+  }
+  document.getElementById('notes-main').innerHTML = html;
+}
+
+function buildTopicSection(subj, topic, lessons, showSubjBadge) {
+  const count   = lessons.length;
+  const label   = topic === 'General' ? (showSubjBadge ? 'General' : subj) : topic;
+  const showBadge = showSubjBadge && topic !== 'General';
+  let html = `<div class="topic-section">`;
+  html += `<div class="topic-header" onclick="toggleTopic(this)">`;
+  html += `<span class="topic-arr open">▶</span>`;
+  html += `<div class="topic-meta"><span class="topic-name">${escHtml(label)}</span>`;
+  if (showBadge) html += `<span class="topic-subj-badge">${escHtml(subj)}</span>`;
+  html += `</div><span class="topic-count">${count} lesson${count===1?'':'s'}</span></div>`;
+  html += `<div class="topic-lessons">`;
+  lessons.forEach(l => { html += buildLessonCard(l); });
+  html += `</div></div>`;
+  return html;
+}
+
+function buildLessonCard(l) {
+  const d     = new Date(l.dateKey + 'T00:00:00');
+  const date  = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+  const color = l.blk?.color || '#9ca3af';
+  let html = `<div class="lesson-note-card" style="border-left:3px solid ${color}" onclick="goToLesson('${l.dateKey}')">`;
+  html += `<div class="lnc-top">`;
+  html += `<span class="lnc-date">${date}</span>`;
+  html += `<span class="lnc-block-badge" style="${chipStyle(color)}">Block ${escHtml(l.blockId)}</span>`;
+  html += `</div>`;
+  if (l.title) html += `<div class="lnc-title">${escHtml(l.title)}</div>`;
+  else html += `<div class="lnc-empty">No title</div>`;
+  if (l.notes) html += `<div class="lnc-notes">${escHtml(l.notes)}</div>`;
+  if (l.objectives && !l.notes) html += `<div class="lnc-objectives"><strong>Objectives:</strong> ${escHtml(l.objectives)}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function toggleTopic(header) {
+  const lessons = header.nextElementSibling;
+  const arr     = header.querySelector('.topic-arr');
+  const closed  = lessons.classList.toggle('closed');
+  arr.classList.toggle('open', !closed);
+}
+
+function selectSubject(subj) {
+  selectedSubject = subj;
+  renderNotesView();
+}
+
+function onNotesSearch(val) {
+  notesSearch = val;
+  renderNotesMain(aggregateNotes());
+  renderNotesSidebar(aggregateNotes());
+}
+
+function goToLesson(dk) {
+  const d = new Date(dk + 'T00:00:00');
+  viewYear = d.getFullYear(); viewMonth = d.getMonth();
+  openKey  = dk;
+  switchView('calendar');
+  renderCalendar();
 }
 
 document.addEventListener('keydown', e => {
