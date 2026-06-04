@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Report Card Comments — Grade 7</title>
+  <title>Report Card Comments</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
@@ -228,6 +228,14 @@
             <input class="fi" id="cf-name" placeholder="e.g. Block 2 — Science"/>
           </div>
           <div class="fg">
+            <div class="fl">Grade</div>
+            <select class="fi sel" id="cf-grade" style="width:100%">
+              <option value="6">Grade 6</option>
+              <option value="7" selected>Grade 7</option>
+              <option value="8">Grade 8</option>
+            </select>
+          </div>
+          <div class="fg">
             <div class="fl">Subjects taught in this class</div>
             <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:2px" id="cf-subjects"></div>
           </div>
@@ -280,18 +288,19 @@ const PR = {
 const PROF     = {E:'Emerging',D:'Developing',P:'Proficient',Ex:'Extending'};
 const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
 const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers'];
-const SUBJ_LABELS  = {ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'PHE 7', science:'Science 7', careers:'Career Education 7'};
+const SUBJ_LABELS  = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education'};
 
 const FALLBACK_CLASSES = [
-  {id:'hr', name:'Homeroom', subjects:['ela','math','ss','french','phe','science','careers']},
-  {id:'sw', name:'Switch',   subjects:['ss','french']},
+  {id:'hr', name:'Homeroom', grade:7, subjects:['ela','math','ss','french','phe','science','careers']},
+  {id:'sw', name:'Switch',   grade:7, subjects:['ss','french']},
 ];
 
 // ── Proficiency definitions ────────────────────────────────────────────────────
-function profDef(name, prof, subLabel, p) {
+function profDef(name, prof, subLabel, p, grade) {
+  const g = grade || 7;
   if(prof==='Ex') return `${name} is working at an extending level in ${subLabel} this term. ${p.sub} consistently goes above and beyond what is expected, showing impressive depth and a genuine love of learning in ${p.pos} work.`;
-  if(prof==='P')  return `${name} is working at a proficient level in ${subLabel} this term, fully meeting the Grade 7 expectations.`;
-  if(prof==='D')  return `${name} is working at a developing level in ${subLabel} this term. ${p.sub} is building ${p.pos} understanding and making steady progress toward meeting the Grade 7 expectations.`;
+  if(prof==='P')  return `${name} is working at a proficient level in ${subLabel} this term, fully meeting the Grade ${g} expectations.`;
+  if(prof==='D')  return `${name} is working at a developing level in ${subLabel} this term. ${p.sub} is building ${p.pos} understanding and making steady progress toward meeting the Grade ${g} expectations.`;
   if(prof==='E')  return `${name} is working at an emerging level in ${subLabel} this term. ${p.sub} is beginning to show understanding and will benefit from continued support and practice to build more consistency.`;
   return '';
 }
@@ -563,6 +572,10 @@ function saveClasses() { localStorage.setItem('rc_classes',JSON.stringify(classe
 
 function getClass(id) { return classes.find(c=>c.id===id)||classes[0]||FALLBACK_CLASSES[0]; }
 function classSubjects(classId) { return getClass(classId).subjects; }
+function classGrade(classId) { return getClass(classId)?.grade || 7; }
+function studentGrade(sid) { return classGrade(getStudent(sid)?.classId); }
+const SUB_BASE = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education'};
+function subGradeLabel(key, grade) { return (SUB_BASE[key]||key)+' '+(grade||7); }
 
 function initStudent(sid) {
   if (!comments[sid]) comments[sid]={};
@@ -617,6 +630,8 @@ function migrateData() {
       if(!cl.subjects.includes('science')){cl.subjects.push('science');classChanged=true;}
       if(!cl.subjects.includes('careers')){cl.subjects.push('careers');classChanged=true;}
     }
+    // Add default grade to existing classes that don't have one
+    if(!cl.grade){cl.grade=7;classChanged=true;}
   });
   if(classChanged) saveClasses();
 }
@@ -633,7 +648,7 @@ function assembleSubjectComment(sid, key) {
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
   if(ctx) parts.push(ctx);
-  if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p));
+  if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p,studentGrade(sid)));
   if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
   if(grws.length){
     const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
@@ -755,15 +770,16 @@ function renderEditor() {
   bar.style.display='';
   document.getElementById('expinfo').textContent=`${students.filter(x=>(x.classId||classes[0]?.id)===activeClass).length} students · ${s.firstName} ${s.lastName}`;
   const subs=classSubjects(s.classId||classes[0]?.id);
+  const cg=classGrade(s.classId||classes[0]?.id);
   const tabDefs=[
-    {key:'ela',     label:'ELA 7',             show:subs.includes('ela')},
-    {key:'math',    label:'Math 7',            show:subs.includes('math')},
-    {key:'ss',      label:'Social Studies 7',  show:subs.includes('ss')},
-    {key:'french',  label:'French 7',          show:subs.includes('french')},
-    {key:'phe',     label:'PHE 7',             show:subs.includes('phe')},
-    {key:'science', label:'Science 7',         show:subs.includes('science')},
-    {key:'careers', label:'Career Education 7',show:subs.includes('careers')},
-    {key:'pg',      label:'Progress & Growth', show:true},
+    {key:'ela',     label:subGradeLabel('ela',cg),             show:subs.includes('ela')},
+    {key:'math',    label:subGradeLabel('math',cg),            show:subs.includes('math')},
+    {key:'ss',      label:subGradeLabel('ss',cg),              show:subs.includes('ss')},
+    {key:'french',  label:subGradeLabel('french',cg),          show:subs.includes('french')},
+    {key:'phe',     label:subGradeLabel('phe',cg),             show:subs.includes('phe')},
+    {key:'science', label:subGradeLabel('science',cg),         show:subs.includes('science')},
+    {key:'careers', label:subGradeLabel('careers',cg),         show:subs.includes('careers')},
+    {key:'pg',      label:'Progress & Growth',                 show:true},
   ];
   function tabChip(k){
     if(k==='pg') return '';
@@ -811,6 +827,7 @@ function buildELASection() {
   const sid=activeId;
   const c=comments[sid]['ela'];
   const sub=SUB['ela'];
+  const cg=studentGrade(sid);
 
   // Three proficiency rows
   const elaAreas=[{f:'profR',label:'Reading'},{f:'profW',label:'Writing'},{f:'profO',label:'Oral Language'}];
@@ -843,7 +860,7 @@ function buildELASection() {
 
   return `<div class="card">
     <div class="card-head">
-      <div class="card-title">ELA 7 — English Language Arts</div>
+      <div class="card-title">${subGradeLabel('ela',cg)} — English Language Arts</div>
       <div style="font-size:.72rem;color:var(--muted)">One comment · three separate grades</div>
     </div>
     <div class="card-body">
@@ -907,8 +924,9 @@ function buildELASection() {
 
 function buildSubjectCard(subj) {
   const sub=SUB[subj]; if(!sub) return '';
+  const cg=studentGrade(activeId);
   return `<div class="card">
-    <div class="card-head"><div class="card-title">${esc(sub.label)}</div></div>
+    <div class="card-head"><div class="card-title">${esc(subGradeLabel(subj,cg))}</div></div>
     <div class="card-body">${buildCommentSection(activeId,subj)}</div>
   </div>`;
 }
@@ -1250,9 +1268,10 @@ function renderClassSettingsList() {
   el.innerHTML=classes.map((cl,i)=>{
     const cnt=students.filter(s=>(s.classId||classes[0]?.id)===cl.id).length;
     const chips=cl.subjects.map(s=>`<span class="subj-tag">${SUBJ_LABELS[s]||s}</span>`).join('');
+    const grade=cl.grade||7;
     return `<div class="class-row">
       <div style="flex:1">
-        <div style="font-weight:600;font-size:.88rem">${esc(cl.name)}</div>
+        <div style="font-weight:600;font-size:.88rem">${esc(cl.name)} <span style="font-size:.72rem;font-weight:500;background:var(--primary-light);color:var(--primary);padding:1px 7px;border-radius:10px;margin-left:4px">Grade ${grade}</span></div>
         <div style="margin-top:4px">${chips}</div>
         <div style="font-size:.71rem;color:var(--muted);margin-top:3px">${cnt} student${cnt!==1?'s':''}</div>
       </div>
@@ -1268,6 +1287,7 @@ function showAddClassForm() {
   classFormMode='add';
   document.getElementById('class-form-title').textContent='New Class';
   document.getElementById('cf-name').value='';
+  document.getElementById('cf-grade').value='7';
   renderClassFormSubjects(ALL_SUBJECTS);
   document.getElementById('class-form-section').style.display='';
   setTimeout(()=>document.getElementById('cf-name').focus(),50);
@@ -1278,6 +1298,7 @@ function startEditClass(idx) {
   const cl=classes[idx];
   document.getElementById('class-form-title').textContent=`Edit: ${cl.name}`;
   document.getElementById('cf-name').value=cl.name;
+  document.getElementById('cf-grade').value=String(cl.grade||7);
   renderClassFormSubjects(cl.subjects);
   document.getElementById('class-form-section').style.display='';
 }
@@ -1297,12 +1318,13 @@ function cancelClassForm() {
 function saveClassForm() {
   const name=document.getElementById('cf-name').value.trim();
   if(!name){alert('Please enter a class name.');return;}
+  const grade=parseInt(document.getElementById('cf-grade').value)||7;
   const subs=ALL_SUBJECTS.filter(k=>document.getElementById('cfsub-'+k)?.checked);
   if(!subs.length){alert('Please select at least one subject.');return;}
   if(classFormMode==='add'){
-    classes.push({id:genId(),name,subjects:subs});
+    classes.push({id:genId(),name,grade,subjects:subs});
   } else if(classFormMode?.idx!=null){
-    classes[classFormMode.idx]={...classes[classFormMode.idx],name,subjects:subs};
+    classes[classFormMode.idx]={...classes[classFormMode.idx],name,grade,subjects:subs};
     // Deselect student if their active subject is no longer in this class
     if(activeId){
       const s=getStudent(activeId);
@@ -1480,7 +1502,8 @@ function dlTemplate() {
 
 // ── Word Export ────────────────────────────────────────────────────────────────
 const SUB_ORDER=['ela','math','ss','french','phe','science','careers'];
-const SUB_NAMES={ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7', science:'Science 7', careers:'Career Education 7', _pg:'Progress & Growth'};
+const SUB_LONG={ela:'English Language Arts', math:'Math', ss:'Social Studies', french:'French', phe:'Physical & Health Education', science:'Science', careers:'Career Education', _pg:'Progress & Growth'};
+function subExportLabel(key, grade) { return key==='_pg'?'Progress & Growth':(SUB_LONG[key]||key)+' '+(grade||7); }
 
 // Converts \n\n-separated text into proper <p> tags; \n within a block → <br/>
 function textToWordHtml(text) {
@@ -1523,7 +1546,7 @@ function buildByStudent(targetStudents) {
       const c=comments[s.id]?.[key]||{};
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:12pt">`;
-      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${SUB_NAMES[key]||key}${profLabel}</h2>`;
+      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${subExportLabel(key,studentGrade(s.id))}${profLabel}</h2>`;
       body+=textToWordHtml(text);
       body+=`</div>`;
     });
@@ -1545,7 +1568,7 @@ function buildBySubject(targetStudents) {
     }).filter(Boolean);
     if(!entries.length) return;
     body+=`<div style="${ki>0?'page-break-before:always;':''}margin-bottom:20pt">`;
-    body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:2pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:12pt">${SUB_NAMES[key]||key}</h1>`;
+    body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:2pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:12pt">${subExportLabel(key,classGrade(activeClass))}</h1>`;
     entries.forEach(({s,text,c})=>{
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` — <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:14pt;padding:10pt 12pt;border:1pt solid #e4e7ec;border-radius:4pt">`;
@@ -1570,7 +1593,8 @@ function exportAll(mode) {
   if(!students.length) return alert('No students to export.');
   const html=mode==='subject'?buildBySubject(students):buildByStudent(students);
   const blob=new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
-  saveAs(blob,mode==='subject'?'Grade7_BySubject.doc':'Grade7_ByStudent.doc');
+  const gLabel=`Grade${classGrade(activeClass)}`;
+  saveAs(blob,mode==='subject'?`${gLabel}_BySubject.doc`:`${gLabel}_ByStudent.doc`);
 }
 
 // ── Misc ──────────────────────────────────────────────────────────────────────
