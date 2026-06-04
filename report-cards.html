@@ -578,7 +578,7 @@ let students   = JSON.parse(localStorage.getItem('rc_students') || '[]');
 let comments   = JSON.parse(localStorage.getItem('rc_comments') || '{}');
 let classCtx   = JSON.parse(localStorage.getItem('rc_ctx')      || '{}');
 let classes    = JSON.parse(localStorage.getItem('rc_classes')  || '[]');
-const firstRun = classes.length === 0;
+let firstRun   = classes.length === 0;
 let activeId   = null;
 let activeSubj = 'ela';
 let activeClass= localStorage.getItem('rc_class') || classes[0]?.id || null;
@@ -649,6 +649,17 @@ function migrateData() {
     ['ela_reading','ela_writing','ela_oral'].forEach(k=>{ if(sc[k]){delete sc[k];changed=true;} });
   });
   if (changed) save();
+  // Remove old auto-generated default classes ('hr'/'sw') if they have no students.
+  // This triggers the first-run welcome modal for users who had the old defaults saved.
+  const OLD_DEFAULT_IDS = ['hr','sw'];
+  const hasOnlyDefaults = classes.length > 0 && classes.every(cl=>OLD_DEFAULT_IDS.includes(cl.id));
+  const defaultsHaveStudents = students.some(s=>OLD_DEFAULT_IDS.includes(s.classId||'hr'));
+  if(hasOnlyDefaults && !defaultsHaveStudents){
+    classes = [];
+    localStorage.removeItem('rc_classes');
+    localStorage.removeItem('rc_class');
+    return; // skip further migration — welcome modal will handle setup
+  }
   // Add science & careers to any class that has all 5 original subjects (i.e. Homeroom)
   let classChanged = false;
   classes.forEach(cl=>{
@@ -1667,6 +1678,8 @@ document.getElementById('settings-modal').addEventListener('click',e=>{if(e.targ
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 migrateData();
+// Re-check after migration in case old default classes were wiped
+firstRun = classes.length === 0;
 renderClassTabs();
 renderStudentList();
 renderEditor();
