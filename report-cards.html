@@ -34,15 +34,12 @@
     .btn.danger:hover{background:var(--danger);color:#fff}
     .ibt{background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);cursor:pointer;padding:5px 9px;font-size:1rem;line-height:1}
     .ibt:hover{background:var(--bg);color:var(--text)}
-
     .app{display:flex;height:calc(100vh - var(--hh));overflow:hidden}
-
-    /* Sidebar */
     .sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
     .sb-head{padding:10px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
     .sb-title{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-    .class-tabs{display:flex;gap:4px}
-    .class-tab{flex:1;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;font-family:inherit;color:var(--muted);transition:all .14s}
+    .class-tabs{display:flex;gap:4px;flex-wrap:wrap}
+    .class-tab{flex:1;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;font-family:inherit;color:var(--muted);transition:all .14s;white-space:nowrap}
     .class-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
     .upload-z{border:2px dashed var(--border2);border-radius:7px;padding:9px;text-align:center;cursor:pointer;font-size:.78rem;color:var(--muted);transition:border-color .14s,color .14s;line-height:1.4}
     .upload-z:hover{border-color:var(--primary);color:var(--primary)}
@@ -56,49 +53,32 @@
     .avatar{width:26px;height:26px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .stu-item.active .avatar{background:var(--primary);color:#fff}
     .empty-p{padding:14px 10px;text-align:center;color:var(--muted);font-size:.79rem;line-height:1.5}
-
-    /* Editor */
     .editor{flex:1;overflow-y:auto;padding:16px 20px 80px;min-width:0}
     .ed-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);text-align:center;gap:10px}
-
-    /* Student header */
     .stu-hdr{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;margin-bottom:13px}
     .stu-name{font-size:1.05rem;font-weight:700}
     .stu-sub{font-size:.76rem;color:var(--muted);margin-top:1px}
     .sel{padding:4px 7px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;color:var(--text);background:var(--bg);cursor:pointer;outline:none}
     .sel:focus{border-color:var(--primary)}
-
-    /* Subject tabs */
     .stabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px;overflow-x:auto;flex-shrink:0}
     .stab{padding:7px 13px;font-size:.81rem;font-weight:600;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;font-family:inherit;transition:color .14s}
     .stab:hover{color:var(--text)}
     .stab.active{color:var(--primary);border-bottom-color:var(--primary)}
     .pchip{display:inline-block;margin-left:5px;font-size:.62rem;padding:1px 5px;border-radius:3px;font-weight:700;vertical-align:middle}
-
-    /* ELA sub-tabs */
-    .etabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:12px}
-    .etab{padding:6px 12px;font-size:.79rem;font-weight:600;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
-    .etab.active{color:var(--primary);border-bottom-color:var(--primary)}
-    .etab:hover{color:var(--text)}
-
-    /* Cards */
     .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
     .card-head{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;border-bottom:1px solid var(--border);background:var(--bg)}
     .card-title{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
     .card-body{padding:13px;display:flex;flex-direction:column;gap:11px}
-
-    /* Note */
     .note{font-size:.77rem;background:var(--primary-light);border-radius:6px;padding:7px 10px;line-height:1.5;color:var(--text2)}
-
-    /* Prof buttons */
     .prof-row{display:flex;gap:6px;flex-wrap:wrap}
+    .ela-prof-grid{display:flex;flex-direction:column;gap:8px}
+    .ela-prof-row{display:flex;align-items:center;gap:10px}
+    .ela-prof-label{width:100px;font-size:.8rem;font-weight:600;color:var(--text2);flex-shrink:0}
     .pb{padding:5px 13px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text2);transition:all .14s}
     .pb.aE{border-color:#ef4444;background:#fef2f2;color:#dc2626}
     .pb.aD{border-color:#f59e0b;background:#fffbeb;color:#b45309}
     .pb.aP{border-color:#10b981;background:#ecfdf5;color:#059669}
     .pb.aEx{border-color:#6366f1;background:#eef2ff;color:#4f46e5}
-
-    /* Competency chips */
     .comp-grid{display:flex;flex-direction:column;gap:5px}
     .comp-item{display:flex;align-items:flex-start;gap:7px}
     .comp-item input{margin-top:3px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
@@ -106,12 +86,6 @@
     .comp-hint{font-size:.7rem;margin-top:3px}
     .comp-hint.ok{color:var(--success)}
     .comp-hint.warn{color:var(--warn)}
-
-    /* Selected competencies display */
-    .comp-display{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:.8rem;line-height:1.7;color:var(--text2);min-height:36px}
-    .comp-display em{color:var(--muted);font-style:italic}
-
-    /* Phrase picker */
     .phrase-row{display:flex;gap:7px}
     .psel{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:7px;font-size:.81rem;font-family:inherit;color:var(--text);background:var(--bg);cursor:pointer;outline:none}
     .psel:focus{border-color:var(--primary)}
@@ -123,41 +97,40 @@
     .tag span{flex:1;line-height:1.35}
     .tag button{background:none;border:none;cursor:pointer;color:currentColor;opacity:.6;font-size:.72rem;padding:0 2px;flex-shrink:0;margin-top:1px}
     .tag button:hover{opacity:1}
-
-    /* P&G phrase groups */
     .pg-group{display:flex;flex-direction:column;gap:5px}
     .pg-group-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
     .pg-check{display:flex;align-items:flex-start;gap:7px;padding:4px 0}
     .pg-check input{margin-top:3px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
     .pg-check label{font-size:.81rem;cursor:pointer;line-height:1.4;color:var(--text2)}
-
-    /* Fields */
     .fg{display:flex;flex-direction:column;gap:4px}
     .fl{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
     .fi{width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:.82rem;font-family:inherit;color:var(--text);background:var(--bg);outline:none}
     .fi:focus{border-color:var(--primary);background:var(--surface)}
     .ta{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:.84rem;font-family:inherit;color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.6}
     .ta:focus{border-color:var(--primary);background:var(--surface)}
-    .ta.preview{min-height:130px;border-color:var(--primary);background:var(--surface)}
+    .ta.preview{min-height:160px;border-color:var(--primary);background:var(--surface)}
     .ta.ctx{min-height:70px}
     .ta.short{min-height:60px}
-
     .cmt-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
     .cc{font-size:.71rem;color:var(--muted)}
     .cpok{font-size:.71rem;color:var(--success);opacity:0;transition:opacity .3s}
     .cpok.show{opacity:1}
-
-    /* Export bar */
     .expbar{position:fixed;bottom:0;left:220px;right:0;background:var(--surface);border-top:1px solid var(--border);padding:9px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:5}
     .expinfo{font-size:.8rem;color:var(--muted)}
-
-    /* Modal */
     .mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center}
     .mbk.open{display:flex}
     .modal{background:var(--surface);border-radius:12px;padding:20px;width:360px;max-width:95vw;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
     .modal-title{font-size:.96rem;font-weight:700}
     .mactions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-
+    /* Settings modal */
+    .settings-modal{width:520px;max-height:88vh;overflow-y:auto}
+    .settings-section{border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:12px}
+    .settings-section-head{padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .settings-section-title{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
+    .settings-section-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+    .class-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .class-row:last-child{border-bottom:none}
+    .subj-tag{display:inline-block;font-size:.68rem;padding:1px 6px;border-radius:4px;background:var(--primary-light);color:var(--primary);font-weight:600;margin:1px}
     ::-webkit-scrollbar{width:6px;height:6px}
     ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
     ::-webkit-scrollbar-track{background:transparent}
@@ -170,7 +143,8 @@
   <div class="hdr-r">
     <button class="btn" onclick="dlTemplate()">⬇ Excel Template</button>
     <a href="index.html" style="text-decoration:none"><button class="btn">📅 Planner</button></a>
-    <button class="ibt" onclick="toggleDark()">◑</button>
+    <button class="btn" onclick="openSettings()">⚙ Settings</button>
+    <button class="ibt" onclick="toggleDark()" title="Toggle dark mode">◑</button>
   </div>
 </header>
 
@@ -217,11 +191,73 @@
       <select class="fi sel" id="ap"><option value="they">They / Them</option><option value="she">She / Her</option><option value="he">He / Him</option></select>
     </div>
     <div class="fg"><div class="fl">Class</div>
-      <select class="fi sel" id="ac"><option value="hr">Homeroom</option><option value="sw">Switch</option></select>
+      <select class="fi sel" id="ac"></select>
     </div>
     <div class="mactions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn" onclick="closeModal('add-modal')">Cancel</button>
       <button class="btn primary" onclick="confirmAdd()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="mbk" id="settings-modal">
+  <div class="modal settings-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title">⚙ Settings</div>
+      <button class="ibt" onclick="closeModal('settings-modal')">✕</button>
+    </div>
+
+    <!-- Classes -->
+    <div class="settings-section">
+      <div class="settings-section-head">
+        <span class="settings-section-title">Classes</span>
+        <button class="btn sm" onclick="showAddClassForm()">+ Add Class</button>
+      </div>
+      <div class="settings-section-body" id="class-settings-body"></div>
+    </div>
+
+    <!-- Add / Edit class form -->
+    <div id="class-form-section" style="display:none">
+      <div class="settings-section">
+        <div class="settings-section-head">
+          <span class="settings-section-title" id="class-form-title">New Class</span>
+        </div>
+        <div class="settings-section-body">
+          <div class="fg">
+            <div class="fl">Class Name</div>
+            <input class="fi" id="cf-name" placeholder="e.g. Block 2 — Science"/>
+          </div>
+          <div class="fg">
+            <div class="fl">Subjects taught in this class</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:2px" id="cf-subjects"></div>
+          </div>
+          <div class="mactions" style="margin-top:4px">
+            <button class="btn" onclick="cancelClassForm()">Cancel</button>
+            <button class="btn primary" onclick="saveClassForm()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="settings-section">
+      <div class="settings-section-head"><span class="settings-section-title">Appearance</span></div>
+      <div class="settings-section-body">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:.84rem">Dark mode</span>
+          <button class="btn sm" onclick="toggleDark();renderSettingsAppearance()" id="dark-toggle-btn"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div class="settings-section">
+      <div class="settings-section-head"><span class="settings-section-title">Data</span></div>
+      <div class="settings-section-body">
+        <div style="font-size:.8rem;color:var(--muted);line-height:1.5">All data is stored in your browser's local storage. Clearing will permanently remove all students and comments.</div>
+        <button class="btn sm danger" onclick="clearAllData()">Clear All Student Data</button>
+      </div>
     </div>
   </div>
 </div>
@@ -235,13 +271,15 @@ const PR = {
 };
 const PROF     = {E:'Emerging',D:'Developing',P:'Proficient',Ex:'Extending'};
 const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
+const ALL_SUBJECTS = ['ela','math','ss','french','phe'];
+const SUBJ_LABELS  = {ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'PHE 7'};
 
-const DEFAULT_CLASSES = [
+const FALLBACK_CLASSES = [
   {id:'hr', name:'Homeroom', subjects:['ela','math','ss','french','phe']},
   {id:'sw', name:'Switch',   subjects:['ss','french']},
 ];
 
-// ── Proficiency definitions (verbatim from SD35 guide) ────────────────────────
+// ── Proficiency definitions ────────────────────────────────────────────────────
 function profDef(name, prof, subLabel) {
   if (prof==='Ex') return `${name} demonstrated an extending understanding of the ${subLabel} competencies covered this term. "Extending" is a student demonstrating learning, in relation to Learning Standards, with increasing depth and complexity.`;
   if (prof==='P')  return `${name} demonstrated a proficient understanding of the ${subLabel} competencies covered this term. "Proficient" is the standard goal for all students. It is when a student demonstrates the expected learning in relation to the Learning Standards of the curriculum.`;
@@ -252,84 +290,47 @@ function profDef(name, prof, subLabel) {
 
 // ── Subject data ──────────────────────────────────────────────────────────────
 const SUB = {
-  ela_reading:{
-    label:'ELA 7 — Reading', short:'English Language Arts',
+  ela:{
+    label:'ELA 7', short:'English Language Arts',
     competencies:[
       'Construct meaningful personal connections between self, text, and world',
       'Apply appropriate strategies to comprehend written, oral, and visual texts, guide inquiry, and extend thinking',
       'Think critically, creatively, and reflectively to explore ideas within, between, and beyond texts',
       'Recognize and appreciate the role of story, narrative, and oral tradition in expressing First Peoples perspectives',
       'Understand how literary elements, techniques, and devices enhance and shape meaning',
-      'Identify how different texts reflect different purposes and audiences',
-    ],
-    strengths:[
-      'identifies main ideas and key details with confidence across a range of texts',
-      'makes thoughtful and insightful text-to-self, text-to-text, and text-to-world connections',
-      'uses context clues and vocabulary strategies effectively to make meaning from challenging texts',
-      'analyses how an author\'s literary devices and word choice contribute to meaning and effect',
-      'draws well-supported inferences using specific evidence from the text',
-      'reads fluently and with expression across a variety of genres',
-      'asks perceptive questions that deepen understanding of texts',
-    ],
-    growth:[
-      'continue developing strategies for reading and independently interpreting more complex texts',
-      'practise making and justifying inferences by citing specific textual evidence',
-      'work on identifying and explaining the author\'s purpose, point of view, and craft across a range of text forms',
-      'build vocabulary through wide and varied reading and by exploring word roots and context clues',
-      'deepen comprehension by pausing regularly to summarize, question, and make connections while reading',
-    ],
-    ctx:'Describe what the class studied in Reading this term (novel, short stories, comprehension strategies…)',
-  },
-  ela_writing:{
-    label:'ELA 7 — Writing', short:'English Language Arts',
-    competencies:[
       'Use writing and design processes to plan, develop, and create engaging and meaningful texts',
       'Express and support personal opinions and ideas through a variety of writing forms',
       'Develop and apply knowledge of language features, forms, and conventions',
-      'Transform ideas and information to create original texts',
-      'Think critically, creatively, and reflectively to explore ideas in writing',
+      'Communicate clearly and purposefully for a range of purposes and audiences',
+      'Listen actively and respectfully to understand others\' perspectives',
+      'Collaborate constructively in discussions and group work',
+      'Speak with increasing confidence, fluency, and expression',
     ],
     strengths:[
+      'identifies main ideas and key details with confidence and draws well-supported inferences from a range of texts',
+      'makes thoughtful and insightful text-to-self, text-to-text, and text-to-world connections',
+      'analyses how an author\'s literary devices and word choice contribute to meaning and effect',
       'crafts writing that is purposeful, organized, and clearly focused on the audience',
       'uses vivid, precise language and thoughtful word choice to engage the reader',
       'develops ideas with specific details, examples, and well-chosen supporting evidence',
       'demonstrates a distinct and authentic voice in personal and creative writing',
       'applies grammar, punctuation, and spelling conventions accurately and consistently',
-      'structures writing with clear introductions, developed body paragraphs, and effective conclusions',
-      'revises and edits writing thoughtfully to strengthen clarity, detail, and expression',
-    ],
-    growth:[
-      'continue developing elaboration skills by adding specific details and explanation to ideas',
-      'work on varying sentence structure and length to improve the flow and impact of writing',
-      'practise applying grammar, spelling, and punctuation conventions consistently across all writing',
-      'strengthen organizational structure by working on effective transitions and logical flow',
-      'develop revision strategies to improve clarity, voice, and depth of ideas',
-    ],
-    ctx:'Describe what the class worked on in Writing this term (paragraphs, essays, creative writing…)',
-  },
-  ela_oral:{
-    label:'ELA 7 — Oral Language', short:'English Language Arts',
-    competencies:[
-      'Communicate clearly and purposefully for a range of purposes and audiences',
-      'Listen actively and respectfully to understand others\' perspectives',
-      'Collaborate constructively in discussions and group work',
-      'Select and use strategies for effective spoken communication',
-      'Speak with increasing confidence, fluency, and expression',
-    ],
-    strengths:[
       'communicates ideas clearly, confidently, and with a strong sense of audience',
       'listens attentively and responds thoughtfully, building respectfully on peers\' ideas',
       'contributes meaningfully and consistently to collaborative discussions and group activities',
-      'presents information in a well-organized and engaging manner',
-      'demonstrates strong active listening skills and asks thoughtful follow-up questions',
     ],
     growth:[
+      'continue developing strategies for reading and independently interpreting more complex texts',
+      'practise making and justifying inferences by citing specific textual evidence',
+      'continue developing elaboration skills by adding specific details and explanation to ideas in writing',
+      'work on varying sentence structure and length to improve the flow and impact of writing',
+      'practise applying grammar, spelling, and punctuation conventions consistently across all writing',
+      'strengthen organizational structure by working on effective transitions and logical flow',
       'continue building confidence in sharing and elaborating on ideas in whole-class settings',
       'work on expanding responses to include more specific detail, reasoning, and evidence',
-      'practise active listening strategies — including paraphrasing and asking follow-up questions',
-      'develop skills in organizing and presenting ideas clearly and with confidence to an audience',
+      'develop revision strategies to improve clarity, voice, and depth of ideas',
     ],
-    ctx:'Describe oral language activities this term (Socratic seminars, presentations, drama, reader\'s theatre…)',
+    ctx:'Describe what your ELA class studied and worked on this term (novels, writing units, Socratic seminars, oral presentations…)',
   },
   math:{
     label:'Math 7', short:'Mathematics',
@@ -460,7 +461,7 @@ const PG = {
     {id:'s6', t:'demonstrates leadership by encouraging and supporting classmates in their learning'},
   ],
   cc:[
-    {id:'c1', t:'SPACES_REF'}, // special — gets personalized
+    {id:'c1', t:'SPACES_REF'},
     {id:'c2', t:'GOAL_REF'},
     {id:'c3', t:'is showing strong self-awareness and takes ownership of [name]\'s learning journey'},
     {id:'c4', t:'demonstrates creative thinking and applies problem-solving strategies across subjects'},
@@ -479,166 +480,196 @@ const PG = {
 let students   = JSON.parse(localStorage.getItem('rc_students') || '[]');
 let comments   = JSON.parse(localStorage.getItem('rc_comments') || '{}');
 let classCtx   = JSON.parse(localStorage.getItem('rc_ctx')      || '{}');
+let classes    = JSON.parse(localStorage.getItem('rc_classes')  || 'null') || FALLBACK_CLASSES;
 let activeId   = null;
 let activeSubj = 'ela';
-let activeEla  = 'reading';
-let activeClass= localStorage.getItem('rc_class') || 'hr';
+let activeClass= localStorage.getItem('rc_class') || (classes[0]?.id || 'hr');
 let dark       = localStorage.getItem('rc_dark')  === '1';
+let classFormMode = null; // null | 'add' | {idx:number}
 
 if (dark) document.documentElement.classList.add('dark');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const esc  = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const genId= () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const pr   = sid => { const s=getStudent(sid); return PR[s?.pronouns]||PR.they; };
+const esc   = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const genId = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const pr    = sid => { const s=getStudent(sid); return PR[s?.pronouns]||PR.they; };
 const getStudent = id => students.find(s=>s.id===id);
 
 function save()    { localStorage.setItem('rc_students',JSON.stringify(students)); localStorage.setItem('rc_comments',JSON.stringify(comments)); }
 function saveCtx() { localStorage.setItem('rc_ctx',JSON.stringify(classCtx)); }
+function saveClasses() { localStorage.setItem('rc_classes',JSON.stringify(classes)); }
 
-function getClass(id) { return DEFAULT_CLASSES.find(c=>c.id===id)||DEFAULT_CLASSES[0]; }
+function getClass(id) { return classes.find(c=>c.id===id)||classes[0]||FALLBACK_CLASSES[0]; }
+function classSubjects(classId) { return getClass(classId).subjects; }
 
 function initStudent(sid) {
   if (!comments[sid]) comments[sid]={};
-  const keys = ['ela_reading','ela_writing','ela_oral','math','ss','french','phe'];
-  keys.forEach(k => {
+  if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
+  ['math','ss','french','phe'].forEach(k=>{
     if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
   });
   if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],customNote:'',customText:''};
 }
 
-function activeKey() {
-  return activeSubj==='ela' ? 'ela_'+activeEla : activeSubj;
-}
-
-function classSubjects(classId) {
-  return getClass(classId).subjects;
-}
-
 function studentSubjKeys(sid) {
   const s = getStudent(sid);
-  const subs = classSubjects(s?.classId||'hr');
+  const subs = classSubjects(s?.classId||classes[0]?.id||'hr');
   const keys = [];
-  if (subs.includes('ela')) keys.push('ela_reading','ela_writing','ela_oral');
-  ['math','ss','french','phe'].forEach(k => { if (subs.includes(k)) keys.push(k); });
+  subs.forEach(k => keys.push(k));
   return keys;
+}
+
+function studentDoneCount(sid) {
+  const c = comments[sid]||{};
+  const keys = studentSubjKeys(sid);
+  return keys.filter(k=>{
+    if (k==='ela') return c['ela']?.profR && c['ela']?.profW && c['ela']?.profO;
+    return c[k]?.proficiency;
+  }).length;
+}
+
+// ── Data migration (old ela_reading/writing/oral → ela) ───────────────────────
+function migrateData() {
+  let changed = false;
+  students.forEach(s=>{
+    const sc = comments[s.id]; if (!sc) return;
+    if ((sc['ela_reading']||sc['ela_writing']||sc['ela_oral']) && !sc['ela']) {
+      const r=sc['ela_reading']||{}, w=sc['ela_writing']||{}, o=sc['ela_oral']||{};
+      sc['ela']={
+        profR:r.proficiency||'', profW:w.proficiency||'', profO:o.proficiency||'',
+        competencies:r.competencies||[], strengthPhrases:r.strengthPhrases||[],
+        growthPhrases:r.growthPhrases||[], adaptations:r.adaptations||'',
+        customText:r.customText||'', special:r.special||'',
+      };
+      changed=true;
+    }
+    ['ela_reading','ela_writing','ela_oral'].forEach(k=>{ if(sc[k]){delete sc[k];changed=true;} });
+  });
+  if (changed) save();
 }
 
 // ── Comment assembly ──────────────────────────────────────────────────────────
 function assembleSubjectComment(sid, key) {
-  const s   = getStudent(sid);
-  if (!s) return '';
-  const c   = comments[sid]?.[key]||{};
-  const sub = SUB[key];
-  if (!sub) return c.customText||'';
-
-  const name = s.firstName;
-  const p    = pr(sid);
-  const prof = c.proficiency||'';
-  const ctx  = (classCtx[key]||'').trim();
-  const strs = c.strengthPhrases||[];
-  const grws = c.growthPhrases||[];
-  const adapt= (c.adaptations||'').trim();
-  const spec = (c.special||'').trim();
-  const parts= [];
-
-  if (ctx) parts.push(ctx);
-  if (prof) parts.push(profDef(name, prof, sub.short||sub.label));
-
-  if (strs.length) {
-    parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
-  }
-  if (grws.length) {
-    const gl = grws.length===1 ? grws[0]
-      : grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
+  const s=getStudent(sid); if(!s) return '';
+  const c=comments[sid]?.[key]||{};
+  const sub=SUB[key]; if(!sub) return c.customText||'';
+  const name=s.firstName, p=pr(sid);
+  const prof=c.proficiency||'';
+  const ctx=(classCtx[key]||'').trim();
+  const strs=c.strengthPhrases||[], grws=c.growthPhrases||[];
+  const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
+  const parts=[];
+  if(ctx) parts.push(ctx);
+  if(prof) parts.push(profDef(name,prof,sub.short||sub.label));
+  if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
+  if(grws.length){
+    const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
     parts.push(`To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`);
   }
-  if (adapt) parts.push(adapt);
-  if (spec)  parts.push(spec);
+  if(adapt) parts.push(adapt);
+  if(spec)  parts.push(spec);
+  return parts.join('\n\n');
+}
+
+function assembleELAComment(sid) {
+  const s=getStudent(sid); if(!s) return '';
+  const c=comments[sid]?.['ela']||{};
+  const name=s.firstName, p=pr(sid);
+  const profR=c.profR||'', profW=c.profW||'', profO=c.profO||'';
+  const ctx=(classCtx['ela']||'').trim();
+  const strs=c.strengthPhrases||[], grws=c.growthPhrases||[];
+  const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
+  const parts=[];
+  if(ctx) parts.push(ctx);
+  if(profR||profW||profO){
+    if(profR===profW && profW===profO && profR){
+      parts.push(profDef(name,profR,'English Language Arts'));
+    } else {
+      const areas=[];
+      if(profR) areas.push(`${PROF[profR].toLowerCase()} understanding in Reading`);
+      if(profW) areas.push(`${PROF[profW].toLowerCase()} understanding in Writing`);
+      if(profO) areas.push(`${PROF[profO].toLowerCase()} understanding in Oral Language`);
+      if(areas.length===1) parts.push(`${name} demonstrated ${areas[0]} of the English Language Arts competencies this term.`);
+      else if(areas.length===2) parts.push(`${name} demonstrated ${areas[0]} and ${areas[1]} of the English Language Arts competencies this term.`);
+      else parts.push(`${name} demonstrated ${areas[0]}, ${areas[1]}, and ${areas[2]} of the English Language Arts competencies this term.`);
+    }
+  }
+  if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
+  if(grws.length){
+    const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
+    parts.push(`To further support ${name}'s growth in English Language Arts, I encourage ${p.obj} to ${gl}.`);
+  }
+  if(adapt) parts.push(adapt);
+  if(spec)  parts.push(spec);
   return parts.join('\n\n');
 }
 
 function assemblePG(sid) {
-  const c = comments[sid]?.['_pg'];
-  if (!c) return '';
-  const s    = getStudent(sid);
-  const name = s?.firstName||'';
-  const p    = pr(sid);
-
-  const sel = {
-    habits: (c.habits||[]),
-    social: (c.social||[]),
-    cc:     (c.cc||[]),
-    support:(c.support||[]),
-  };
-
-  const parts = [];
-
-  // Para 1: habits + social combined
-  const p1parts = [];
-  sel.habits.forEach(id => {
-    const ph = PG.habits.find(x=>x.id===id);
-    if (ph) p1parts.push(`${name} ${ph.t}.`);
+  const c=comments[sid]?.['_pg']; if(!c) return '';
+  const s=getStudent(sid), name=s?.firstName||'', p=pr(sid);
+  const sel={habits:c.habits||[],social:c.social||[],cc:c.cc||[],support:c.support||[]};
+  const parts=[];
+  const p1=[];
+  sel.habits.forEach(id=>{const ph=PG.habits.find(x=>x.id===id);if(ph)p1.push(`${name} ${ph.t}.`);});
+  sel.social.forEach(id=>{
+    const ph=PG.social.find(x=>x.id===id); if(!ph) return;
+    p1.push(`${p1.length===0?name:p.sub} ${ph.t}.`);
   });
-  sel.social.forEach(id => {
-    const ph = PG.social.find(x=>x.id===id);
-    if (ph) {
-      const subj = p1parts.length===0 ? name : p.sub;
-      p1parts.push(`${subj} ${ph.t}.`);
-    }
+  sel.cc.forEach(id=>{
+    if(id==='c1') p1.push(`Students have been collecting evidence of their learning through the Core Competencies throughout the year. Please see ${name}'s Spaces portfolio for ${p.pos} personal reflections and goal setting.`);
+    else if(id==='c2') p1.push(`${name} has set a meaningful personal learning goal this term and is actively working towards it.`);
+    else{const ph=PG.cc.find(x=>x.id===id);if(ph)p1.push(ph.t.replace('[name]',name).replace('[pronoun]',p.obj));}
   });
-
-  // CC phrases
-  sel.cc.forEach(id => {
-    if (id==='c1') {
-      p1parts.push(`Students have been collecting evidence of their learning through the Core Competencies throughout the year. Please see ${name}'s Spaces portfolio for ${p.pos} personal reflections and goal setting.`);
-    } else if (id==='c2') {
-      p1parts.push(`${name} has set a meaningful personal learning goal this term and is actively working towards it.`);
-    } else {
-      const ph = PG.cc.find(x=>x.id===id);
-      if (ph) p1parts.push(ph.t.replace('[name]',name).replace('[pronoun]',p.obj));
-    }
-  });
-
-  if (p1parts.length) parts.push(p1parts.join(' '));
-
-  // Support bullets
-  if (sel.support.length) {
-    const bullets = sel.support.map(id => {
-      const ph = PG.support.find(x=>x.id===id);
-      return ph ? '• '+ph.t.replace(/\[name\]/g,name) : null;
-    }).filter(Boolean);
+  if(p1.length) parts.push(p1.join(' '));
+  if(sel.support.length){
+    const bullets=sel.support.map(id=>{const ph=PG.support.find(x=>x.id===id);return ph?'• '+ph.t.replace(/\[name\]/g,name):null;}).filter(Boolean);
     parts.push(`To support ${name}'s continued growth, I recommend:\n${bullets.join('\n')}`);
   }
-
-  if (c.customNote?.trim()) parts.push(c.customNote.trim());
+  if(c.customNote?.trim()) parts.push(c.customNote.trim());
   return parts.join('\n\n');
+}
+
+// Build full comment (competencies + narrative) — used for textarea display & export
+function buildFullComment(sid, key) {
+  const c=comments[sid]?.[key]||{};
+  const sub=SUB[key]; if(!sub) return '';
+  const comps=c.competencies||[];
+  const narrative=key==='ela'?assembleELAComment(sid):assembleSubjectComment(sid,key);
+  if(!narrative.trim()&&!comps.length) return '';
+  const compLines=comps.map(comp=>`(Curricular Competency) ${comp}`).join('\n');
+  return [compLines,narrative].filter(Boolean).join('\n\n');
+}
+
+function getFullComment(sid,key) {
+  initStudent(sid);
+  if(key==='_pg'){const c=comments[sid]?.['_pg']||{};return c.customText||assemblePG(sid);}
+  const c=comments[sid]?.[key]||{};
+  const sub=SUB[key]; if(!sub) return '';
+  return c.customText||buildFullComment(sid,key);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderClassTabs() {
-  document.getElementById('class-tabs').innerHTML = DEFAULT_CLASSES.map(cl=>
+  const ac = document.getElementById('ac');
+  if (ac) ac.innerHTML = classes.map(cl=>`<option value="${esc(cl.id)}">${esc(cl.name)}</option>`).join('');
+  document.getElementById('class-tabs').innerHTML = classes.map(cl=>
     `<button class="class-tab${activeClass===cl.id?' active':''}" onclick="switchClass('${cl.id}')">${esc(cl.name)}</button>`
   ).join('');
 }
 
 function renderStudentList() {
-  const el = document.getElementById('stu-list');
-  const filtered = students.filter(s=>(s.classId||'hr')===activeClass);
-  if (!filtered.length) {
-    el.innerHTML = `<div class="empty-p">No students in this class yet. Add some or import an Excel file.</div>`;
-    return;
-  }
-  el.innerHTML = filtered.map(s=>{
-    const ini = (s.firstName[0]||'')+(s.lastName[0]||'');
-    const c   = comments[s.id]||{};
-    const keys= studentSubjKeys(s.id);
-    const done= keys.filter(k=>c[k]?.proficiency).length;
+  const el=document.getElementById('stu-list');
+  const filtered=students.filter(s=>(s.classId||classes[0]?.id)===activeClass);
+  if(!filtered.length){el.innerHTML=`<div class="empty-p">No students in this class yet.<br>Add some or import an Excel file.</div>`;return;}
+  el.innerHTML=filtered.map(s=>{
+    const ini=(s.firstName[0]||'')+(s.lastName[0]||'');
+    const done=studentDoneCount(s.id);
+    const total=studentSubjKeys(s.id).length;
     return `<div class="stu-item${activeId===s.id?' active':''}" onclick="selectStudent('${s.id}')">
       <div class="avatar">${esc(ini.toUpperCase())}</div>
       <div style="flex:1;min-width:0">
         <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.firstName+' '+s.lastName)}</div>
-        ${done?`<div style="font-size:.67rem;color:var(--success);font-weight:600">${done}/${keys.length} subjects</div>`:''}
+        ${done?`<div style="font-size:.67rem;color:var(--success);font-weight:600">${done}/${total} subjects</div>`:''}
       </div>
       <button class="del" onclick="deleteStudent(event,'${s.id}')">✕</button>
     </div>`;
@@ -646,50 +677,47 @@ function renderStudentList() {
 }
 
 function renderEditor() {
-  const panel = document.getElementById('editor');
-  const bar   = document.getElementById('expbar');
-  if (!activeId) {
-    panel.innerHTML = `<div class="ed-empty"><div style="font-size:3rem">📋</div><div style="font-weight:700;font-size:1rem">Select a student</div><div style="font-size:.84rem;max-width:300px;line-height:1.5">Download the Excel template, fill in your class list with proficiency levels, then import it here.</div></div>`;
-    bar.style.display='none';
-    return;
+  const panel=document.getElementById('editor');
+  const bar=document.getElementById('expbar');
+  if(!activeId){
+    panel.innerHTML=`<div class="ed-empty"><div style="font-size:3rem">📋</div><div style="font-weight:700;font-size:1rem">Select a student</div><div style="font-size:.84rem;max-width:300px;line-height:1.5">Download the Excel template, fill in your class list with proficiency levels, then import it here.</div></div>`;
+    bar.style.display='none'; return;
   }
-  const s = getStudent(activeId);
-  if (!s) { activeId=null; renderEditor(); return; }
+  const s=getStudent(activeId);
+  if(!s){activeId=null;renderEditor();return;}
   initStudent(activeId);
   bar.style.display='';
-  document.getElementById('expinfo').textContent = `${students.filter(x=>(x.classId||'hr')===activeClass).length} students in ${getClass(activeClass).name} · ${s.firstName} ${s.lastName}`;
-
-  const subs = classSubjects(s.classId||'hr');
-  const tabDefs = [
-    {key:'ela',  label:'ELA 7',            show:subs.includes('ela')},
-    {key:'math', label:'Math 7',           show:subs.includes('math')},
-    {key:'ss',   label:'Social Studies 7', show:subs.includes('ss')},
-    {key:'french',label:'French 7',        show:subs.includes('french')},
-    {key:'phe',  label:'PHE 7',            show:subs.includes('phe')},
-    {key:'pg',   label:'Progress & Growth',show:true},
+  document.getElementById('expinfo').textContent=`${students.filter(x=>(x.classId||classes[0]?.id)===activeClass).length} students · ${s.firstName} ${s.lastName}`;
+  const subs=classSubjects(s.classId||classes[0]?.id);
+  const tabDefs=[
+    {key:'ela',    label:'ELA 7',             show:subs.includes('ela')},
+    {key:'math',   label:'Math 7',            show:subs.includes('math')},
+    {key:'ss',     label:'Social Studies 7',  show:subs.includes('ss')},
+    {key:'french', label:'French 7',          show:subs.includes('french')},
+    {key:'phe',    label:'PHE 7',             show:subs.includes('phe')},
+    {key:'pg',     label:'Progress & Growth', show:true},
   ];
-
-  function tabChip(k) {
-    if (k==='pg') return '';
-    if (k==='ela') {
-      const ps = ['ela_reading','ela_writing','ela_oral'].map(ek=>comments[activeId]?.[ek]?.proficiency).filter(Boolean);
-      if (ps.length===3) return `<span class="pchip" style="background:${PROF_COL[ps[0]]}22;color:${PROF_COL[ps[0]]}">R/W/O</span>`;
+  function tabChip(k){
+    if(k==='pg') return '';
+    if(k==='ela'){
+      const c=comments[activeId]?.['ela'];
+      const ps=[c?.profR,c?.profW,c?.profO].filter(Boolean);
+      if(ps.length===3) return `<span class="pchip" style="background:${PROF_COL[ps[0]]}22;color:${PROF_COL[ps[0]]}">R/W/O</span>`;
+      if(ps.length>0)   return `<span class="pchip" style="background:var(--primary-light);color:var(--primary)">${ps.length}/3</span>`;
       return '';
     }
-    const pf = comments[activeId]?.[k]?.proficiency;
-    return pf ? `<span class="pchip" style="background:${PROF_COL[pf]}22;color:${PROF_COL[pf]}">${PROF[pf]}</span>` : '';
+    const pf=comments[activeId]?.[k]?.proficiency;
+    return pf?`<span class="pchip" style="background:${PROF_COL[pf]}22;color:${PROF_COL[pf]}">${PROF[pf]}</span>`:'';
   }
-
-  const tabs = tabDefs.filter(t=>t.show).map(t=>
+  const tabs=tabDefs.filter(t=>t.show).map(t=>
     `<button class="stab${activeSubj===t.key?' active':''}" onclick="switchSubj('${t.key}')">${t.label}${tabChip(t.key)}</button>`
   ).join('');
-
-  panel.innerHTML = `
+  panel.innerHTML=`
     <div class="stu-hdr">
       <div style="font-size:1.8rem">👤</div>
       <div style="flex:1">
         <div class="stu-name">${esc(s.firstName+' '+s.lastName)}</div>
-        <div class="stu-sub">${esc(getClass(s.classId||'hr').name)} · ${s.pronouns==='they'?'They/Them':s.pronouns==='she'?'She/Her':'He/Him'}</div>
+        <div class="stu-sub">${esc(getClass(s.classId||classes[0]?.id).name)} · ${s.pronouns==='they'?'They/Them':s.pronouns==='she'?'She/Her':'He/Him'}</div>
       </div>
       <select class="sel" onchange="updatePronouns('${s.id}',this.value)">
         <option value="they"${s.pronouns==='they'?' selected':''}>They/Them</option>
@@ -704,92 +732,161 @@ function renderEditor() {
 }
 
 function renderSubjBody() {
-  const el = document.getElementById('subj-body');
-  if (!el) return;
-  if (activeSubj==='ela')    el.innerHTML = buildELA();
-  else if (activeSubj==='pg') el.innerHTML = buildPG();
-  else                        el.innerHTML = buildSubject(activeSubj);
+  const el=document.getElementById('subj-body'); if(!el) return;
+  if(activeSubj==='pg')  el.innerHTML=buildPG();
+  else if(activeSubj==='ela') el.innerHTML=buildELASection();
+  else el.innerHTML=buildSubjectCard(activeSubj);
 }
 
-function buildELA() {
-  const tabs = ['reading','writing','oral'].map(t=>{
-    const key = 'ela_'+t;
-    const pf  = comments[activeId]?.[key]?.proficiency;
-    const chip= pf?`<span class="pchip" style="background:${PROF_COL[pf]}22;color:${PROF_COL[pf]}">${PROF[pf]}</span>`:'';
-    const lbl = {reading:'Reading',writing:'Writing',oral:'Oral Language'}[t];
-    return `<button class="etab${activeEla===t?' active':''}" onclick="switchEla('${t}')">${lbl}${chip}</button>`;
-  }).join('');
-  return `<div class="card"><div class="card-head"><div class="card-title">ELA 7</div><div style="font-size:.72rem;color:var(--muted)">Separate comments required for all three areas</div></div>
-  <div class="card-body"><div class="etabs">${tabs}</div>${buildCommentSection(activeId,'ela_'+activeEla)}</div></div>`;
+// ── ELA unified section ───────────────────────────────────────────────────────
+function buildELASection() {
+  const sid=activeId;
+  const c=comments[sid]['ela'];
+  const sub=SUB['ela'];
+
+  // Three proficiency rows
+  const elaAreas=[{f:'profR',label:'Reading'},{f:'profW',label:'Writing'},{f:'profO',label:'Oral Language'}];
+  const profHtml=elaAreas.map(area=>`
+    <div class="ela-prof-row">
+      <span class="ela-prof-label">${area.label}</span>
+      <div class="prof-row">${Object.entries(PROF).map(([code,lbl])=>
+        `<button class="pb${c[area.f]===code?' a'+code:''}" onclick="setELAProf('${sid}','${area.f}','${code}')">${lbl}</button>`
+      ).join('')}</div>
+    </div>`).join('');
+
+  const selC=c.competencies||[];
+  const cnt=selC.length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+
+  const compHtml=sub.competencies.map((comp,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="cela${i}" data-sid="${sid}" data-key="ela" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
+      <label for="cela${i}">${esc(comp)}</label>
+    </div>`).join('');
+
+  const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
+  const strTags=selStr.map((ph,i)=>`<div class="tag str"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="ela" data-type="str" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
+  const grwTags=selGrw.map((ph,i)=>`<div class="tag grw"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="ela" data-type="grw" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
+  const availStr=sub.strengths.filter(x=>!selStr.includes(x));
+  const availGrw=sub.growth.filter(x=>!selGrw.includes(x));
+
+  const taValue=c.customText||buildFullComment(sid,'ela');
+
+  return `<div class="card">
+    <div class="card-head">
+      <div class="card-title">ELA 7 — English Language Arts</div>
+      <div style="font-size:.72rem;color:var(--muted)">One comment · three separate grades</div>
+    </div>
+    <div class="card-body">
+      <div class="note">📌 ELA has one overall comment with three separate proficiency grades for Reading, Writing, and Oral Language.</div>
+      <div class="fg">
+        <div class="fl">Class Context <span style="color:var(--muted);font-weight:400">(shared for all students)</span></div>
+        <textarea class="ta ctx" placeholder="${esc(sub.ctx||'')}" oninput="updateCtx('ela',this.value)">${esc(classCtx['ela']||'')}</textarea>
+      </div>
+      <div class="fg">
+        <div class="fl">Proficiency Levels</div>
+        <div class="ela-prof-grid">${profHtml}</div>
+      </div>
+      <div class="fg">
+        <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
+        <div class="comp-grid">${compHtml}</div>
+        <div class="comp-hint ${cHint}" id="chint-ela">${cMsg}</div>
+      </div>
+      <div class="fg">
+        <div class="fl">Strength Phrases</div>
+        ${strTags?`<div class="tag-list">${strTags}</div>`:''}
+        <div class="phrase-row">
+          <select class="psel" id="ss-ela"><option value="">— pick a strength phrase —</option>${availStr.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
+          <button class="btn sm" onclick="addPhrase('${sid}','ela','str','ss-ela')">+ Add</button>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fl">Growth / Next Steps</div>
+        ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
+        <div class="phrase-row">
+          <select class="psel" id="gs-ela"><option value="">— pick a growth phrase —</option>${availGrw.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
+          <button class="btn sm" onclick="addPhrase('${sid}','ela','grw','gs-ela')">+ Add</button>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fl">Adaptations &amp; Supports</div>
+        <input class="fi" type="text" value="${esc(c.adaptations||'')}" placeholder="e.g. extended time; text-to-speech access" oninput="updateField('${sid}','ela','adaptations',this.value)"/>
+      </div>
+      <div class="fg">
+        <div class="fl">Special Circumstances</div>
+        <select class="fi sel" style="width:100%" onchange="setSpecial('${sid}','ela',this.value)">
+          <option value="">— None —</option>
+          <option value="iep"${c.special?.includes('IEP')?' selected':''}>IEP Student</option>
+          <option value="ell"${c.special?.includes('ELL')?' selected':''}>ELL Student</option>
+          <option value="new"${c.special?.includes('recently joined')?' selected':''}>New Student (IE)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl" style="display:flex;justify-content:space-between">
+          Full Comment Preview <span style="font-weight:400;color:var(--muted)">(competencies + narrative — editable)</span>
+          <button class="btn sm" onclick="regenSubj('${sid}','ela')">↺ Regenerate</button>
+        </div>
+        <textarea class="ta preview" id="ta-ela" oninput="updateCT('${sid}','ela',this.value)">${esc(taValue)}</textarea>
+        <div class="cmt-actions">
+          <span class="cc" id="cc-ela">${taValue.length} chars</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="cpok" id="cp-ela">✓ Copied</span><button class="btn sm" onclick="copyTA('ta-ela','cp-ela')">📋 Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
-function buildSubject(subj) {
-  const sub = SUB[subj]; if (!sub) return '';
-  return `<div class="card"><div class="card-head"><div class="card-title">${esc(sub.label)}</div></div>
-  <div class="card-body">${buildCommentSection(activeId,subj)}</div></div>`;
+function buildSubjectCard(subj) {
+  const sub=SUB[subj]; if(!sub) return '';
+  return `<div class="card">
+    <div class="card-head"><div class="card-title">${esc(sub.label)}</div></div>
+    <div class="card-body">${buildCommentSection(activeId,subj)}</div>
+  </div>`;
 }
 
 function buildCommentSection(sid, key) {
-  const sub  = SUB[key]; if (!sub) return '';
-  const c    = comments[sid][key];
-  const p    = pr(sid);
-  const name = getStudent(sid).firstName;
+  const sub=SUB[key]; if(!sub) return '';
+  const c=comments[sid][key];
+  const p=pr(sid), name=getStudent(sid).firstName;
 
-  // Proficiency buttons
-  const profBtns = Object.entries(PROF).map(([code,lbl])=>
+  const profBtns=Object.entries(PROF).map(([code,lbl])=>
     `<button class="pb${c.proficiency===code?' a'+code:''}" onclick="setProf('${sid}','${key}','${code}')">${lbl}</button>`
   ).join('');
 
-  // Competency checkboxes
-  const selC = c.competencies||[];
-  const cnt  = selC.length;
-  const cHint= cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
-  const cMsg = cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  const selC=c.competencies||[];
+  const cnt=selC.length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
 
-  const compHtml = sub.competencies.map((comp,i)=>`
+  const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
-      <input type="checkbox" id="c${key}${i}" ${selC.includes(comp)?'checked':''} onchange="toggleComp('${sid}','${key}',${JSON.stringify(comp)},this.checked)"/>
+      <input type="checkbox" id="c${key}${i}" data-sid="${sid}" data-key="${key}" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
       <label for="c${key}${i}">${esc(comp)}</label>
     </div>`).join('');
 
-  // Selected competencies display
-  const compDisplay = selC.length
-    ? selC.map(c=>`<div>• ${esc(c)}</div>`).join('')
-    : `<em>No competencies selected yet — check boxes above</em>`;
+  const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
+  const strTags=selStr.map((ph,i)=>`<div class="tag str"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="${key}" data-type="str" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
+  const grwTags=selGrw.map((ph,i)=>`<div class="tag grw"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="${key}" data-type="grw" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
+  const availStr=sub.strengths.filter(x=>!selStr.includes(x));
+  const availGrw=sub.growth.filter(x=>!selGrw.includes(x));
 
-  // Strength tags
-  const selStr = c.strengthPhrases||[];
-  const selGrw = c.growthPhrases||[];
-  const strTags = selStr.map(ph=>`<div class="tag str"><span>${esc(ph)}</span><button onclick="removePhrase('${sid}','${key}','str',${JSON.stringify(ph)})">✕</button></div>`).join('');
-  const grwTags = selGrw.map(ph=>`<div class="tag grw"><span>${esc(ph)}</span><button onclick="removePhrase('${sid}','${key}','grw',${JSON.stringify(ph)})">✕</button></div>`).join('');
-
-  const availStr = sub.strengths.filter(x=>!selStr.includes(x));
-  const availGrw = sub.growth.filter(x=>!selGrw.includes(x));
-
-  // Assembled comment (without competency list — that is shown separately)
-  const assembled = c.customText || assembleSubjectComment(sid, key);
+  const taValue=c.customText||buildFullComment(sid,key);
 
   return `
     <div class="fg">
       <div class="fl">Class Context <span style="color:var(--muted);font-weight:400">(shared for all students in this subject)</span></div>
       <textarea class="ta ctx" placeholder="${esc(sub.ctx||'')}" oninput="updateCtx('${key}',this.value)">${esc(classCtx[key]||'')}</textarea>
     </div>
-
     <div class="fg">
       <div class="fl">Proficiency Level</div>
       <div class="prof-row">${profBtns}</div>
     </div>
-
     <div class="fg">
-      <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5; appear at top of exported comment)</span></div>
+      <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
       <div class="comp-grid">${compHtml}</div>
-      <div class="comp-hint ${cHint}">${cMsg}</div>
-      <div style="margin-top:6px">
-        <div class="fl" style="margin-bottom:4px">Selected competencies (shown in comment export)</div>
-        <div class="comp-display" id="cd-${key}">${compDisplay}</div>
-      </div>
+      <div class="comp-hint ${cHint}" id="chint-${key}">${cMsg}</div>
     </div>
-
     <div class="fg">
       <div class="fl">Strength Phrases</div>
       ${strTags?`<div class="tag-list">${strTags}</div>`:''}
@@ -798,7 +895,6 @@ function buildCommentSection(sid, key) {
         <button class="btn sm" onclick="addPhrase('${sid}','${key}','str','ss-${key}')">+ Add</button>
       </div>
     </div>
-
     <div class="fg">
       <div class="fl">Growth / Next Steps</div>
       ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
@@ -807,47 +903,42 @@ function buildCommentSection(sid, key) {
         <button class="btn sm" onclick="addPhrase('${sid}','${key}','grw','gs-${key}')">+ Add</button>
       </div>
     </div>
-
     <div class="fg">
       <div class="fl">Adaptations &amp; Supports</div>
       <input class="fi" type="text" value="${esc(c.adaptations||'')}" placeholder="e.g. extended time; text-to-speech access" oninput="updateField('${sid}','${key}','adaptations',this.value)"/>
     </div>
-
     <div class="fg">
       <div class="fl">Special Circumstances</div>
       <select class="fi sel" style="width:100%" onchange="setSpecial('${sid}','${key}',this.value)">
         <option value="">— None —</option>
-        <option value="iep"${c.special?.includes('IEP')?'  selected':''}>IEP Student</option>
-        <option value="ell"${c.special?.includes('ELL')?'  selected':''}>ELL Student</option>
-        <option value="new"${c.special?.includes('recently joined')?'  selected':''}>New Student (IE)</option>
+        <option value="iep"${c.special?.includes('IEP')?' selected':''}>IEP Student</option>
+        <option value="ell"${c.special?.includes('ELL')?' selected':''}>ELL Student</option>
+        <option value="new"${c.special?.includes('recently joined')?' selected':''}>New Student (IE)</option>
       </select>
     </div>
-
     <div class="fg">
       <div class="fl" style="display:flex;justify-content:space-between">
-        Comment (narrative — competencies exported separately above)
-        <button class="btn sm" onclick="regen('${sid}','${key}')">↺ Regenerate</button>
+        Full Comment Preview <span style="font-weight:400;color:var(--muted)">(competencies + narrative — editable)</span>
+        <button class="btn sm" onclick="regenSubj('${sid}','${key}')">↺ Regenerate</button>
       </div>
-      <textarea class="ta preview" id="ta-${key}" oninput="updateCT('${sid}','${key}',this.value)">${esc(assembled)}</textarea>
+      <textarea class="ta preview" id="ta-${key}" oninput="updateCT('${sid}','${key}',this.value)">${esc(taValue)}</textarea>
       <div class="cmt-actions">
-        <span class="cc" id="cc-${key}">${assembled.length} chars</span>
+        <span class="cc" id="cc-${key}">${taValue.length} chars</span>
         <div style="display:flex;gap:6px;align-items:center"><span class="cpok" id="cp-${key}">✓ Copied</span><button class="btn sm" onclick="copyTA('ta-${key}','cp-${key}')">📋 Copy</button></div>
       </div>
     </div>`;
 }
 
 function buildPG() {
-  const sid = activeId;
-  const c   = comments[sid]['_pg'];
-
+  const sid=activeId;
+  const c=comments[sid]['_pg'];
   function groupHtml(groupKey, label) {
-    const phrases = PG[groupKey];
-    const sel     = c[groupKey]||[];
-    const items   = phrases.map(ph=>{
-      let display = ph.t;
-      if (ph.id==='c1') display = 'Reference Spaces portfolio for Core Competency reflections';
-      else if (ph.id==='c2') display = 'Note that student has set a personal learning goal this term';
-      else display = display.replace(/\[name\]/g,'[student name]');
+    const phrases=PG[groupKey], sel=c[groupKey]||[];
+    const items=phrases.map(ph=>{
+      let display=ph.t;
+      if(ph.id==='c1') display='Reference Spaces portfolio for Core Competency reflections';
+      else if(ph.id==='c2') display='Note that student has set a personal learning goal this term';
+      else display=display.replace(/\[name\]/g,'[student name]');
       return `<div class="pg-check">
         <input type="checkbox" id="pg-${ph.id}" ${sel.includes(ph.id)?'checked':''} onchange="togglePG('${sid}','${groupKey}','${ph.id}',this.checked)"/>
         <label for="pg-${ph.id}">${esc(display)}</label>
@@ -855,21 +946,19 @@ function buildPG() {
     }).join('');
     return `<div class="pg-group"><div class="pg-group-label">${label}</div>${items}</div>`;
   }
-
-  const assembled = c.customText || assemblePG(sid);
-  const s = getStudent(sid);
-
+  const assembled=c.customText||assemblePG(sid);
+  const s=getStudent(sid);
   return `<div class="card">
     <div class="card-head"><div class="card-title">Progress &amp; Growth + Ways to Support at Home</div></div>
     <div class="card-body">
-      <div class="note">📌 Select phrases that apply to ${esc(s.firstName)}. The assembled comment combines work habits, social/emotional, Core Competencies, and support suggestions into one section.</div>
+      <div class="note">📌 Select phrases that apply to ${esc(s.firstName)}. The assembled comment combines habits, character, Core Competencies, and home support into one section.</div>
       ${groupHtml('habits','Work Habits')}
       ${groupHtml('social','Attitude &amp; Character')}
       ${groupHtml('cc','Core Competencies')}
       ${groupHtml('support','Ways to Support at Home')}
       <div class="fg">
         <div class="fl">Additional Personal Note <span style="color:var(--muted);font-weight:400">(optional)</span></div>
-        <textarea class="ta short" id="pg-note" placeholder="Any extra personal comment, e.g. 'Well done this term! I look forward to seeing your growth next term.'" oninput="updatePGNote('${sid}',this.value)">${esc(c.customNote||'')}</textarea>
+        <textarea class="ta short" id="pg-note" placeholder="Any extra personal comment…" oninput="updatePGNote('${sid}',this.value)">${esc(c.customNote||'')}</textarea>
       </div>
       <div class="fg">
         <div class="fl" style="display:flex;justify-content:space-between">
@@ -888,348 +977,431 @@ function buildPG() {
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 function switchClass(id) {
-  activeClass = id;
-  localStorage.setItem('rc_class', id);
-  // deselect student if not in this class
-  if (activeId && (getStudent(activeId)?.classId||'hr') !== id) activeId = null;
+  activeClass=id;
+  localStorage.setItem('rc_class',id);
+  if(activeId&&(getStudent(activeId)?.classId||classes[0]?.id)!==id) activeId=null;
+  renderClassTabs(); renderStudentList(); renderEditor();
+}
+
+function selectStudent(id) {
+  activeId=id; activeSubj='ela';
+  const s=getStudent(id);
+  const subs=classSubjects(s?.classId||classes[0]?.id);
+  if(!subs.includes('ela')) activeSubj=subs[0]||'pg';
+  renderStudentList(); renderEditor(); save();
+}
+
+function switchSubj(k) { activeSubj=k; renderEditor(); }
+
+function setProf(sid,key,prof) {
+  comments[sid][key].proficiency=prof;
+  comments[sid][key].customText='';
+  save();
+  refreshPreview(sid,key);
+  renderEditor();
+}
+
+function setELAProf(sid,field,prof) {
+  comments[sid]['ela'][field]=prof;
+  comments[sid]['ela'].customText='';
+  save();
+  refreshPreview(sid,'ela');
+  // Update tab chip
+  const tabs=document.querySelectorAll('.stab');
+  tabs.forEach(t=>{
+    if(t.textContent.startsWith('ELA')) {
+      const c=comments[activeId]?.['ela'];
+      const ps=[c?.profR,c?.profW,c?.profO].filter(Boolean);
+      const existing=t.querySelector('.pchip');
+      if(existing) t.removeChild(existing);
+      if(ps.length===3){const chip=document.createElement('span');chip.className='pchip';chip.style.cssText=`background:${PROF_COL[ps[0]]}22;color:${PROF_COL[ps[0]]}`;chip.textContent='R/W/O';t.appendChild(chip);}
+      else if(ps.length>0){const chip=document.createElement('span');chip.className='pchip';chip.style.cssText='background:var(--primary-light);color:var(--primary)';chip.textContent=`${ps.length}/3`;t.appendChild(chip);}
+    }
+  });
+}
+
+function toggleCompEl(cb) {
+  const {sid,key,idx}=cb.dataset;
+  const comp=SUB[key]?.competencies[parseInt(idx)];
+  if(!comp) return;
+  const arr=comments[sid][key].competencies;
+  if(cb.checked){if(!arr.includes(comp))arr.push(comp);}
+  else{comments[sid][key].competencies=arr.filter(x=>x!==comp);}
+  comments[sid][key].customText='';
+  save();
+  // Update hint
+  const cnt=comments[sid][key].competencies.length;
+  const hint=document.getElementById('chint-'+key);
+  if(hint){
+    hint.className='comp-hint '+(cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn'));
+    hint.textContent=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  }
+  refreshPreview(sid,key);
+}
+
+function addPhrase(sid,key,type,selId) {
+  const sel=document.getElementById(selId);
+  if(!sel?.value) return;
+  const field=type==='str'?'strengthPhrases':'growthPhrases';
+  const arr=comments[sid][key][field];
+  if(!arr.includes(sel.value)) arr.push(sel.value);
+  comments[sid][key].customText='';
+  save();
+  renderSubjBody();
+}
+
+function removePhraseEl(btn) {
+  const {sid,key,type,idx}=btn.dataset;
+  const field=type==='str'?'strengthPhrases':'growthPhrases';
+  comments[sid][key][field].splice(parseInt(idx),1);
+  comments[sid][key].customText='';
+  save();
+  renderSubjBody();
+}
+
+function updateField(sid,key,field,val) {
+  comments[sid][key][field]=val; save();
+}
+
+function updateCtx(key,val) {
+  classCtx[key]=val; saveCtx();
+  if(activeId){comments[activeId][key]&&(comments[activeId][key].customText='');refreshPreview(activeId,key);}
+}
+
+function updateCT(sid,key,val) {
+  comments[sid][key].customText=val;
+  const cc=document.getElementById('cc-'+key);
+  if(cc) cc.textContent=val.length+' chars';
+  save();
+}
+
+function updatePronouns(sid,val) {
+  const s=getStudent(sid); if(s) s.pronouns=val;
+  Object.keys(comments[sid]||{}).forEach(k=>{if(comments[sid][k])comments[sid][k].customText='';});
+  save(); renderSubjBody();
+}
+
+function setSpecial(sid,key,val) {
+  const s=getStudent(sid), name=s?.firstName||'The student', p=pr(sid);
+  const map={
+    iep:`Please see ${name}'s Individualized Education Plan for further details on ${p.pos} progress and growth this term.`,
+    ell:`${name} is learning English as an additional language and receives ELL support. ${p.sub} is making meaningful progress and demonstrates growing confidence in English communication.`,
+    new:`${name} recently joined our class this term. It has been a pleasure getting to know ${p.obj}, but there has not been sufficient evidence to provide a full proficiency assessment for this subject. I look forward to working with ${p.obj} next term.`,
+    '':'',
+  };
+  comments[sid][key].special=map[val]||'';
+  comments[sid][key].customText='';
+  save(); renderSubjBody();
+}
+
+function togglePG(sid,groupKey,phraseId,checked) {
+  const arr=comments[sid]['_pg'][groupKey]||[];
+  if(checked){if(!arr.includes(phraseId))arr.push(phraseId);}
+  else{comments[sid]['_pg'][groupKey]=arr.filter(x=>x!==phraseId);}
+  comments[sid]['_pg'].customText=''; save(); refreshPGPreview(sid);
+}
+
+function updatePGNote(sid,val) {
+  comments[sid]['_pg'].customNote=val;
+  comments[sid]['_pg'].customText='';
+  save(); refreshPGPreview(sid);
+}
+
+function refreshPreview(sid,key) {
+  const ta=document.getElementById('ta-'+key); if(!ta) return;
+  const text=getFullComment(sid,key);
+  ta.value=text;
+  const cc=document.getElementById('cc-'+key);
+  if(cc) cc.textContent=text.length+' chars';
+}
+
+function refreshPGPreview(sid) {
+  const ta=document.getElementById('ta-_pg'); if(!ta) return;
+  const text=assemblePG(sid); ta.value=text;
+  const cc=document.getElementById('cc-_pg');
+  if(cc) cc.textContent=text.length+' chars';
+}
+
+function regenSubj(sid,key) {
+  comments[sid][key].customText=''; save(); renderSubjBody();
+}
+function regenPG(sid) {
+  comments[sid]['_pg'].customText=''; save(); renderSubjBody();
+}
+
+function copyTA(taId,confirmId) {
+  const el=document.getElementById(taId), text=el?.value||'';
+  navigator.clipboard.writeText(text).catch(()=>{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);});
+  const c=document.getElementById(confirmId);
+  if(c){c.classList.add('show');setTimeout(()=>c.classList.remove('show'),1600);}
+}
+
+// ── Student CRUD ──────────────────────────────────────────────────────────────
+function openAddStudent() {
+  document.getElementById('af').value='';
+  document.getElementById('al').value='';
+  document.getElementById('ac').value=activeClass;
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('af').focus(),50);
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function confirmAdd() {
+  const first=document.getElementById('af').value.trim();
+  const last=document.getElementById('al').value.trim();
+  const pron=document.getElementById('ap').value;
+  const cls=document.getElementById('ac').value;
+  if(!first) return;
+  students.push({id:genId(),firstName:first,lastName:last,pronouns:pron,classId:cls});
+  save(); renderStudentList(); closeModal('add-modal');
+}
+function deleteStudent(e,id) {
+  e.stopPropagation();
+  if(!confirm('Remove this student and all their comments?')) return;
+  students=students.filter(s=>s.id!==id);
+  delete comments[id];
+  if(activeId===id) activeId=null;
+  save(); renderStudentList(); renderEditor();
+}
+
+// ── Settings ─────────────────────────────────────────────────────────────────
+function openSettings() {
+  classFormMode=null;
+  document.getElementById('class-form-section').style.display='none';
+  renderClassSettingsList();
+  renderSettingsAppearance();
+  document.getElementById('settings-modal').classList.add('open');
+}
+
+function renderSettingsAppearance() {
+  const btn=document.getElementById('dark-toggle-btn');
+  if(btn) btn.textContent=dark?'Dark mode: On':'Dark mode: Off';
+}
+
+function renderClassSettingsList() {
+  const el=document.getElementById('class-settings-body'); if(!el) return;
+  if(!classes.length){el.innerHTML='<div style="color:var(--muted);font-size:.83rem">No classes. Add one below.</div>';return;}
+  el.innerHTML=classes.map((cl,i)=>{
+    const cnt=students.filter(s=>(s.classId||classes[0]?.id)===cl.id).length;
+    const chips=cl.subjects.map(s=>`<span class="subj-tag">${SUBJ_LABELS[s]||s}</span>`).join('');
+    return `<div class="class-row">
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:.88rem">${esc(cl.name)}</div>
+        <div style="margin-top:4px">${chips}</div>
+        <div style="font-size:.71rem;color:var(--muted);margin-top:3px">${cnt} student${cnt!==1?'s':''}</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button class="btn sm" onclick="startEditClass(${i})">Edit</button>
+        ${classes.length>1?`<button class="btn sm danger" onclick="deleteClass(${i})">Delete</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showAddClassForm() {
+  classFormMode='add';
+  document.getElementById('class-form-title').textContent='New Class';
+  document.getElementById('cf-name').value='';
+  renderClassFormSubjects(ALL_SUBJECTS);
+  document.getElementById('class-form-section').style.display='';
+  setTimeout(()=>document.getElementById('cf-name').focus(),50);
+}
+
+function startEditClass(idx) {
+  classFormMode={idx};
+  const cl=classes[idx];
+  document.getElementById('class-form-title').textContent=`Edit: ${cl.name}`;
+  document.getElementById('cf-name').value=cl.name;
+  renderClassFormSubjects(cl.subjects);
+  document.getElementById('class-form-section').style.display='';
+}
+
+function renderClassFormSubjects(checkedSubjects) {
+  document.getElementById('cf-subjects').innerHTML=ALL_SUBJECTS.map(k=>`
+    <label style="display:flex;align-items:center;gap:5px;font-size:.82rem;cursor:pointer">
+      <input type="checkbox" id="cfsub-${k}" ${checkedSubjects.includes(k)?'checked':''}/> ${esc(SUBJ_LABELS[k])}
+    </label>`).join('');
+}
+
+function cancelClassForm() {
+  classFormMode=null;
+  document.getElementById('class-form-section').style.display='none';
+}
+
+function saveClassForm() {
+  const name=document.getElementById('cf-name').value.trim();
+  if(!name){alert('Please enter a class name.');return;}
+  const subs=ALL_SUBJECTS.filter(k=>document.getElementById('cfsub-'+k)?.checked);
+  if(!subs.length){alert('Please select at least one subject.');return;}
+  if(classFormMode==='add'){
+    classes.push({id:genId(),name,subjects:subs});
+  } else if(classFormMode?.idx!=null){
+    classes[classFormMode.idx]={...classes[classFormMode.idx],name,subjects:subs};
+    // Deselect student if their active subject is no longer in this class
+    if(activeId){
+      const s=getStudent(activeId);
+      if(s&&(s.classId||classes[0]?.id)===classes[classFormMode.idx].id){
+        if(!subs.includes(activeSubj)) activeSubj=subs[0]||'pg';
+      }
+    }
+  }
+  saveClasses();
+  classFormMode=null;
+  document.getElementById('class-form-section').style.display='none';
+  renderClassSettingsList();
   renderClassTabs();
   renderStudentList();
   renderEditor();
 }
 
-function selectStudent(id) {
-  activeId   = id;
-  activeSubj = 'ela';
-  activeEla  = 'reading';
-  // Check if this student's class has ela
-  const s    = getStudent(id);
-  const subs = classSubjects(s?.classId||'hr');
-  if (!subs.includes('ela')) {
-    activeSubj = subs.includes('ss') ? 'ss' : subs[0] || 'pg';
+function deleteClass(idx) {
+  const cl=classes[idx];
+  const cnt=students.filter(s=>(s.classId||classes[0]?.id)===cl.id).length;
+  if(cnt>0){
+    if(!confirm(`"${cl.name}" has ${cnt} student${cnt!==1?'s':''}. Delete class anyway? Students will be moved to "${classes[idx===0?1:0].name}".`)) return;
+    const fallback=classes[idx===0?1:0].id;
+    students.forEach(s=>{if((s.classId||classes[0]?.id)===cl.id)s.classId=fallback;});
+    save();
+  } else {
+    if(!confirm(`Delete class "${cl.name}"?`)) return;
   }
+  classes.splice(idx,1);
+  saveClasses();
+  if(activeClass===cl.id) {activeClass=classes[0].id;localStorage.setItem('rc_class',activeClass);}
+  renderClassSettingsList();
+  renderClassTabs();
   renderStudentList();
   renderEditor();
-  save();
 }
 
-function switchSubj(k)  { activeSubj=k; renderEditor(); }
-function switchEla(t)   { activeEla=t; renderSubjBody(); }
-
-function setProf(sid, key, prof) {
-  comments[sid][key].proficiency = prof;
-  comments[sid][key].customText  = '';
-  save();
-  renderEditor(); // re-render to update tab chip
-}
-
-function toggleComp(sid, key, comp, checked) {
-  const arr = comments[sid][key].competencies;
-  if (checked) { if (!arr.includes(comp)) arr.push(comp); }
-  else         { comments[sid][key].competencies = arr.filter(x=>x!==comp); }
-  comments[sid][key].customText = '';
-  save();
-  // Live-update the competency display box
-  const el = document.getElementById('cd-'+key);
-  if (el) {
-    const selC = comments[sid][key].competencies;
-    el.innerHTML = selC.length ? selC.map(c=>`<div>• ${esc(c)}</div>`).join('') : `<em>No competencies selected yet — check boxes above</em>`;
-  }
-  // Live-update the hint
-  const cnt = comments[sid][key].competencies.length;
-  const hints = document.querySelectorAll('.comp-hint');
-  hints.forEach(h => {
-    const cls = cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
-    h.className = 'comp-hint '+cls;
-    h.textContent = cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
-  });
-  refreshPreview(sid, key);
-}
-
-function addPhrase(sid, key, type, selId) {
-  const sel = document.getElementById(selId);
-  if (!sel?.value) return;
-  const field = type==='str'?'strengthPhrases':'growthPhrases';
-  const arr   = comments[sid][key][field];
-  if (!arr.includes(sel.value)) arr.push(sel.value);
-  comments[sid][key].customText = '';
-  save();
-  renderSubjBody();
-}
-
-function removePhrase(sid, key, type, phrase) {
-  const field = type==='str'?'strengthPhrases':'growthPhrases';
-  comments[sid][key][field] = comments[sid][key][field].filter(x=>x!==phrase);
-  comments[sid][key].customText = '';
-  save();
-  renderSubjBody();
-}
-
-function updateField(sid, key, field, val) {
-  comments[sid][key][field] = val;
-  save();
-}
-
-function updateCtx(key, val) {
-  classCtx[key] = val;
-  saveCtx();
-  if (activeId) refreshPreview(activeId, key);
-}
-
-function updateCT(sid, key, val) {
-  comments[sid][key].customText = val;
-  const cc = document.getElementById('cc-'+key);
-  if (cc) cc.textContent = val.length+' chars';
-  save();
-}
-
-function updatePronouns(sid, val) {
-  const s = getStudent(sid);
-  if (s) s.pronouns = val;
-  Object.keys(comments[sid]||{}).forEach(k => { if (comments[sid][k]) comments[sid][k].customText=''; });
-  save();
-  renderSubjBody();
-}
-
-function setSpecial(sid, key, val) {
-  const s    = getStudent(sid);
-  const name = s?.firstName||'The student';
-  const p    = pr(sid);
-  const map  = {
-    iep: `Please see ${name}'s Individualized Education Plan for further details on ${p.pos} progress and growth this term.`,
-    ell: `${name} is learning English as an additional language and receives ELL support. ${p.sub} is making meaningful progress and demonstrates growing confidence in English communication.`,
-    new: `${name} recently joined our class this term. It has been a pleasure getting to know ${p.obj}, but there has not been sufficient evidence to provide a full proficiency assessment for this subject. I look forward to working with ${p.obj} next term.`,
-    '': '',
-  };
-  comments[sid][key].special    = map[val]||'';
-  comments[sid][key].customText = '';
-  save();
-  renderSubjBody();
-}
-
-function togglePG(sid, groupKey, phraseId, checked) {
-  const arr = comments[sid]['_pg'][groupKey]||[];
-  if (checked) { if (!arr.includes(phraseId)) arr.push(phraseId); }
-  else         { comments[sid]['_pg'][groupKey] = arr.filter(x=>x!==phraseId); }
-  comments[sid]['_pg'].customText = '';
-  save();
-  refreshPGPreview(sid);
-}
-
-function updatePGNote(sid, val) {
-  comments[sid]['_pg'].customNote  = val;
-  comments[sid]['_pg'].customText  = '';
-  save();
-  refreshPGPreview(sid);
-}
-
-function refreshPreview(sid, key) {
-  const ta = document.getElementById('ta-'+key);
-  if (!ta) return;
-  const text = assembleSubjectComment(sid, key);
-  ta.value = text;
-  const cc = document.getElementById('cc-'+key);
-  if (cc) cc.textContent = text.length+' chars';
-}
-
-function refreshPGPreview(sid) {
-  const ta = document.getElementById('ta-_pg');
-  if (!ta) return;
-  const text = assemblePG(sid);
-  ta.value = text;
-  const cc = document.getElementById('cc-_pg');
-  if (cc) cc.textContent = text.length+' chars';
-}
-
-function regen(sid, key) {
-  comments[sid][key].customText = '';
-  save();
-  renderSubjBody();
-}
-
-function regenPG(sid) {
-  comments[sid]['_pg'].customText = '';
-  save();
-  renderSubjBody();
-}
-
-function copyTA(taId, confirmId) {
-  const el   = document.getElementById(taId);
-  const text = el?.value||'';
-  navigator.clipboard.writeText(text).catch(()=>{
-    const t = document.createElement('textarea');
-    t.value = text; document.body.appendChild(t); t.select();
-    document.execCommand('copy'); document.body.removeChild(t);
-  });
-  const c = document.getElementById(confirmId);
-  if (c) { c.classList.add('show'); setTimeout(()=>c.classList.remove('show'),1600); }
-}
-
-// ── Student CRUD ──────────────────────────────────────────────────────────────
-function openAddStudent() {
-  document.getElementById('af').value = '';
-  document.getElementById('al').value = '';
-  document.getElementById('ac').value = activeClass;
-  document.getElementById('add-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('af').focus(),50);
-}
-function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
-function confirmAdd() {
-  const first = document.getElementById('af').value.trim();
-  const last  = document.getElementById('al').value.trim();
-  const pron  = document.getElementById('ap').value;
-  const cls   = document.getElementById('ac').value;
-  if (!first) return;
-  students.push({id:genId(), firstName:first, lastName:last, pronouns:pron, classId:cls});
-  save(); renderStudentList(); closeModal();
-}
-function deleteStudent(e, id) {
-  e.stopPropagation();
-  if (!confirm('Remove this student and all their comments?')) return;
-  students = students.filter(s=>s.id!==id);
-  delete comments[id];
-  if (activeId===id) activeId=null;
-  save(); renderStudentList(); renderEditor();
+function clearAllData() {
+  if(!confirm('This will permanently delete ALL students and comments. Are you sure?')) return;
+  students=[]; comments={};
+  save(); activeId=null;
+  closeModal('settings-modal');
+  renderStudentList(); renderEditor();
 }
 
 // ── Excel Import ──────────────────────────────────────────────────────────────
-const PMAP = {'emerging':'E','e':'E','developing':'D','d':'D','proficient':'P','p':'P','extending':'Ex','ex':'Ex'};
-const CMAP = {
-  'ela reading':'ela_reading','reading':'ela_reading',
-  'ela writing':'ela_writing','writing':'ela_writing',
-  'ela oral':'ela_oral','oral':'ela_oral','oral language':'ela_oral',
+const PMAP={'emerging':'E','e':'E','developing':'D','d':'D','proficient':'P','p':'P','extending':'Ex','ex':'Ex'};
+const CMAP={
+  'ela reading':'ela:profR','reading':'ela:profR',
+  'ela writing':'ela:profW','writing':'ela:profW',
+  'ela oral':'ela:profO','oral':'ela:profO','oral language':'ela:profO',
   'math':'math','mathematics':'math',
   'social studies':'ss','ss':'ss','socials':'ss',
   'french':'french','français':'french','fr':'french',
   'phe':'phe','physical':'phe','physical and health education':'phe',
-  'class':'_class',
 };
 
 function importExcel(input) {
-  const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const wb   = XLSX.read(e.target.result,{type:'array'});
-      const ws   = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      if (!rows.length) return alert('No data found.');
-      const header = rows[0].map(h=>String(h).toLowerCase().trim());
-      let firstC=-1, lastC=-1, nameC=-1, pronC=-1;
-      const profCols={}, classColIdx = header.indexOf('class');
-
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      if(!rows.length) return alert('No data found.');
+      const header=rows[0].map(h=>String(h).toLowerCase().trim());
+      let firstC=-1,lastC=-1,nameC=-1,pronC=-1;
+      const profCols={},classColIdx=header.indexOf('class');
       header.forEach((h,i)=>{
-        if (h.includes('first')||h.includes('given')||h.includes('preferred')) firstC=i;
-        if (h.includes('last')||h.includes('surname')||h.includes('family'))   lastC=i;
-        if (h==='name'||h==='student name'||h==='student') nameC=i;
-        if (h.includes('pronoun')) pronC=i;
-        if (CMAP[h] && CMAP[h]!=='_class') profCols[CMAP[h]]=i;
+        if(h.includes('first')||h.includes('given')||h.includes('preferred')) firstC=i;
+        if(h.includes('last')||h.includes('surname')||h.includes('family'))   lastC=i;
+        if(h==='name'||h==='student name'||h==='student') nameC=i;
+        if(h.includes('pronoun')) pronC=i;
+        if(CMAP[h]) profCols[CMAP[h]]=i;
       });
-
       let added=0;
       rows.slice(1).filter(r=>r.some(c=>String(c).trim())).forEach(row=>{
-        let firstName='',lastName='',pronouns='they',classId='hr';
-        if (firstC>=0) firstName=String(row[firstC]||'').trim();
-        if (lastC>=0)  lastName =String(row[lastC] ||'').trim();
-        if (!firstName&&!lastName) {
-          const raw=String(row[nameC>=0?nameC:0]||'').trim();
-          if (!raw) return;
-          const pts=raw.split(/\s+/);
-          firstName=pts[0]; lastName=pts.slice(1).join(' ');
+        let firstName='',lastName='',pronouns='they',classId=classes[0]?.id||'hr';
+        if(firstC>=0) firstName=String(row[firstC]||'').trim();
+        if(lastC>=0)  lastName=String(row[lastC]||'').trim();
+        if(!firstName&&!lastName){
+          const raw=String(row[nameC>=0?nameC:0]||'').trim(); if(!raw) return;
+          const pts=raw.split(/\s+/); firstName=pts[0]; lastName=pts.slice(1).join(' ');
         }
-        if (!firstName) return;
-        if (pronC>=0) {
-          const pv=String(row[pronC]||'').toLowerCase();
-          if (pv.includes('she')||pv.includes('her')) pronouns='she';
-          else if (pv.includes('he')||pv.includes('him')) pronouns='he';
-          else pronouns='they';
-        }
-        if (classColIdx>=0) {
+        if(!firstName) return;
+        if(pronC>=0){const pv=String(row[pronC]||'').toLowerCase();if(pv.includes('she')||pv.includes('her'))pronouns='she';else if(pv.includes('he')||pv.includes('him'))pronouns='he';else pronouns='they';}
+        if(classColIdx>=0){
           const cv=String(row[classColIdx]||'').toLowerCase().trim();
-          if (cv.includes('switch')||cv==='sw') classId='sw';
-          else classId='hr';
+          const matched=classes.find(c=>c.name.toLowerCase()===cv||c.id===cv);
+          if(matched) classId=matched.id;
+          else if(cv.includes('switch')||cv==='sw') classId=classes.find(c=>c.id==='sw')?.id||classes[0]?.id;
         }
-        if (students.find(s=>s.firstName===firstName&&s.lastName===lastName)) return;
+        if(students.find(s=>s.firstName===firstName&&s.lastName===lastName)) return;
         const sid=genId();
         students.push({id:sid,firstName,lastName,pronouns,classId});
         initStudent(sid);
         Object.entries(profCols).forEach(([subKey,ci])=>{
           const raw=String(row[ci]||'').trim().toLowerCase();
-          const pf=PMAP[raw];
-          if (pf&&comments[sid]?.[subKey]) comments[sid][subKey].proficiency=pf;
+          const pf=PMAP[raw]; if(!pf) return;
+          if(subKey.startsWith('ela:')){
+            const field=subKey.split(':')[1];
+            if(comments[sid]?.['ela']) comments[sid]['ela'][field]=pf;
+          } else if(comments[sid]?.[subKey]){
+            comments[sid][subKey].proficiency=pf;
+          }
         });
         added++;
       });
       save(); renderStudentList();
       alert(`Imported ${added} student${added===1?'':'s'}${Object.keys(profCols).length?' with proficiency data':''}.`);
-    } catch(err){ alert('Could not read file: '+err.message); }
+    }catch(err){alert('Could not read file: '+err.message);}
   };
   reader.readAsArrayBuffer(file);
   input.value='';
 }
 
-// ── Excel Template Download ────────────────────────────────────────────────────
+// ── Excel Template ─────────────────────────────────────────────────────────────
 function dlTemplate() {
-  const heads = ['First Name','Last Name','Pronouns (he/she/they)','Class (Homeroom/Switch)',
-    'ELA Reading','ELA Writing','ELA Oral','Math','Social Studies','French','PHE'];
-  const note  = ['Enter first name','Enter last name','he, she, or they','Homeroom or Switch',
-    '↓ Enter E, D, P, or Ex for each subject ↓','','','','','',''];
-  const ex1   = ['Jordan','Smith','they','Homeroom','P','P','D','P','D','P','P'];
-  const ex2   = ['Alex','Johnson','she','Switch','','','','','P','D',''];
-  const ws    = XLSX.utils.aoa_to_sheet([heads,note,ex1,ex2]);
-  ws['!cols'] = heads.map((_,i)=>({wch:i<4?18:12}));
-  const wb    = XLSX.utils.book_new();
+  const heads=['First Name','Last Name','Pronouns (he/she/they)','Class','ELA Reading','ELA Writing','ELA Oral','Math','Social Studies','French','PHE'];
+  const note=['Enter first name','Enter last name','he, she, or they',classes.map(c=>c.name).join(' / '),'↓ E, D, P, or Ex ↓','','','','','',''];
+  const ex1=['Jordan','Smith','they',classes[0]?.name||'Homeroom','P','P','D','P','D','P','P'];
+  const ex2=['Alex','Johnson','she',classes[1]?.name||'Switch','','','','','P','D',''];
+  const ws=XLSX.utils.aoa_to_sheet([heads,note,ex1,ex2]);
+  ws['!cols']=heads.map((_,i)=>({wch:i<4?18:12}));
+  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Class Roster');
   XLSX.writeFile(wb,'Grade7_Roster_Template.xlsx');
 }
 
 // ── Word Export ────────────────────────────────────────────────────────────────
-const SUB_ORDER = ['ela_reading','ela_writing','ela_oral','math','ss','french','phe'];
-const SUB_NAMES = {
-  ela_reading:'ELA 7 — Reading', ela_writing:'ELA 7 — Writing', ela_oral:'ELA 7 — Oral Language',
-  math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7',
-  _pg:'Progress & Growth',
-};
-
-function getFullComment(sid, key) {
-  initStudent(sid);
-  if (key==='_pg') {
-    const c = comments[sid]?.['_pg']||{};
-    return c.customText||assemblePG(sid);
-  }
-  const c   = comments[sid]?.[key]||{};
-  const sub = SUB[key];
-  if (!sub) return '';
-  const comps = (c.competencies||[]);
-  const narrative = c.customText||assembleSubjectComment(sid,key);
-  if (!narrative.trim()&&!comps.length) return '';
-  const compLines = comps.map(comp=>`(Curricular Competency) ${comp}`).join('\n');
-  return [compLines, narrative].filter(Boolean).join('\n\n');
-}
+const SUB_ORDER=['ela','math','ss','french','phe'];
+const SUB_NAMES={ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7', _pg:'Progress & Growth'};
 
 function wrapDoc(bodyHtml) {
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
 <head><meta charset="utf-8">
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Normal</w:View></w:WordDocument></xml><![endif]-->
-<style>@page{margin:1in}body{font-family:Calibri,sans-serif;font-size:11pt}h1{font-size:14pt;font-weight:bold}h2{font-size:12pt;font-weight:bold}h3{font-size:11pt;font-weight:bold}p{font-size:11pt;line-height:1.6;margin:0 0 6pt}hr{border:none;border-top:1pt solid #ccc;margin:10pt 0}</style>
+<style>@page{margin:1in}body{font-family:Calibri,sans-serif;font-size:11pt}h1{font-size:14pt;font-weight:bold}h2{font-size:12pt;font-weight:bold}p{font-size:11pt;line-height:1.6;margin:0 0 6pt}</style>
 </head><body>${bodyHtml}</body></html>`;
+}
+
+function elaProfLabel(c) {
+  const parts=[];
+  if(c?.profR) parts.push(`R: <span style="color:${PROF_COL[c.profR]}">${PROF[c.profR]}</span>`);
+  if(c?.profW) parts.push(`W: <span style="color:${PROF_COL[c.profW]}">${PROF[c.profW]}</span>`);
+  if(c?.profO) parts.push(`O: <span style="color:${PROF_COL[c.profO]}">${PROF[c.profO]}</span>`);
+  return parts.length?` — ${parts.join(' / ')}` : '';
 }
 
 function buildByStudent(targetStudents) {
   let body='';
   targetStudents.forEach((s,si)=>{
     initStudent(s.id);
-    const pb = si>0?'page-break-before:always;':'';
-    body+=`<div style="${pb}margin-bottom:20pt">`;
-    body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:1.5pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:10pt">${esc(s.firstName+' '+s.lastName)} <span style="font-size:10pt;color:#6b7280;font-weight:normal">${esc(getClass(s.classId||'hr').name)}</span></h1>`;
+    body+=`<div style="${si>0?'page-break-before:always;':''}margin-bottom:20pt">`;
+    body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:1.5pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:10pt">${esc(s.firstName+' '+s.lastName)} <span style="font-size:10pt;color:#6b7280;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h1>`;
     [...SUB_ORDER,'_pg'].forEach(key=>{
-      const text=getFullComment(s.id,key);
-      if (!text.trim()) return;
-      const c  =comments[s.id]?.[key]||{};
-      const pf =c.proficiency;
-      const pc =pf?` <span style="color:${PROF_COL[pf]}">${PROF[pf]}</span>`:'';
+      const subs=classSubjects(s.classId||classes[0]?.id);
+      const show=key==='_pg'?true:subs.includes(key);
+      if(!show) return;
+      const text=getFullComment(s.id,key); if(!text.trim()) return;
+      const c=comments[s.id]?.[key]||{};
+      const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:12pt">`;
-      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:3pt">${SUB_NAMES[key]||key}${pc}</h2>`;
-      body+=`<p style="white-space:pre-wrap">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
+      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:3pt">${SUB_NAMES[key]||key}${profLabel}</h2>`;
+      body+=`<p style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
       body+=`</div>`;
     });
     body+=`</div>`;
@@ -1240,26 +1412,22 @@ function buildByStudent(targetStudents) {
 function buildBySubject(targetStudents) {
   let body='';
   [...SUB_ORDER,'_pg'].forEach((key,ki)=>{
-    // Collect all students who have content for this key
-    const entries = targetStudents.map(s=>{
+    const entries=targetStudents.map(s=>{
       initStudent(s.id);
-      const subs = classSubjects(s.classId||'hr');
-      const subj = key==='_pg'?true:key.startsWith('ela')?subs.includes('ela'):subs.includes(key);
-      if (!subj) return null;
-      const text = getFullComment(s.id,key);
-      if (!text.trim()) return null;
-      return {s, text, prof: comments[s.id]?.[key]?.proficiency};
+      const subs=classSubjects(s.classId||classes[0]?.id);
+      const show=key==='_pg'?true:subs.includes(key);
+      if(!show) return null;
+      const text=getFullComment(s.id,key); if(!text.trim()) return null;
+      return {s,text,c:comments[s.id]?.[key]||{}};
     }).filter(Boolean);
-    if (!entries.length) return;
-
-    const pb = ki>0?'page-break-before:always;':'';
-    body+=`<div style="${pb}margin-bottom:20pt">`;
+    if(!entries.length) return;
+    body+=`<div style="${ki>0?'page-break-before:always;':''}margin-bottom:20pt">`;
     body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:2pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:12pt">${SUB_NAMES[key]||key}</h1>`;
-    entries.forEach(({s,text,prof})=>{
-      const pc = prof?` — <span style="color:${PROF_COL[prof]}">${PROF[prof]}</span>`:'';
+    entries.forEach(({s,text,c})=>{
+      const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` — <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:14pt;padding:10pt 12pt;border:1pt solid #e4e7ec;border-radius:4pt">`;
-      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${esc(s.firstName+' '+s.lastName)}${pc} <span style="font-size:9pt;color:#9ca3af;font-weight:normal">${esc(getClass(s.classId||'hr').name)}</span></h2>`;
-      body+=`<p style="white-space:pre-wrap">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
+      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${esc(s.firstName+' '+s.lastName)}${profLabel} <span style="font-size:9pt;color:#9ca3af;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h2>`;
+      body+=`<p style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
       body+=`</div>`;
     });
     body+=`</div>`;
@@ -1268,17 +1436,17 @@ function buildBySubject(targetStudents) {
 }
 
 function exportStudent() {
-  if (!activeId) return alert('Select a student first.');
-  const s    = getStudent(activeId);
-  const html = buildByStudent([s]);
-  const blob = new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
+  if(!activeId) return alert('Select a student first.');
+  const s=getStudent(activeId);
+  const html=buildByStudent([s]);
+  const blob=new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
   saveAs(blob,`${s.lastName}_${s.firstName}_ReportCard.doc`);
 }
 
 function exportAll(mode) {
-  if (!students.length) return alert('No students to export.');
-  const html = mode==='subject' ? buildBySubject(students) : buildByStudent(students);
-  const blob = new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
+  if(!students.length) return alert('No students to export.');
+  const html=mode==='subject'?buildBySubject(students):buildByStudent(students);
+  const blob=new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
   saveAs(blob,mode==='subject'?'Grade7_BySubject.doc':'Grade7_ByStudent.doc');
 }
 
@@ -1290,12 +1458,14 @@ function toggleDark() {
 }
 
 document.addEventListener('keydown',e=>{
-  if (e.key==='Escape') closeModal();
-  if (e.key==='Enter'&&document.getElementById('add-modal').classList.contains('open')) confirmAdd();
+  if(e.key==='Escape'){closeModal('add-modal');closeModal('settings-modal');}
+  if(e.key==='Enter'&&document.getElementById('add-modal').classList.contains('open')) confirmAdd();
 });
-document.getElementById('add-modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('add-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('add-modal');});
+document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('settings-modal');});
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+migrateData();
 renderClassTabs();
 renderStudentList();
 renderEditor();
