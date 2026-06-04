@@ -1529,13 +1529,11 @@ function importExcel(input) {
 function dlTemplate() {
   const heads=['First Name','Last Name','Pronouns (he/she/they)','Class','ELA Reading','ELA Writing','ELA Oral','Math','Social Studies','French','PHE','Science','Careers'];
   const note=['Enter first name','Enter last name','he, she, or they',classes.map(c=>c.name).join(' / '),'↓ E, D, P, or Ex ↓','','','','','','','',''];
-  const ex1=['Jordan','Smith','they',classes[0]?.name||'Homeroom','P','P','D','P','D','P','P','P','P'];
-  const ex2=['Alex','Johnson','she',classes[1]?.name||'Switch','','','','','P','D','','',''];
-  const ws=XLSX.utils.aoa_to_sheet([heads,note,ex1,ex2]);
+  const ws=XLSX.utils.aoa_to_sheet([heads,note]);
   ws['!cols']=heads.map((_,i)=>({wch:i<4?18:12}));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Class Roster');
-  XLSX.writeFile(wb,'Grade7_Roster_Template.xlsx');
+  XLSX.writeFile(wb,'Roster_Template.xlsx');
 }
 
 // ── Word Export ────────────────────────────────────────────────────────────────
