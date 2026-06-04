@@ -280,11 +280,11 @@ const FALLBACK_CLASSES = [
 ];
 
 // ── Proficiency definitions ────────────────────────────────────────────────────
-function profDef(name, prof, subLabel) {
-  if (prof==='Ex') return `${name} demonstrated an extending understanding of the ${subLabel} competencies covered this term. "Extending" is a student demonstrating learning, in relation to Learning Standards, with increasing depth and complexity.`;
-  if (prof==='P')  return `${name} demonstrated a proficient understanding of the ${subLabel} competencies covered this term. "Proficient" is the standard goal for all students. It is when a student demonstrates the expected learning in relation to the Learning Standards of the curriculum.`;
-  if (prof==='D')  return `${name} demonstrated a developing understanding of the ${subLabel} competencies covered this term. "Developing" indicates that a student is demonstrating learning in relation to the Learning Standards with growing consistency. ${name} is showing initial understanding but is still in the process of developing ${name}'s competency in relation to the Learning Standards of the curriculum.`;
-  if (prof==='E')  return `${name} demonstrated an emerging understanding of the ${subLabel} competencies covered this term. "Emerging" indicates that a student is just beginning to demonstrate learning in relation to the Learning Standards of the curriculum, but is not yet doing so consistently.`;
+function profDef(name, prof, subLabel, p) {
+  if(prof==='Ex') return `${name} is working at an extending level in ${subLabel} this term. ${p.sub} consistently goes above and beyond what is expected, showing impressive depth and a genuine love of learning in ${p.pos} work.`;
+  if(prof==='P')  return `${name} is working at a proficient level in ${subLabel} this term, fully meeting the Grade 7 expectations.`;
+  if(prof==='D')  return `${name} is working at a developing level in ${subLabel} this term. ${p.sub} is building ${p.pos} understanding and making steady progress toward meeting the Grade 7 expectations.`;
+  if(prof==='E')  return `${name} is working at an emerging level in ${subLabel} this term. ${p.sub} is beginning to show understanding and will benefit from continued support and practice to build more consistency.`;
   return '';
 }
 
@@ -307,28 +307,28 @@ const SUB = {
       'Speak with increasing confidence, fluency, and expression',
     ],
     strengths:[
-      'identifies main ideas and key details with confidence and draws well-supported inferences from a range of texts',
-      'makes thoughtful and insightful text-to-self, text-to-text, and text-to-world connections',
-      'analyses how an author\'s literary devices and word choice contribute to meaning and effect',
-      'crafts writing that is purposeful, organized, and clearly focused on the audience',
-      'uses vivid, precise language and thoughtful word choice to engage the reader',
-      'develops ideas with specific details, examples, and well-chosen supporting evidence',
-      'demonstrates a distinct and authentic voice in personal and creative writing',
+      'identifies main ideas and key details with confidence and draws clear, supported conclusions from a variety of texts',
+      'makes thoughtful connections between what is read and personal experiences, other texts, and the wider world',
+      'thinks carefully about how an author\'s word choices and writing techniques shape meaning and mood',
+      'crafts writing that is purposeful, organized, and clearly focused on the reader',
+      'uses vivid, precise language and thoughtful word choice to bring writing to life',
+      'develops ideas with specific details, examples, and well-chosen evidence',
+      'brings a distinct and authentic voice to personal and creative writing',
       'applies grammar, punctuation, and spelling conventions accurately and consistently',
       'communicates ideas clearly, confidently, and with a strong sense of audience',
-      'listens attentively and responds thoughtfully, building respectfully on peers\' ideas',
-      'contributes meaningfully and consistently to collaborative discussions and group activities',
+      'listens attentively and responds thoughtfully, building respectfully on the ideas of others',
+      'contributes meaningfully and consistently to class discussions and group activities',
     ],
     growth:[
-      'continue developing strategies for reading and independently interpreting more complex texts',
-      'practise making and justifying inferences by citing specific textual evidence',
-      'continue developing elaboration skills by adding specific details and explanation to ideas in writing',
+      'continue building strategies for reading and making sense of more complex texts independently',
+      'practise drawing conclusions from texts and explaining thinking with specific examples as support',
+      'continue developing writing by adding specific details and explanation to strengthen ideas',
       'work on varying sentence structure and length to improve the flow and impact of writing',
       'practise applying grammar, spelling, and punctuation conventions consistently across all writing',
-      'strengthen organizational structure by working on effective transitions and logical flow',
-      'continue building confidence in sharing and elaborating on ideas in whole-class settings',
-      'work on expanding responses to include more specific detail, reasoning, and evidence',
-      'develop revision strategies to improve clarity, voice, and depth of ideas',
+      'work on strengthening writing structure through clear transitions and logical organization',
+      'continue building confidence in sharing ideas and speaking up in whole-class settings',
+      'work on expanding responses to include more detail, reasoning, and supporting evidence',
+      'develop revision habits to improve the clarity, voice, and depth of written work',
     ],
     ctx:'Describe what your ELA class studied and worked on this term (novels, writing units, Socratic seminars, oral presentations…)',
   },
@@ -560,7 +560,7 @@ function assembleSubjectComment(sid, key) {
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
   if(ctx) parts.push(ctx);
-  if(prof) parts.push(profDef(name,prof,sub.short||sub.label));
+  if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p));
   if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
   if(grws.length){
     const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
@@ -581,19 +581,12 @@ function assembleELAComment(sid) {
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
   if(ctx) parts.push(ctx);
-  if(profR||profW||profO){
-    if(profR===profW && profW===profO && profR){
-      parts.push(profDef(name,profR,'English Language Arts'));
-    } else {
-      const areas=[];
-      if(profR) areas.push(`${PROF[profR].toLowerCase()} understanding in Reading`);
-      if(profW) areas.push(`${PROF[profW].toLowerCase()} understanding in Writing`);
-      if(profO) areas.push(`${PROF[profO].toLowerCase()} understanding in Oral Language`);
-      if(areas.length===1) parts.push(`${name} demonstrated ${areas[0]} of the English Language Arts competencies this term.`);
-      else if(areas.length===2) parts.push(`${name} demonstrated ${areas[0]} and ${areas[1]} of the English Language Arts competencies this term.`);
-      else parts.push(`${name} demonstrated ${areas[0]}, ${areas[1]}, and ${areas[2]} of the English Language Arts competencies this term.`);
-    }
-  }
+  // Proficiency — each area on its own line (clear for parents and students)
+  const profLines=[];
+  if(profR) profLines.push(`Reading — ${PROF[profR]}`);
+  if(profW) profLines.push(`Writing — ${PROF[profW]}`);
+  if(profO) profLines.push(`Oral Language — ${PROF[profO]}`);
+  if(profLines.length) parts.push(profLines.join('\n'));
   if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
   if(grws.length){
     const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
@@ -1005,18 +998,17 @@ function setELAProf(sid,field,prof) {
   comments[sid]['ela'][field]=prof;
   comments[sid]['ela'].customText='';
   save();
-  refreshPreview(sid,'ela');
-  // Update tab chip
-  const tabs=document.querySelectorAll('.stab');
-  tabs.forEach(t=>{
-    if(t.textContent.startsWith('ELA')) {
-      const c=comments[activeId]?.['ela'];
-      const ps=[c?.profR,c?.profW,c?.profO].filter(Boolean);
-      const existing=t.querySelector('.pchip');
-      if(existing) t.removeChild(existing);
-      if(ps.length===3){const chip=document.createElement('span');chip.className='pchip';chip.style.cssText=`background:${PROF_COL[ps[0]]}22;color:${PROF_COL[ps[0]]}`;chip.textContent='R/W/O';t.appendChild(chip);}
-      else if(ps.length>0){const chip=document.createElement('span');chip.className='pchip';chip.style.cssText='background:var(--primary-light);color:var(--primary)';chip.textContent=`${ps.length}/3`;t.appendChild(chip);}
-    }
+  renderSubjBody(); // rebuild ELA section so prof buttons show the correct active state
+  // Update tab chip in place without full editor re-render
+  const c2=comments[activeId]?.['ela'];
+  const ps=[c2?.profR,c2?.profW,c2?.profO].filter(Boolean);
+  document.querySelectorAll('.stab').forEach(t=>{
+    if(!t.textContent.includes('ELA')) return;
+    let chip=t.querySelector('.pchip');
+    if(ps.length===0){if(chip)chip.remove();return;}
+    if(!chip){chip=document.createElement('span');chip.className='pchip';t.appendChild(chip);}
+    if(ps.length===3){chip.style.cssText=`background:${PROF_COL[ps[0]]}22;color:${PROF_COL[ps[0]]}`;chip.textContent='R/W/O';}
+    else{chip.style.cssText='background:var(--primary-light);color:var(--primary)';chip.textContent=`${ps.length}/3`;}
   });
 }
 
@@ -1370,11 +1362,22 @@ function dlTemplate() {
 const SUB_ORDER=['ela','math','ss','french','phe'];
 const SUB_NAMES={ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7', _pg:'Progress & Growth'};
 
+// Converts \n\n-separated text into proper <p> tags; \n within a block → <br/>
+function textToWordHtml(text) {
+  if(!text) return '';
+  return text.split('\n\n').map(para=>{
+    const escaped=para.split('\n')
+      .map(line=>line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'))
+      .join('<br/>');
+    return `<p style="margin:0 0 7pt;line-height:1.65">${escaped}</p>`;
+  }).join('');
+}
+
 function wrapDoc(bodyHtml) {
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
 <head><meta charset="utf-8">
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Normal</w:View></w:WordDocument></xml><![endif]-->
-<style>@page{margin:1in}body{font-family:Calibri,sans-serif;font-size:11pt}h1{font-size:14pt;font-weight:bold}h2{font-size:12pt;font-weight:bold}p{font-size:11pt;line-height:1.6;margin:0 0 6pt}</style>
+<style>@page{margin:1in}body{font-family:Calibri,sans-serif;font-size:11pt}h1{font-size:14pt;font-weight:bold;margin:0 0 4pt}h2{font-size:11pt;font-weight:bold;margin:0 0 4pt}p{font-size:11pt;line-height:1.65;margin:0 0 7pt}</style>
 </head><body>${bodyHtml}</body></html>`;
 }
 
@@ -1400,8 +1403,8 @@ function buildByStudent(targetStudents) {
       const c=comments[s.id]?.[key]||{};
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:12pt">`;
-      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:3pt">${SUB_NAMES[key]||key}${profLabel}</h2>`;
-      body+=`<p style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
+      body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${SUB_NAMES[key]||key}${profLabel}</h2>`;
+      body+=textToWordHtml(text);
       body+=`</div>`;
     });
     body+=`</div>`;
@@ -1427,7 +1430,7 @@ function buildBySubject(targetStudents) {
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` — <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
       body+=`<div style="margin-bottom:14pt;padding:10pt 12pt;border:1pt solid #e4e7ec;border-radius:4pt">`;
       body+=`<h2 style="font-size:11pt;color:#374151;margin-bottom:5pt">${esc(s.firstName+' '+s.lastName)}${profLabel} <span style="font-size:9pt;color:#9ca3af;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h2>`;
-      body+=`<p style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>`;
+      body+=textToWordHtml(text);
       body+=`</div>`;
     });
     body+=`</div>`;
