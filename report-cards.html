@@ -139,7 +139,7 @@
 <body>
 
 <header>
-  <div class="logo">📝 Report Card Comments — Grade 7</div>
+  <div class="logo">📝 Report Card Comments</div>
   <div class="hdr-r">
     <button class="btn" onclick="dlTemplate()">⬇ Excel Template</button>
     <button class="btn" onclick="openSettings()">⚙ Settings</button>
@@ -195,6 +195,36 @@
     <div class="mactions">
       <button class="btn" onclick="closeModal('add-modal')">Cancel</button>
       <button class="btn primary" onclick="confirmAdd()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome / first-run modal -->
+<div class="mbk" id="welcome-modal">
+  <div class="modal" style="width:420px;max-width:95vw">
+    <div style="text-align:center;margin-bottom:4px">
+      <div style="font-size:2.2rem;margin-bottom:6px">📝</div>
+      <div class="modal-title" style="font-size:1.1rem">Welcome to Report Card Comments</div>
+      <div style="font-size:.83rem;color:var(--muted);margin-top:5px;line-height:1.5">Let's set up your first class to get started.</div>
+    </div>
+    <div class="fg">
+      <div class="fl">Class Name</div>
+      <input class="fi" id="wc-name" type="text" placeholder="e.g. Homeroom Block 2"/>
+    </div>
+    <div class="fg">
+      <div class="fl">Grade</div>
+      <select class="fi sel" id="wc-grade" style="width:100%">
+        <option value="6">Grade 6</option>
+        <option value="7" selected>Grade 7</option>
+        <option value="8">Grade 8</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="fl">Subjects in this class</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:2px" id="wc-subjects"></div>
+    </div>
+    <div class="mactions" style="justify-content:center;margin-top:2px">
+      <button class="btn primary" style="padding:8px 24px;font-size:.88rem" onclick="finishFirstRun()">Create Class &amp; Get Started</button>
     </div>
   </div>
 </div>
@@ -548,6 +578,7 @@ const PG = {
 };
 
 // ── State ─────────────────────────────────────────────────────────────────────
+const firstRun = localStorage.getItem('rc_classes') === null;
 let students   = JSON.parse(localStorage.getItem('rc_students') || '[]');
 let comments   = JSON.parse(localStorage.getItem('rc_comments') || '{}');
 let classCtx   = JSON.parse(localStorage.getItem('rc_ctx')      || '{}');
@@ -1597,6 +1628,32 @@ function exportAll(mode) {
   saveAs(blob,mode==='subject'?`${gLabel}_BySubject.doc`:`${gLabel}_ByStudent.doc`);
 }
 
+// ── First-run setup ────────────────────────────────────────────────────────────
+function renderWelcomeSubjects() {
+  document.getElementById('wc-subjects').innerHTML = ALL_SUBJECTS.map(k=>`
+    <label style="display:flex;align-items:center;gap:5px;font-size:.82rem;cursor:pointer">
+      <input type="checkbox" id="wcsub-${k}" checked/> ${esc(SUBJ_LABELS[k])}
+    </label>`).join('');
+}
+
+function finishFirstRun() {
+  const name = document.getElementById('wc-name').value.trim();
+  if(!name) { document.getElementById('wc-name').focus(); document.getElementById('wc-name').style.borderColor='var(--danger)'; return; }
+  document.getElementById('wc-name').style.borderColor='';
+  const grade = parseInt(document.getElementById('wc-grade').value) || 7;
+  const subs = ALL_SUBJECTS.filter(k => document.getElementById('wcsub-'+k)?.checked);
+  if(!subs.length) { alert('Please select at least one subject.'); return; }
+  // Replace the placeholder fallback classes with the user's first real class
+  classes = [{id: genId(), name, grade, subjects: subs}];
+  activeClass = classes[0].id;
+  localStorage.setItem('rc_class', activeClass);
+  saveClasses();
+  document.getElementById('welcome-modal').classList.remove('open');
+  renderClassTabs();
+  renderStudentList();
+  renderEditor();
+}
+
 // ── Misc ──────────────────────────────────────────────────────────────────────
 function toggleDark() {
   dark=!dark;
@@ -1607,6 +1664,7 @@ function toggleDark() {
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeModal('add-modal');closeModal('settings-modal');}
   if(e.key==='Enter'&&document.getElementById('add-modal').classList.contains('open')) confirmAdd();
+  if(e.key==='Enter'&&document.getElementById('welcome-modal').classList.contains('open')) finishFirstRun();
 });
 document.getElementById('add-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('add-modal');});
 document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('settings-modal');});
@@ -1616,6 +1674,11 @@ migrateData();
 renderClassTabs();
 renderStudentList();
 renderEditor();
+if(firstRun) {
+  renderWelcomeSubjects();
+  document.getElementById('welcome-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('wc-name').focus(), 50);
+}
 </script>
 </body>
 </html>
