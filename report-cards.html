@@ -320,10 +320,6 @@ const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
 const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers'];
 const SUBJ_LABELS  = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education'};
 
-const FALLBACK_CLASSES = [
-  {id:'hr', name:'Homeroom', grade:7, subjects:['ela','math','ss','french','phe','science','careers']},
-  {id:'sw', name:'Switch',   grade:7, subjects:['ss','french']},
-];
 
 // ── Proficiency definitions ────────────────────────────────────────────────────
 function profDef(name, prof, subLabel, p, grade) {
@@ -578,14 +574,14 @@ const PG = {
 };
 
 // ── State ─────────────────────────────────────────────────────────────────────
-const firstRun = localStorage.getItem('rc_classes') === null;
 let students   = JSON.parse(localStorage.getItem('rc_students') || '[]');
 let comments   = JSON.parse(localStorage.getItem('rc_comments') || '{}');
 let classCtx   = JSON.parse(localStorage.getItem('rc_ctx')      || '{}');
-let classes    = JSON.parse(localStorage.getItem('rc_classes')  || 'null') || FALLBACK_CLASSES;
+let classes    = JSON.parse(localStorage.getItem('rc_classes')  || '[]');
+const firstRun = classes.length === 0;
 let activeId   = null;
 let activeSubj = 'ela';
-let activeClass= localStorage.getItem('rc_class') || (classes[0]?.id || 'hr');
+let activeClass= localStorage.getItem('rc_class') || classes[0]?.id || null;
 let dark       = localStorage.getItem('rc_dark')  === '1';
 let classFormMode = null; // null | 'add' | {idx:number}
 
@@ -601,8 +597,8 @@ function save()    { localStorage.setItem('rc_students',JSON.stringify(students)
 function saveCtx() { localStorage.setItem('rc_ctx',JSON.stringify(classCtx)); }
 function saveClasses() { localStorage.setItem('rc_classes',JSON.stringify(classes)); }
 
-function getClass(id) { return classes.find(c=>c.id===id)||classes[0]||FALLBACK_CLASSES[0]; }
-function classSubjects(classId) { return getClass(classId).subjects; }
+function getClass(id) { return classes.find(c=>c.id===id)||classes[0]||null; }
+function classSubjects(classId) { return getClass(classId)?.subjects || []; }
 function classGrade(classId) { return getClass(classId)?.grade || 7; }
 function studentGrade(sid) { return classGrade(getStudent(sid)?.classId); }
 const SUB_BASE = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education'};
