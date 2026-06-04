@@ -142,7 +142,6 @@
   <div class="logo">📝 Report Card Comments — Grade 7</div>
   <div class="hdr-r">
     <button class="btn" onclick="dlTemplate()">⬇ Excel Template</button>
-    <a href="index.html" style="text-decoration:none"><button class="btn">📅 Planner</button></a>
     <button class="btn" onclick="openSettings()">⚙ Settings</button>
     <button class="ibt" onclick="toggleDark()" title="Toggle dark mode">◑</button>
   </div>
@@ -280,11 +279,11 @@ const PR = {
 };
 const PROF     = {E:'Emerging',D:'Developing',P:'Proficient',Ex:'Extending'};
 const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
-const ALL_SUBJECTS = ['ela','math','ss','french','phe'];
-const SUBJ_LABELS  = {ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'PHE 7'};
+const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers'];
+const SUBJ_LABELS  = {ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'PHE 7', science:'Science 7', careers:'Career Education 7'};
 
 const FALLBACK_CLASSES = [
-  {id:'hr', name:'Homeroom', subjects:['ela','math','ss','french','phe']},
+  {id:'hr', name:'Homeroom', subjects:['ela','math','ss','french','phe','science','careers']},
   {id:'sw', name:'Switch',   subjects:['ss','french']},
 ];
 
@@ -449,6 +448,60 @@ const SUB = {
     ],
     ctx:'Describe PHE units and health topics covered (e.g. Bocce, Soccer, fitness, health discussions…)',
   },
+  science:{
+    label:'Science 7', short:'Science',
+    competencies:[
+      'Demonstrate a sustained intellectual curiosity about science topics and problems of personal interest',
+      'Make observations, ask questions, and identify problems to investigate',
+      'Plan and carry out investigations using appropriate methods, tools, and materials',
+      'Process and analyze data, using reasoning and evidence to draw conclusions',
+      'Evaluate the validity of evidence and the reliability of results',
+      'Communicate ideas, findings, and solutions using scientific language and reasoning',
+    ],
+    strengths:[
+      'approaches science with genuine curiosity and asks thoughtful, insightful questions',
+      'carries out investigations carefully, making accurate observations and recording data with precision',
+      'analyzes data clearly and draws well-supported, evidence-based conclusions',
+      'demonstrates strong understanding of scientific concepts and connects them to the real world',
+      'communicates scientific ideas and findings clearly using appropriate vocabulary',
+      'works collaboratively and contributes thoughtfully to group investigations and discussions',
+      'shows excellent attention to detail and strong lab safety practices throughout all activities',
+    ],
+    growth:[
+      'continue developing skills in designing fair tests and identifying and controlling variables',
+      'work on using evidence more carefully to support conclusions and explain reasoning clearly',
+      'practise applying scientific vocabulary accurately and consistently in written and oral work',
+      'deepen understanding of concepts by making connections between science and everyday situations',
+      'continue building skills in recording observations and organizing data clearly during investigations',
+    ],
+    ctx:'Describe the science units and topics covered this term (e.g. ecosystems, chemistry, physics, earth science…)',
+  },
+  careers:{
+    label:'Career Education 7', short:'Career Education',
+    competencies:[
+      'Recognize personal strengths, interests, and values and connect them to future goals',
+      'Explore a range of career options and understand the education and training pathways they require',
+      'Set personal goals and identify the steps and strategies needed to reach them',
+      'Develop and apply skills for positive and respectful relationships in work and community settings',
+      'Reflect on learning experiences and connect them to life and career development',
+    ],
+    strengths:[
+      'shows strong self-awareness and a clear understanding of personal strengths, interests, and values',
+      'actively explores career and educational pathways with curiosity and an open mind',
+      'sets thoughtful, realistic personal goals and works with focus and determination to achieve them',
+      'demonstrates excellent communication, teamwork, and interpersonal skills in all settings',
+      'makes meaningful connections between classroom learning and real-world career possibilities',
+      'shows maturity, responsibility, and a consistently positive attitude in all Career Education activities',
+    ],
+    growth:[
+      'continue exploring a broader range of career and educational pathways with curiosity',
+      'work on setting specific, achievable goals and breaking them into clear, manageable steps',
+      'continue building self-awareness by reflecting regularly on personal strengths and areas for growth',
+      'develop stronger communication and collaboration skills for work and community contexts',
+      'practise connecting classroom learning and personal interests to future career possibilities',
+    ],
+    ctx:'Describe the topics and activities covered in Career Education this term (e.g. goal setting, career exploration, self-discovery, community connections…)',
+  },
 };
 
 // ── Progress & Growth phrase banks ────────────────────────────────────────────
@@ -514,7 +567,7 @@ function classSubjects(classId) { return getClass(classId).subjects; }
 function initStudent(sid) {
   if (!comments[sid]) comments[sid]={};
   if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
-  ['math','ss','french','phe'].forEach(k=>{
+  ['math','ss','french','phe','science','careers'].forEach(k=>{
     if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
   });
   if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],customNote:'',customText:''};
@@ -537,9 +590,10 @@ function studentDoneCount(sid) {
   }).length;
 }
 
-// ── Data migration (old ela_reading/writing/oral → ela) ───────────────────────
+// ── Data migration ────────────────────────────────────────────────────────────
 function migrateData() {
   let changed = false;
+  // Old ela_reading/writing/oral → single ela key
   students.forEach(s=>{
     const sc = comments[s.id]; if (!sc) return;
     if ((sc['ela_reading']||sc['ela_writing']||sc['ela_oral']) && !sc['ela']) {
@@ -555,6 +609,16 @@ function migrateData() {
     ['ela_reading','ela_writing','ela_oral'].forEach(k=>{ if(sc[k]){delete sc[k];changed=true;} });
   });
   if (changed) save();
+  // Add science & careers to any class that has all 5 original subjects (i.e. Homeroom)
+  let classChanged = false;
+  classes.forEach(cl=>{
+    const has5 = ['ela','math','ss','french','phe'].every(s=>cl.subjects.includes(s));
+    if(has5){
+      if(!cl.subjects.includes('science')){cl.subjects.push('science');classChanged=true;}
+      if(!cl.subjects.includes('careers')){cl.subjects.push('careers');classChanged=true;}
+    }
+  });
+  if(classChanged) saveClasses();
 }
 
 // ── Comment assembly ──────────────────────────────────────────────────────────
@@ -1335,6 +1399,8 @@ const CMAP={
   'social studies':'ss','ss':'ss','socials':'ss',
   'french':'french','français':'french','fr':'french',
   'phe':'phe','physical':'phe','physical and health education':'phe',
+  'science':'science','science 7':'science',
+  'careers':'careers','career education':'careers','career ed':'careers',
 };
 
 function importExcel(input) {
@@ -1399,10 +1465,10 @@ function importExcel(input) {
 
 // ── Excel Template ─────────────────────────────────────────────────────────────
 function dlTemplate() {
-  const heads=['First Name','Last Name','Pronouns (he/she/they)','Class','ELA Reading','ELA Writing','ELA Oral','Math','Social Studies','French','PHE'];
-  const note=['Enter first name','Enter last name','he, she, or they',classes.map(c=>c.name).join(' / '),'↓ E, D, P, or Ex ↓','','','','','',''];
-  const ex1=['Jordan','Smith','they',classes[0]?.name||'Homeroom','P','P','D','P','D','P','P'];
-  const ex2=['Alex','Johnson','she',classes[1]?.name||'Switch','','','','','P','D',''];
+  const heads=['First Name','Last Name','Pronouns (he/she/they)','Class','ELA Reading','ELA Writing','ELA Oral','Math','Social Studies','French','PHE','Science','Careers'];
+  const note=['Enter first name','Enter last name','he, she, or they',classes.map(c=>c.name).join(' / '),'↓ E, D, P, or Ex ↓','','','','','','','',''];
+  const ex1=['Jordan','Smith','they',classes[0]?.name||'Homeroom','P','P','D','P','D','P','P','P','P'];
+  const ex2=['Alex','Johnson','she',classes[1]?.name||'Switch','','','','','P','D','','',''];
   const ws=XLSX.utils.aoa_to_sheet([heads,note,ex1,ex2]);
   ws['!cols']=heads.map((_,i)=>({wch:i<4?18:12}));
   const wb=XLSX.utils.book_new();
@@ -1411,8 +1477,8 @@ function dlTemplate() {
 }
 
 // ── Word Export ────────────────────────────────────────────────────────────────
-const SUB_ORDER=['ela','math','ss','french','phe'];
-const SUB_NAMES={ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7', _pg:'Progress & Growth'};
+const SUB_ORDER=['ela','math','ss','french','phe','science','careers'];
+const SUB_NAMES={ela:'ELA 7', math:'Math 7', ss:'Social Studies 7', french:'French 7', phe:'Physical & Health Education 7', science:'Science 7', careers:'Career Education 7', _pg:'Progress & Growth'};
 
 // Converts \n\n-separated text into proper <p> tags; \n within a block → <br/>
 function textToWordHtml(text) {
