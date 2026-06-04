@@ -756,12 +756,14 @@ function renderEditor() {
   document.getElementById('expinfo').textContent=`${students.filter(x=>(x.classId||classes[0]?.id)===activeClass).length} students · ${s.firstName} ${s.lastName}`;
   const subs=classSubjects(s.classId||classes[0]?.id);
   const tabDefs=[
-    {key:'ela',    label:'ELA 7',             show:subs.includes('ela')},
-    {key:'math',   label:'Math 7',            show:subs.includes('math')},
-    {key:'ss',     label:'Social Studies 7',  show:subs.includes('ss')},
-    {key:'french', label:'French 7',          show:subs.includes('french')},
-    {key:'phe',    label:'PHE 7',             show:subs.includes('phe')},
-    {key:'pg',     label:'Progress & Growth', show:true},
+    {key:'ela',     label:'ELA 7',             show:subs.includes('ela')},
+    {key:'math',    label:'Math 7',            show:subs.includes('math')},
+    {key:'ss',      label:'Social Studies 7',  show:subs.includes('ss')},
+    {key:'french',  label:'French 7',          show:subs.includes('french')},
+    {key:'phe',     label:'PHE 7',             show:subs.includes('phe')},
+    {key:'science', label:'Science 7',         show:subs.includes('science')},
+    {key:'careers', label:'Career Education 7',show:subs.includes('careers')},
+    {key:'pg',      label:'Progress & Growth', show:true},
   ];
   function tabChip(k){
     if(k==='pg') return '';
