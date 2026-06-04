@@ -253,10 +253,19 @@
 
     <!-- Data -->
     <div class="settings-section">
-      <div class="settings-section-head"><span class="settings-section-title">Data</span></div>
+      <div class="settings-section-head"><span class="settings-section-title">Data &amp; Backup</span></div>
       <div class="settings-section-body">
-        <div style="font-size:.8rem;color:var(--muted);line-height:1.5">All data is stored in your browser's local storage. Clearing will permanently remove all students and comments.</div>
-        <button class="btn sm danger" onclick="clearAllData()">Clear All Student Data</button>
+        <div style="font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:2px">Transfer to another device</div>
+        <div style="font-size:.79rem;color:var(--muted);line-height:1.5;margin-bottom:8px">Export saves all students, comments, classes, and context to a <code>.json</code> file. Save it to Google Drive, iCloud, or Dropbox, then Import it on your other device.</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button class="btn sm primary" onclick="exportData()">⬇ Export All Data</button>
+          <button class="btn sm" onclick="document.getElementById('import-json-input').click()">⬆ Import Data</button>
+          <input type="file" id="import-json-input" accept=".json" style="display:none" onchange="importData(this)"/>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px">Danger Zone</div>
+          <button class="btn sm danger" onclick="clearAllData()">Clear All Student Data</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1263,6 +1272,49 @@ function deleteClass(idx) {
   renderClassTabs();
   renderStudentList();
   renderEditor();
+}
+
+function exportData() {
+  const payload = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    students,
+    comments,
+    classCtx,
+    classes,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  saveAs(blob, `ReportCards_${new Date().toISOString().slice(0,10)}.json`);
+}
+
+function importData(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if(!Array.isArray(d.students)||typeof d.comments!=='object')
+        return alert('This doesn\'t look like a valid export file. Please use a file saved by this app.');
+      if(!confirm(`Import "${file.name}"?\n\nThis will replace all current students and comments with the data from this file.`))
+        { input.value=''; return; }
+      students = d.students || [];
+      comments = d.comments || {};
+      classCtx = d.classCtx || {};
+      if(Array.isArray(d.classes) && d.classes.length) {
+        classes = d.classes;
+        saveClasses();
+        activeClass = classes[0]?.id || activeClass;
+        localStorage.setItem('rc_class', activeClass);
+      }
+      save(); saveCtx();
+      activeId = null;
+      closeModal('settings-modal');
+      renderClassTabs(); renderStudentList(); renderEditor();
+      alert(`Imported ${students.length} student${students.length!==1?'s':''} successfully.`);
+    } catch(err) { alert('Could not read file: '+err.message); }
+  };
+  reader.readAsText(file);
+  input.value = '';
 }
 
 function clearAllData() {
