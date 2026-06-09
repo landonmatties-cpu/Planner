@@ -47,9 +47,11 @@
     .stu-item{display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer;font-size:.83rem;font-weight:500;transition:background .1s}
     .stu-item:hover{background:var(--bg)}
     .stu-item.active{background:var(--primary-light);color:var(--primary);font-weight:700}
-    .stu-item .del{margin-left:auto;opacity:0;background:none;border:none;cursor:pointer;color:var(--muted);font-size:.75rem;padding:1px 4px;border-radius:3px}
-    .stu-item:hover .del{opacity:1}
+    .stu-item .del,.stu-item .edit{opacity:0;background:none;border:none;cursor:pointer;color:var(--muted);font-size:.75rem;padding:1px 4px;border-radius:3px}
+    .stu-item .del{margin-left:auto}
+    .stu-item:hover .del,.stu-item:hover .edit{opacity:1}
     .stu-item .del:hover{background:var(--danger-light);color:var(--danger)}
+    .stu-item .edit:hover{background:var(--primary-light);color:var(--primary)}
     .avatar{width:26px;height:26px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .stu-item.active .avatar{background:var(--primary);color:#fff}
     .empty-p{padding:14px 10px;text-align:center;color:var(--muted);font-size:.79rem;line-height:1.5}
@@ -180,10 +182,10 @@
   </div>
 </div>
 
-<!-- Add student modal -->
+<!-- Add / Edit student modal -->
 <div class="mbk" id="add-modal">
   <div class="modal">
-    <div class="modal-title">Add Student</div>
+    <div class="modal-title" id="add-modal-title">Add Student</div>
     <div class="fg"><div class="fl">First Name</div><input class="fi" id="af" type="text" placeholder="e.g. Jordan"/></div>
     <div class="fg"><div class="fl">Last Name</div><input class="fi" id="al" type="text" placeholder="e.g. Smith"/></div>
     <div class="fg"><div class="fl">Pronouns</div>
@@ -194,7 +196,7 @@
     </div>
     <div class="mactions">
       <button class="btn" onclick="closeModal('add-modal')">Cancel</button>
-      <button class="btn primary" onclick="confirmAdd()">Add</button>
+      <button class="btn primary" id="add-modal-confirm" onclick="confirmAddOrEdit()">Add</button>
     </div>
   </div>
 </div>
@@ -584,6 +586,7 @@ let activeSubj = 'ela';
 let activeClass= localStorage.getItem('rc_class') || classes[0]?.id || null;
 let dark       = localStorage.getItem('rc_dark')  === '1';
 let classFormMode = null; // null | 'add' | {idx:number}
+let editStudentId = null;
 
 if (dark) document.documentElement.classList.add('dark');
 
@@ -769,8 +772,6 @@ function getFullComment(sid,key) {
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderClassTabs() {
-  const ac = document.getElementById('ac');
-  if (ac) ac.innerHTML = classes.map(cl=>`<option value="${esc(cl.id)}">${esc(cl.name)}</option>`).join('');
   document.getElementById('class-tabs').innerHTML = classes.map(cl=>
     `<button class="class-tab${activeClass===cl.id?' active':''}" onclick="switchClass('${cl.id}')">${esc(cl.name)}</button>`
   ).join('');
@@ -790,6 +791,7 @@ function renderStudentList() {
         <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.firstName+' '+s.lastName)}</div>
         ${done?`<div style="font-size:.67rem;color:var(--success);font-weight:600">${done}/${total} subjects</div>`:''}
       </div>
+      <button class="edit" onclick="openEditStudent(event,'${s.id}')">✏</button>
       <button class="del" onclick="deleteStudent(event,'${s.id}')">✕</button>
     </div>`;
   }).join('');
@@ -841,11 +843,7 @@ function renderEditor() {
         <div class="stu-name">${esc(s.firstName+' '+s.lastName)}</div>
         <div class="stu-sub">${esc(getClass(s.classId||classes[0]?.id).name)} · ${s.pronouns==='they'?'They/Them':s.pronouns==='she'?'She/Her':'He/Him'}</div>
       </div>
-      <select class="sel" onchange="updatePronouns('${s.id}',this.value)">
-        <option value="they"${s.pronouns==='they'?' selected':''}>They/Them</option>
-        <option value="she"${s.pronouns==='she'?' selected':''}>She/Her</option>
-        <option value="he"${s.pronouns==='he'?' selected':''}>He/Him</option>
-      </select>
+      <button class="btn sm" onclick="openEditStudent(null,'${s.id}')">Edit Details</button>
     </div>
     <div class="stabs">${tabs}</div>
     <div id="subj-body"></div>
@@ -1198,12 +1196,6 @@ function updateCT(sid,key,val) {
   save();
 }
 
-function updatePronouns(sid,val) {
-  const s=getStudent(sid); if(s) s.pronouns=val;
-  Object.keys(comments[sid]||{}).forEach(k=>{if(comments[sid][k])comments[sid][k].customText='';});
-  save(); renderSubjBody();
-}
-
 function setSpecial(sid,key,val) {
   const s=getStudent(sid), name=s?.firstName||'The student', p=pr(sid);
   const map={
@@ -1260,22 +1252,56 @@ function copyTA(taId,confirmId) {
 }
 
 // ── Student CRUD ──────────────────────────────────────────────────────────────
+function populateClassSelect(selectedId) {
+  const sel=document.getElementById('ac');
+  sel.innerHTML=classes.map(c=>`<option value="${c.id}"${c.id===selectedId?' selected':''}>${esc(c.name)}</option>`).join('');
+}
 function openAddStudent() {
+  editStudentId=null;
+  document.getElementById('add-modal-title').textContent='Add Student';
+  document.getElementById('add-modal-confirm').textContent='Add';
   document.getElementById('af').value='';
   document.getElementById('al').value='';
-  document.getElementById('ac').value=activeClass;
+  document.getElementById('ap').value='they';
+  populateClassSelect(activeClass);
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('af').focus(),50);
+}
+function openEditStudent(e, id) {
+  if(e) e.stopPropagation();
+  const s=getStudent(id); if(!s) return;
+  editStudentId=id;
+  document.getElementById('add-modal-title').textContent='Edit Student';
+  document.getElementById('add-modal-confirm').textContent='Save';
+  document.getElementById('af').value=s.firstName;
+  document.getElementById('al').value=s.lastName;
+  document.getElementById('ap').value=s.pronouns||'they';
+  populateClassSelect(s.classId||classes[0]?.id||'');
   document.getElementById('add-modal').classList.add('open');
   setTimeout(()=>document.getElementById('af').focus(),50);
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function confirmAdd() {
+function confirmAddOrEdit() {
   const first=document.getElementById('af').value.trim();
   const last=document.getElementById('al').value.trim();
   const pron=document.getElementById('ap').value;
   const cls=document.getElementById('ac').value;
   if(!first) return;
-  students.push({id:genId(),firstName:first,lastName:last,pronouns:pron,classId:cls});
-  save(); renderStudentList(); closeModal('add-modal');
+  if(editStudentId) {
+    const s=getStudent(editStudentId); if(!s) return;
+    const classChanged=s.classId!==cls;
+    const pronounsChanged=s.pronouns!==pron;
+    s.firstName=first; s.lastName=last; s.pronouns=pron; s.classId=cls;
+    if(pronounsChanged) Object.keys(comments[s.id]||{}).forEach(k=>{if(comments[s.id][k])comments[s.id][k].customText='';});
+    save();
+    if(classChanged && activeId===editStudentId) { activeId=null; renderEditor(); }
+    renderStudentList();
+    if(activeId===editStudentId) renderEditor();
+  } else {
+    students.push({id:genId(),firstName:first,lastName:last,pronouns:pron,classId:cls});
+    save(); renderStudentList();
+  }
+  closeModal('add-modal');
 }
 function deleteStudent(e,id) {
   e.stopPropagation();
