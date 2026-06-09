@@ -119,13 +119,13 @@
     .cpok.show{opacity:1}
     .expbar{position:fixed;bottom:0;left:220px;right:0;background:var(--surface);border-top:1px solid var(--border);padding:9px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:5}
     .expinfo{font-size:.8rem;color:var(--muted)}
-    .mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center}
+    .mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px}
     .mbk.open{display:flex}
-    .modal{background:var(--surface);border-radius:12px;padding:20px;width:360px;max-width:95vw;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+    .modal{background:var(--surface);border-radius:12px;padding:20px;width:360px;max-width:95vw;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 40px rgba(0,0,0,.2);margin:auto}
     .modal-title{font-size:.96rem;font-weight:700}
     .mactions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
     /* Settings modal */
-    .settings-modal{width:520px;max-height:88vh;overflow-y:auto}
+    .settings-modal{width:520px;max-width:95vw}
     .settings-section{border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:12px}
     .settings-section-head{padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
     .settings-section-title{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
@@ -279,6 +279,18 @@
       </div>
     </div>
 
+    <!-- Subject Setup -->
+    <div class="settings-section">
+      <div class="settings-section-head">
+        <span class="settings-section-title">Subject Setup</span>
+      </div>
+      <div class="settings-section-body">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px">Set class defaults for <strong id="setup-class-name"></strong>. Each class stores its own defaults. Changes here only affect students when you click "Apply to All".</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px" id="setup-subj-tabs"></div>
+        <div id="setup-subj-body"></div>
+      </div>
+    </div>
+
     <!-- Appearance -->
     <div class="settings-section">
       <div class="settings-section-head"><span class="settings-section-title">Appearance</span></div>
@@ -319,8 +331,8 @@ const PR = {
 };
 const PROF     = {E:'Emerging',D:'Developing',P:'Proficient',Ex:'Extending'};
 const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
-const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers'];
-const SUBJ_LABELS  = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education'};
+const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers','pg'];
+const SUBJ_LABELS  = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education', pg:'Progress & Growth'};
 
 
 // ── Proficiency definitions ────────────────────────────────────────────────────
@@ -363,17 +375,26 @@ const SUB = {
       'communicates ideas clearly, confidently, and with a strong sense of audience',
       'listens attentively and responds thoughtfully, building respectfully on the ideas of others',
       'contributes meaningfully and consistently to class discussions and group activities',
+      'participates in class activities with effort and a positive, willing attitude',
+      'is developing foundational reading skills and building stamina with assigned texts',
+      'is beginning to organize and express ideas in writing and shows progress from the start of the term',
+      'demonstrates effort and persistence when working through reading and writing tasks',
     ],
     growth:[
       'continue building strategies for reading and making sense of more complex texts independently',
       'practise drawing conclusions from texts and explaining thinking with specific examples as support',
       'continue developing writing by adding specific details and explanation to strengthen ideas',
       'work on varying sentence structure and length to improve the flow and impact of writing',
-      'practise applying grammar, spelling, and punctuation conventions consistently across all writing',
       'work on strengthening writing structure through clear transitions and logical organization',
-      'continue building confidence in sharing ideas and speaking up in whole-class settings',
-      'work on expanding responses to include more detail, reasoning, and supporting evidence',
       'develop revision habits to improve the clarity, voice, and depth of written work',
+      'work on expanding responses to include more detail, reasoning, and supporting evidence',
+      'practise applying grammar, spelling, and punctuation conventions consistently across all writing',
+      'continue building confidence in sharing ideas and speaking up in whole-class settings',
+      'focus on reading assigned texts regularly to build stamina and comprehension',
+      'practise writing in complete sentences with a clear main idea supported by at least one detail',
+      'work on applying basic writing conventions consistently, including capital letters, punctuation, and spelling',
+      'build confidence by contributing ideas to class discussions, as every contribution matters',
+      'work on completing and submitting assignments consistently to demonstrate understanding and effort',
     ],
     ctx:'Describe what your ELA class studied and worked on this term (novels, writing units, Socratic seminars, oral presentations…)',
   },
@@ -392,17 +413,25 @@ const SUB = {
       'applies number operations accurately and efficiently to solve multi-step problems',
       'demonstrates strong proportional reasoning and applies it flexibly to new situations',
       'uses a variety of problem-solving strategies with persistence and flexibility',
+      'demonstrates solid understanding of algebraic expressions and equations',
       'communicates mathematical thinking clearly and precisely using appropriate vocabulary',
       'connects mathematical concepts to real-world and personally relevant situations',
       'shows strong mental math and estimation skills',
-      'demonstrates solid understanding of algebraic expressions and equations',
+      'approaches math tasks with a positive attitude and genuine effort',
+      'is developing fluency with foundational number operations and showing steady progress',
+      'demonstrates persistence when working through challenging problems and asks for help when needed',
+      'is building confidence in math and engages actively with hands-on and visual tasks',
     ],
     growth:[
       'continue developing fluency with operations involving rational numbers',
-      'work on communicating mathematical reasoning clearly using precise vocabulary',
       'practise applying a variety of problem-solving strategies to multi-step and unfamiliar problems',
       'focus on connecting algebraic thinking to real-world and contextual situations',
+      'work on communicating mathematical reasoning clearly using precise vocabulary',
       'develop habits of checking the reasonableness of answers and reflecting on problem-solving',
+      'focus on building fluency with fundamental number operations and reviewing key concepts regularly',
+      'practise showing work step-by-step to make thinking visible and catch errors',
+      'work on identifying what a problem is asking before beginning to solve, and checking work when finished',
+      'develop confidence by regularly practising foundational skills and seeking support when uncertain',
     ],
     ctx:'Describe the math content covered this term (integers, fractions, ratios, expressions, geometry…)',
   },
@@ -417,19 +446,27 @@ const SUB = {
       'Construct arguments defending the significance of individuals or groups',
     ],
     strengths:[
-      'demonstrates genuine curiosity and deep engagement with the historical concepts studied this term',
       'uses evidence from primary and secondary sources effectively to support and justify thinking',
+      'constructs well-developed arguments supported by specific and relevant historical evidence',
       'makes insightful connections between historical events and contemporary issues and perspectives',
       'considers and appreciates multiple and diverse perspectives when analysing historical events',
+      'demonstrates genuine curiosity and deep engagement with the historical concepts studied this term',
       'communicates ideas confidently and clearly in both written and oral responses',
-      'constructs well-developed arguments supported by specific and relevant historical evidence',
+      'engages with Social Studies activities with interest and a positive attitude',
+      'participates in class discussions and shows growing awareness of historical topics and concepts',
+      'is developing skills in identifying key ideas and important details in historical content',
+      'demonstrates effort in completing assigned work and is building foundational Social Studies knowledge',
     ],
     growth:[
       'continue developing skills in constructing strong arguments with specific historical evidence',
-      'work on examining historical events from multiple and underrepresented perspectives',
       'practise writing well-organized, clear, and evidence-based responses with a strong argument',
+      'work on examining historical events from multiple and underrepresented perspectives',
       'develop deeper connections between historical events and contemporary issues',
       'continue building geographic literacy, including map reading and spatial analysis skills',
+      'work on identifying the main ideas in texts and class materials to build foundational content knowledge',
+      'practise writing responses that include at least one clear idea supported by a specific detail or example',
+      'focus on completing assigned readings and tasks to build understanding of key topics and events',
+      'build confidence by participating in class discussions and sharing observations about the content',
     ],
     ctx:'Describe the topics covered in Social Studies this term…',
   },
@@ -443,19 +480,27 @@ const SUB = {
       'Engage in listening and speaking activities to enhance oral fluency',
     ],
     strengths:[
+      'writes in French using vocabulary and grammar structures accurately',
+      'applies knowledge of French grammar to craft meaningful and complete sentences',
       'communicates ideas in French using familiar vocabulary and structures with growing confidence',
       'demonstrates improving ability to read and comprehend a variety of French texts',
-      'writes in French using vocabulary and grammar structures accurately',
-      'participates with enthusiasm and a positive attitude in French conversations and activities',
-      'applies knowledge of French grammar to craft meaningful and complete sentences',
       'shows genuine enthusiasm for the French language and Francophone culture',
+      'participates with enthusiasm and a positive attitude in French conversations and activities',
+      'demonstrates a positive attitude toward learning French and engages willingly in class activities',
+      'is building a foundational French vocabulary and applying familiar words and phrases in context',
+      'participates in French activities with effort and a growing willingness to try speaking and writing',
+      'is developing confidence in French and shows persistence when working with new language concepts',
     ],
     growth:[
-      'continue building French vocabulary through daily reading, listening, and speaking practice',
-      'work on applying French grammar conventions more accurately and consistently in written work',
-      'practise speaking French more often and with greater confidence in class',
       'develop strategies for reading and understanding longer and more complex French texts',
+      'work on applying French grammar conventions more accurately and consistently in written work',
+      'continue building French vocabulary through daily reading, listening, and speaking practice',
+      'practise speaking French more often and with greater confidence in class',
       'continue exploring connections between French and diverse Francophone cultures',
+      'focus on learning and reviewing core French vocabulary to build a working foundation',
+      'practise writing short, simple sentences in French using familiar vocabulary and structures',
+      'work on identifying key words and cognates to support reading comprehension in French',
+      'build confidence by practising speaking French aloud, beginning with simple phrases and greetings',
     ],
     ctx:'Describe the French content and activities covered this term…',
   },
@@ -470,18 +515,26 @@ const SUB = {
     ],
     strengths:[
       'demonstrates strong movement skills and applies them effectively across a range of activities',
-      'participates with consistent energy, enthusiasm, and a positive attitude in all activities',
       'exemplifies outstanding sportsmanship, cooperation, fairness, and respect for all participants',
-      'applies safety practices responsibly and consistently throughout all physical activities',
+      'participates with consistent energy, enthusiasm, and a positive attitude in all activities',
       'demonstrates solid understanding of health and wellness concepts and applies them thoughtfully',
+      'applies safety practices responsibly and consistently throughout all physical activities',
       'shows genuine commitment to personal fitness goals and works hard to achieve them',
+      'participates in PHE activities with a cooperative and respectful attitude toward classmates',
+      'is developing foundational movement skills and making progress with regular practice and effort',
+      'demonstrates a willingness to try new activities and engages with a positive effort',
+      'shows respect for safety guidelines and treats classmates with kindness and fairness',
     ],
     growth:[
       'continue developing sport-specific movement skills through regular and focused practice',
       'work on applying cooperative communication and leadership strategies during team activities',
-      'focus on setting specific personal wellness goals and creating a plan to achieve them',
       'develop a deeper understanding of how regular physical activity connects to overall well-being',
+      'focus on setting specific personal wellness goals and creating a plan to achieve them',
       'continue building cardiovascular endurance and overall physical fitness over time',
+      'work on engaging consistently and with full effort in all activities, including those that feel challenging',
+      'develop sportsmanship and cooperation skills by encouraging teammates and showing respect',
+      'focus on applying personal best effort in every class, regardless of skill level or prior experience',
+      'continue building basic movement skills through regular practice and a willingness to keep trying',
     ],
     ctx:'Describe PHE units and health topics covered (e.g. Bocce, Soccer, fitness, health discussions…)',
   },
@@ -497,12 +550,16 @@ const SUB = {
     ],
     strengths:[
       'approaches science with genuine curiosity and asks thoughtful, insightful questions',
-      'carries out investigations carefully, making accurate observations and recording data with precision',
       'analyzes data clearly and draws well-supported, evidence-based conclusions',
+      'carries out investigations carefully, making accurate observations and recording data with precision',
       'demonstrates strong understanding of scientific concepts and connects them to the real world',
       'communicates scientific ideas and findings clearly using appropriate vocabulary',
-      'works collaboratively and contributes thoughtfully to group investigations and discussions',
       'shows excellent attention to detail and strong lab safety practices throughout all activities',
+      'works collaboratively and contributes thoughtfully to group investigations and discussions',
+      'engages in science activities with enthusiasm and a genuine curiosity about the natural world',
+      'participates cooperatively in group investigations and follows safety guidelines responsibly',
+      'is developing foundational science skills and demonstrates effort in completing labs and assignments',
+      'demonstrates a positive attitude and growing confidence when working through scientific tasks',
     ],
     growth:[
       'continue developing skills in designing fair tests and identifying and controlling variables',
@@ -510,6 +567,10 @@ const SUB = {
       'practise applying scientific vocabulary accurately and consistently in written and oral work',
       'deepen understanding of concepts by making connections between science and everyday situations',
       'continue building skills in recording observations and organizing data clearly during investigations',
+      'focus on recording observations accurately and completely during labs and hands-on activities',
+      'work on identifying the purpose of investigations and explaining what was learned in simple terms',
+      'practise applying basic scientific vocabulary when describing observations and findings',
+      'build confidence in science by completing all assigned work and asking questions when uncertain',
     ],
     ctx:'Describe the science units and topics covered this term (e.g. ecosystems, chemistry, physics, earth science…)',
   },
@@ -524,11 +585,15 @@ const SUB = {
     ],
     strengths:[
       'shows strong self-awareness and a clear understanding of personal strengths, interests, and values',
-      'actively explores career and educational pathways with curiosity and an open mind',
       'sets thoughtful, realistic personal goals and works with focus and determination to achieve them',
-      'demonstrates excellent communication, teamwork, and interpersonal skills in all settings',
       'makes meaningful connections between classroom learning and real-world career possibilities',
+      'actively explores career and educational pathways with curiosity and an open mind',
+      'demonstrates excellent communication, teamwork, and interpersonal skills in all settings',
       'shows maturity, responsibility, and a consistently positive attitude in all Career Education activities',
+      'participates in Career Education activities with a positive and cooperative attitude',
+      'is developing awareness of personal interests and beginning to explore career-related ideas',
+      'demonstrates effort in completing Career Education tasks and engages with the learning process',
+      'shows willingness to reflect on personal strengths and is beginning to connect them to future goals',
     ],
     growth:[
       'continue exploring a broader range of career and educational pathways with curiosity',
@@ -536,6 +601,10 @@ const SUB = {
       'continue building self-awareness by reflecting regularly on personal strengths and areas for growth',
       'develop stronger communication and collaboration skills for work and community contexts',
       'practise connecting classroom learning and personal interests to future career possibilities',
+      'focus on identifying personal strengths and interests as a starting point for future planning',
+      'work on completing self-reflections and assessments thoughtfully and with genuine effort',
+      'build confidence in sharing ideas and participating in group activities and discussions',
+      'develop the habit of setting one small, achievable goal and working toward it consistently',
     ],
     ctx:'Describe the topics and activities covered in Career Education this term (e.g. goal setting, career exploration, self-discovery, community connections…)',
   },
@@ -571,7 +640,7 @@ const PG = {
     {id:'su3', t:'having regular conversations about what [name] is learning at school to reinforce understanding and show support'},
     {id:'su4', t:'ensuring [name] has a quiet, organized space for completing homework and projects each evening'},
     {id:'su5', t:'encouraging outdoor physical activity and ensuring adequate sleep each night to support well-being and readiness to learn'},
-    {id:'su6', t:'celebrating [name]\'s achievements — big and small — to build confidence and motivation to keep trying'},
+    {id:'su6', t:'celebrating [name]\'s achievements, big and small, to build confidence and motivation to keep trying'},
   ],
 };
 
@@ -579,6 +648,7 @@ const PG = {
 let students   = JSON.parse(localStorage.getItem('rc_students') || '[]');
 let comments   = JSON.parse(localStorage.getItem('rc_comments') || '{}');
 let classCtx   = JSON.parse(localStorage.getItem('rc_ctx')      || '{}');
+let classComps = JSON.parse(localStorage.getItem('rc_comps')   || '{}');
 let classes    = JSON.parse(localStorage.getItem('rc_classes')  || '[]');
 let firstRun   = classes.length === 0;
 let activeId   = null;
@@ -587,6 +657,7 @@ let activeClass= localStorage.getItem('rc_class') || classes[0]?.id || null;
 let dark       = localStorage.getItem('rc_dark')  === '1';
 let classFormMode = null; // null | 'add' | {idx:number}
 let editStudentId = null;
+let activeSetupSubj = 'ela';
 
 if (dark) document.documentElement.classList.add('dark');
 
@@ -598,7 +669,11 @@ const getStudent = id => students.find(s=>s.id===id);
 
 function save()    { localStorage.setItem('rc_students',JSON.stringify(students)); localStorage.setItem('rc_comments',JSON.stringify(comments)); }
 function saveCtx() { localStorage.setItem('rc_ctx',JSON.stringify(classCtx)); }
+function saveComps() { localStorage.setItem('rc_comps',JSON.stringify(classComps)); }
 function saveClasses() { localStorage.setItem('rc_classes',JSON.stringify(classes)); }
+
+// Key for per-class ctx/comps: "classId:subjKey"
+function clsKey(classId, subjKey) { return (classId||'_')+':'+subjKey; }
 
 function getClass(id) { return classes.find(c=>c.id===id)||classes[0]||null; }
 function classSubjects(classId) { return getClass(classId)?.subjects || []; }
@@ -609,19 +684,19 @@ function subGradeLabel(key, grade) { return (SUB_BASE[key]||key)+' '+(grade||7);
 
 function initStudent(sid) {
   if (!comments[sid]) comments[sid]={};
-  if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
+  const _cid = getStudent(sid)?.classId||classes[0]?.id||'';
+  const _dc = k => classCtx[clsKey(_cid,k)]||'';
+  const _dp = k => [...(classComps[clsKey(_cid,k)]||[])];
+  if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:_dp('ela'),ctx:_dc('ela'),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
   ['math','ss','french','phe','science','careers'].forEach(k=>{
-    if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:[],strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
+    if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:_dp(k),ctx:_dc(k),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
   });
   if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],customNote:'',customText:''};
 }
 
 function studentSubjKeys(sid) {
   const s = getStudent(sid);
-  const subs = classSubjects(s?.classId||classes[0]?.id||'hr');
-  const keys = [];
-  subs.forEach(k => keys.push(k));
-  return keys;
+  return classSubjects(s?.classId||classes[0]?.id).filter(k=>k!=='pg');
 }
 
 function studentDoneCount(sid) {
@@ -673,8 +748,26 @@ function migrateData() {
     }
     // Add default grade to existing classes that don't have one
     if(!cl.grade){cl.grade=7;classChanged=true;}
+    // Add pg to existing classes (was always shown before, now toggleable)
+    if(!cl.subjects.includes('pg')){cl.subjects.push('pg');classChanged=true;}
   });
   if(classChanged) saveClasses();
+  // Migrate classCtx and classComps from flat "key" format to "classId:key" format
+  let ctxMig=false, compsMig=false;
+  Object.keys(classCtx).forEach(k=>{
+    if(!k.includes(':')&&classes.length>0){
+      classes.forEach(cl=>{const nk=clsKey(cl.id,k);if(!classCtx[nk])classCtx[nk]=classCtx[k];});
+      delete classCtx[k]; ctxMig=true;
+    }
+  });
+  if(ctxMig) saveCtx();
+  Object.keys(classComps).forEach(k=>{
+    if(!k.includes(':')&&classes.length>0){
+      classes.forEach(cl=>{const nk=clsKey(cl.id,k);if(!classComps[nk])classComps[nk]=classComps[k];});
+      delete classComps[k]; compsMig=true;
+    }
+  });
+  if(compsMig) saveComps();
 }
 
 // ── Comment assembly ──────────────────────────────────────────────────────────
@@ -684,17 +777,16 @@ function assembleSubjectComment(sid, key) {
   const sub=SUB[key]; if(!sub) return c.customText||'';
   const name=s.firstName, p=pr(sid);
   const prof=c.proficiency||'';
-  const ctx=(classCtx[key]||'').trim();
+  const ctx=(c.ctx||classCtx[clsKey(s.classId||classes[0]?.id||'',key)]||'').trim();
   const strs=c.strengthPhrases||[], grws=c.growthPhrases||[];
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
-  if(ctx) parts.push(ctx);
   if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p,studentGrade(sid)));
-  if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
-  if(grws.length){
-    const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
-    parts.push(`To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`);
-  }
+  if(ctx) parts.push(ctx);
+  const strText=strs.length?strs.map((ph,i)=>`${i===0?name:p.sub} ${ph}.`).join(' '):'';
+  const grwText=grws.length?(()=>{const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];return `To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`;})():'';
+  const transition=strs.length?(strs.length===1?`In ${p.pos} work this term, ${name} has shown a notable strength.`:`In ${p.pos} work this term, ${name} has shown several notable strengths.`):'';
+  if(transition||strText||grwText) parts.push([transition,strText,grwText].filter(Boolean).join(' '));
   if(adapt) parts.push(adapt);
   if(spec)  parts.push(spec);
   return parts.join('\n\n');
@@ -705,22 +797,23 @@ function assembleELAComment(sid) {
   const c=comments[sid]?.['ela']||{};
   const name=s.firstName, p=pr(sid);
   const profR=c.profR||'', profW=c.profW||'', profO=c.profO||'';
-  const ctx=(classCtx['ela']||'').trim();
+  const ctx=(c.ctx||classCtx[clsKey(s.classId||classes[0]?.id||'','ela')]||'').trim();
   const strs=c.strengthPhrases||[], grws=c.growthPhrases||[];
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
-  if(ctx) parts.push(ctx);
-  // Proficiency — each area on its own line (clear for parents and students)
+  // Proficiency — narrative lead-in + each area on its own line
   const profLines=[];
-  if(profR) profLines.push(`Reading — ${PROF[profR]}`);
-  if(profW) profLines.push(`Writing — ${PROF[profW]}`);
-  if(profO) profLines.push(`Oral Language — ${PROF[profO]}`);
-  if(profLines.length) parts.push(profLines.join('\n'));
-  if(strs.length) parts.push(strs.map((ph,i)=>`${i===0?p.sub:name} ${ph}.`).join(' '));
-  if(grws.length){
-    const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];
-    parts.push(`To further support ${name}'s growth in English Language Arts, I encourage ${p.obj} to ${gl}.`);
+  if(profR) profLines.push(`Reading: ${PROF[profR]}`);
+  if(profW) profLines.push(`Writing: ${PROF[profW]}`);
+  if(profO) profLines.push(`Oral Language: ${PROF[profO]}`);
+  if(profLines.length){
+    parts.push(`This term, ${name} has demonstrated the following proficiency levels:\n${profLines.join('\n')}`);
   }
+  if(ctx) parts.push(ctx);
+  const strText=strs.length?strs.map((ph,i)=>`${i===0?name:p.sub} ${ph}.`).join(' '):'';
+  const grwText=grws.length?(()=>{const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];return `To further support ${name}'s growth in English Language Arts, I encourage ${p.obj} to ${gl}.`;})():'';
+  const transition=strs.length?(strs.length===1?`In ${p.pos} work this term, ${name} has shown a notable strength.`:`In ${p.pos} work this term, ${name} has shown several notable strengths.`):'';
+  if(transition||strText||grwText) parts.push([transition,strText,grwText].filter(Boolean).join(' '));
   if(adapt) parts.push(adapt);
   if(spec)  parts.push(spec);
   return parts.join('\n\n');
@@ -755,10 +848,13 @@ function assemblePG(sid) {
 function buildFullComment(sid, key) {
   const c=comments[sid]?.[key]||{};
   const sub=SUB[key]; if(!sub) return '';
-  const comps=c.competencies||[];
+  const _s=getStudent(sid);
+  const _cid=_s?.classId||classes[0]?.id||'';
+  const comps = c.competencies?.length ? c.competencies : (classComps[clsKey(_cid,key)]||[]);
+  const name2=_s?.firstName||'';
   const narrative=key==='ela'?assembleELAComment(sid):assembleSubjectComment(sid,key);
   if(!narrative.trim()&&!comps.length) return '';
-  const compLines=comps.map(comp=>`(Curricular Competency) ${comp}`).join('\n');
+  const compLines=comps.length?comps.map(c2=>`(Curricular Competency) ${c2}`).join('\n'):'';
   return [compLines,narrative].filter(Boolean).join('\n\n');
 }
 
@@ -819,7 +915,7 @@ function renderEditor() {
     {key:'phe',     label:subGradeLabel('phe',cg),             show:subs.includes('phe')},
     {key:'science', label:subGradeLabel('science',cg),         show:subs.includes('science')},
     {key:'careers', label:subGradeLabel('careers',cg),         show:subs.includes('careers')},
-    {key:'pg',      label:'Progress & Growth',                 show:true},
+    {key:'pg',      label:'Progress & Growth',                 show:subs.includes('pg')},
   ];
   function tabChip(k){
     if(k==='pg') return '';
@@ -864,6 +960,7 @@ function buildELASection() {
   const c=comments[sid]['ela'];
   const sub=SUB['ela'];
   const cg=studentGrade(sid);
+  const classId=getStudent(sid)?.classId||classes[0]?.id||'';
 
   // Three proficiency rows
   const elaAreas=[{f:'profR',label:'Reading'},{f:'profW',label:'Writing'},{f:'profO',label:'Oral Language'}];
@@ -879,7 +976,6 @@ function buildELASection() {
   const cnt=selC.length;
   const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
   const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
-
   const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
       <input type="checkbox" id="cela${i}" data-sid="${sid}" data-key="ela" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
@@ -902,15 +998,21 @@ function buildELASection() {
     <div class="card-body">
       <div class="note">📌 ELA has one overall comment with three separate proficiency grades for Reading, Writing, and Oral Language.</div>
       <div class="fg">
-        <div class="fl">Class Context <span style="color:var(--muted);font-weight:400">(shared for all students)</span></div>
-        <textarea class="ta ctx" placeholder="${esc(sub.ctx||'')}" oninput="updateCtx('ela',this.value)">${esc(classCtx['ela']||'')}</textarea>
+        <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Class Overview <span style="color:var(--muted);font-weight:400">(what the class studied this term)</span></span>
+          <button class="btn sm" onclick="applyCtxToAll('${sid}','ela')">Apply to All Students</button>
+        </div>
+        <textarea class="ta ctx" placeholder="${esc(sub.ctx||classCtx[clsKey(classId,'ela')]||'')}" oninput="updateStudentCtx('${sid}','ela',this.value)">${esc(c.ctx||classCtx[clsKey(classId,'ela')]||'')}</textarea>
       </div>
       <div class="fg">
         <div class="fl">Proficiency Levels</div>
         <div class="ela-prof-grid">${profHtml}</div>
       </div>
       <div class="fg">
-        <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
+        <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></span>
+          <button class="btn sm" onclick="applyCompsToAll('${sid}','ela')">Apply to All Students</button>
+        </div>
         <div class="comp-grid">${compHtml}</div>
         <div class="comp-hint ${cHint}" id="chint-ela">${cMsg}</div>
       </div>
@@ -971,6 +1073,7 @@ function buildCommentSection(sid, key) {
   const sub=SUB[key]; if(!sub) return '';
   const c=comments[sid][key];
   const p=pr(sid), name=getStudent(sid).firstName;
+  const classId=getStudent(sid)?.classId||classes[0]?.id||'';
 
   const profBtns=Object.entries(PROF).map(([code,lbl])=>
     `<button class="pb${c.proficiency===code?' a'+code:''}" onclick="setProf('${sid}','${key}','${code}')">${lbl}</button>`
@@ -980,7 +1083,6 @@ function buildCommentSection(sid, key) {
   const cnt=selC.length;
   const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
   const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
-
   const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
       <input type="checkbox" id="c${key}${i}" data-sid="${sid}" data-key="${key}" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
@@ -997,15 +1099,21 @@ function buildCommentSection(sid, key) {
 
   return `
     <div class="fg">
-      <div class="fl">Class Context <span style="color:var(--muted);font-weight:400">(shared for all students in this subject)</span></div>
-      <textarea class="ta ctx" placeholder="${esc(sub.ctx||'')}" oninput="updateCtx('${key}',this.value)">${esc(classCtx[key]||'')}</textarea>
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Class Overview <span style="color:var(--muted);font-weight:400">(what the class studied this term)</span></span>
+        <button class="btn sm" onclick="applyCtxToAll('${sid}','${key}')">Apply to All Students</button>
+      </div>
+      <textarea class="ta ctx" placeholder="${esc(sub.ctx||classCtx[clsKey(classId,key)]||'')}" oninput="updateStudentCtx('${sid}','${key}',this.value)">${esc(c.ctx||classCtx[clsKey(classId,key)]||'')}</textarea>
     </div>
     <div class="fg">
       <div class="fl">Proficiency Level</div>
       <div class="prof-row">${profBtns}</div>
     </div>
     <div class="fg">
-      <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></span>
+        <button class="btn sm" onclick="applyCompsToAll('${sid}','${key}')">Apply to All Students</button>
+      </div>
       <div class="comp-grid">${compHtml}</div>
       <div class="comp-hint ${cHint}" id="chint-${key}">${cMsg}</div>
     </div>
@@ -1141,24 +1249,6 @@ function setELAProf(sid,field,prof) {
   });
 }
 
-function toggleCompEl(cb) {
-  const {sid,key,idx}=cb.dataset;
-  const comp=SUB[key]?.competencies[parseInt(idx)];
-  if(!comp) return;
-  const arr=comments[sid][key].competencies;
-  if(cb.checked){if(!arr.includes(comp))arr.push(comp);}
-  else{comments[sid][key].competencies=arr.filter(x=>x!==comp);}
-  comments[sid][key].customText='';
-  save();
-  // Update hint
-  const cnt=comments[sid][key].competencies.length;
-  const hint=document.getElementById('chint-'+key);
-  if(hint){
-    hint.className='comp-hint '+(cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn'));
-    hint.textContent=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
-  }
-  refreshPreview(sid,key);
-}
 
 function addPhrase(sid,key,type,selId) {
   const sel=document.getElementById(selId);
@@ -1185,8 +1275,73 @@ function updateField(sid,key,field,val) {
 }
 
 function updateCtx(key,val) {
-  classCtx[key]=val; saveCtx();
-  if(activeId){comments[activeId][key]&&(comments[activeId][key].customText='');refreshPreview(activeId,key);}
+  classCtx[clsKey(activeClass,key)]=val; saveCtx();
+}
+
+function updateStudentCtx(sid,key,val) {
+  if(!comments[sid]?.[key]) return;
+  comments[sid][key].ctx=val;
+  comments[sid][key].customText='';
+  save();
+  refreshPreview(sid,key);
+}
+
+function applyCtxToAll(sid,key) {
+  const val=comments[sid]?.[key]?.ctx||'';
+  const cid=getStudent(sid)?.classId||classes[0]?.id||'';
+  classCtx[clsKey(cid,key)]=val; saveCtx();
+  students.filter(s=>(s.classId||classes[0]?.id)===activeClass).forEach(s=>{
+    if(!comments[s.id]?.[key]) initStudent(s.id);
+    comments[s.id][key].ctx=val;
+    comments[s.id][key].customText='';
+  });
+  save();
+  showToast('Class overview applied to all students.');
+}
+
+function applyCompsToAll(sid,key) {
+  const comps=[...(comments[sid]?.[key]?.competencies||[])];
+  const cid=getStudent(sid)?.classId||classes[0]?.id||'';
+  classComps[clsKey(cid,key)]=[...comps]; saveComps();
+  students.filter(s=>(s.classId||classes[0]?.id)===activeClass).forEach(s=>{
+    if(!comments[s.id]?.[key]) initStudent(s.id);
+    comments[s.id][key].competencies=[...comps];
+    comments[s.id][key].customText='';
+  });
+  save();
+  showToast('Competencies applied to all students.');
+}
+
+function toggleCompEl(btn) {
+  const {sid, key, idx} = btn.dataset;
+  const sub = SUB[key]; if(!sub) return;
+  if(!comments[sid]?.[key]) return;
+  const comp = sub.competencies[parseInt(idx)];
+  const arr = comments[sid][key].competencies || (comments[sid][key].competencies=[]);
+  if(btn.checked){ if(!arr.includes(comp)) arr.push(comp); }
+  else { comments[sid][key].competencies = arr.filter(c=>c!==comp); }
+  comments[sid][key].customText='';
+  save();
+  const cnt=comments[sid][key].competencies.length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  const hintEl=document.getElementById('chint-'+key);
+  if(hintEl){hintEl.className='comp-hint '+cHint;hintEl.textContent=cMsg;}
+  refreshPreview(sid, key);
+}
+
+function showToast(msg) {
+  let t=document.getElementById('rc-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='rc-toast';
+    t.style.cssText='position:fixed;bottom:74px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:8px 18px;border-radius:8px;font-size:.82rem;z-index:500;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._to);
+  t._to=setTimeout(()=>{t.style.opacity='0';},2200);
 }
 
 function updateCT(sid,key,val) {
@@ -1318,12 +1473,92 @@ function openSettings() {
   document.getElementById('class-form-section').style.display='none';
   renderClassSettingsList();
   renderSettingsAppearance();
+  renderSubjectSetup();
   document.getElementById('settings-modal').classList.add('open');
 }
 
 function renderSettingsAppearance() {
   const btn=document.getElementById('dark-toggle-btn');
   if(btn) btn.textContent=dark?'Dark mode: On':'Dark mode: Off';
+}
+
+function openSubjectSetup(key) {
+  activeSetupSubj = key;
+  openSettings();
+}
+
+function switchSetupSubj(key) {
+  activeSetupSubj = key;
+  renderSubjectSetup();
+}
+
+function toggleSetupComp(key, idx, checked) {
+  const sub=SUB[key]; if(!sub) return;
+  const comp=sub.competencies[idx];
+  const ck=clsKey(activeClass,key);
+  if(!classComps[ck]) classComps[ck]=[];
+  if(checked){ if(!classComps[ck].includes(comp)) classComps[ck].push(comp); }
+  else { classComps[ck]=classComps[ck].filter(c=>c!==comp); }
+  saveComps();
+  const cnt=classComps[ck].length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  const el=document.getElementById('setup-chint-'+key);
+  if(el){el.className='comp-hint '+cHint;el.textContent=cMsg;}
+}
+
+function applySetupToAll(key) {
+  const ck=clsKey(activeClass,key);
+  const ctx=classCtx[ck]||'';
+  const comps=[...(classComps[ck]||[])];
+  students.filter(s=>(s.classId||classes[0]?.id)===activeClass).forEach(s=>{
+    if(!comments[s.id]?.[key]) initStudent(s.id);
+    if(key!=='pg'){
+      comments[s.id][key].ctx=ctx;
+      comments[s.id][key].competencies=[...comps];
+      comments[s.id][key].customText='';
+    }
+  });
+  save();
+  showToast('Defaults applied to all students in this class.');
+}
+
+function renderSubjectSetup() {
+  const tabsEl=document.getElementById('setup-subj-tabs');
+  const bodyEl=document.getElementById('setup-subj-body');
+  if(!tabsEl||!bodyEl) return;
+  const nameEl=document.getElementById('setup-class-name');
+  if(nameEl) nameEl.textContent=getClass(activeClass)?.name||'(no class)';
+  const key=activeSetupSubj;
+  const sub=SUB[key];
+  tabsEl.innerHTML=ALL_SUBJECTS.map(k=>
+    `<button class="btn sm${k===key?' primary':''}" onclick="switchSetupSubj('${k}')">${esc(SUBJ_LABELS[k])}</button>`
+  ).join('');
+  if(!sub){bodyEl.innerHTML='';return;}
+  const ck=clsKey(activeClass,key);
+  const comps=classComps[ck]||[];
+  const cnt=comps.length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  const compHtml=sub.competencies.map((comp,i)=>
+    `<div class="comp-item">
+      <input type="checkbox" id="ssc${key}${i}" ${comps.includes(comp)?'checked':''} onchange="toggleSetupComp('${key}',${i},this.checked)"/>
+      <label for="ssc${key}${i}" style="font-size:.81rem;cursor:pointer;line-height:1.4;color:var(--text2)">${esc(comp)}</label>
+    </div>`
+  ).join('');
+  bodyEl.innerHTML=`
+    <div class="fg" style="margin-bottom:4px">
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Class Overview <span style="color:var(--muted);font-weight:400">(class default)</span></span>
+      </div>
+      <textarea class="ta ctx" placeholder="${esc(sub.ctx||'')}" oninput="updateCtx('${key}',this.value)">${esc(classCtx[ck]||'')}</textarea>
+    </div>
+    <div class="fg">
+      <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
+      <div class="comp-grid" style="max-height:220px;overflow-y:auto;padding-right:4px">${compHtml}</div>
+      <div class="comp-hint ${cHint}" id="setup-chint-${key}">${cMsg}</div>
+    </div>
+    <button class="btn sm" style="margin-top:6px;width:100%" onclick="applySetupToAll('${key}')">Apply Class Defaults to All Students in This Class</button>`;
 }
 
 function renderClassSettingsList() {
@@ -1602,7 +1837,7 @@ function buildByStudent(targetStudents) {
     body+=`<h1 style="font-size:14pt;color:#1e3a6e;border-bottom:1.5pt solid #1e3a6e;padding-bottom:4pt;margin-bottom:10pt">${esc(s.firstName+' '+s.lastName)} <span style="font-size:10pt;color:#6b7280;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h1>`;
     [...SUB_ORDER,'_pg'].forEach(key=>{
       const subs=classSubjects(s.classId||classes[0]?.id);
-      const show=key==='_pg'?true:subs.includes(key);
+      const show=key==='_pg'?subs.includes('pg'):subs.includes(key);
       if(!show) return;
       const text=getFullComment(s.id,key); if(!text.trim()) return;
       const c=comments[s.id]?.[key]||{};
@@ -1623,7 +1858,7 @@ function buildBySubject(targetStudents) {
     const entries=targetStudents.map(s=>{
       initStudent(s.id);
       const subs=classSubjects(s.classId||classes[0]?.id);
-      const show=key==='_pg'?true:subs.includes(key);
+      const show=key==='_pg'?subs.includes('pg'):subs.includes(key);
       if(!show) return null;
       const text=getFullComment(s.id,key); if(!text.trim()) return null;
       return {s,text,c:comments[s.id]?.[key]||{}};
@@ -1643,12 +1878,18 @@ function buildBySubject(targetStudents) {
   return wrapDoc(body);
 }
 
+function exportTimestamp() {
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+}
+
 function exportStudent() {
   if(!activeId) return alert('Select a student first.');
   const s=getStudent(activeId);
   const html=buildByStudent([s]);
   const blob=new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
-  saveAs(blob,`${s.lastName}_${s.firstName}_ReportCard.doc`);
+  saveAs(blob,`${s.lastName}_${s.firstName}_ReportCard_${exportTimestamp()}.doc`);
 }
 
 function exportAll(mode) {
@@ -1656,7 +1897,7 @@ function exportAll(mode) {
   const html=mode==='subject'?buildBySubject(students):buildByStudent(students);
   const blob=new Blob(['﻿',html],{type:'application/vnd.ms-word;charset=utf-8'});
   const gLabel=`Grade${classGrade(activeClass)}`;
-  saveAs(blob,mode==='subject'?`${gLabel}_BySubject.doc`:`${gLabel}_ByStudent.doc`);
+  saveAs(blob,mode==='subject'?`${gLabel}_BySubject_${exportTimestamp()}.doc`:`${gLabel}_ByStudent_${exportTimestamp()}.doc`);
 }
 
 // ── First-run setup ────────────────────────────────────────────────────────────
