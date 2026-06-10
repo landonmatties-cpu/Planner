@@ -1214,10 +1214,10 @@ function switchClass(id) {
 }
 
 function selectStudent(id) {
-  activeId=id; activeSubj='ela';
+  activeId=id;
   const s=getStudent(id);
   const subs=classSubjects(s?.classId||classes[0]?.id);
-  if(!subs.includes('ela')) activeSubj=subs[0]||'pg';
+  if(!subs.includes(activeSubj)) activeSubj=subs.includes('ela')?'ela':subs[0]||'pg';
   renderStudentList(); renderEditor(); save();
 }
 
