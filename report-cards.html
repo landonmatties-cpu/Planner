@@ -781,8 +781,8 @@ function assembleSubjectComment(sid, key) {
   const strs=c.strengthPhrases||[], grws=c.growthPhrases||[];
   const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
   const parts=[];
-  if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p,studentGrade(sid)));
   if(ctx) parts.push(ctx);
+  if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p,studentGrade(sid)));
   const strText=strs.length?strs.map((ph,i)=>`${i===0?name:p.sub} ${ph}.`).join(' '):'';
   const grwText=grws.length?(()=>{const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];return `To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`;})():'';
   const transition=strs.length?(strs.length===1?`In ${p.pos} work this term, ${name} has shown a notable strength.`:`In ${p.pos} work this term, ${name} has shown several notable strengths.`):'';
