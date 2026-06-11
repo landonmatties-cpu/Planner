@@ -1083,7 +1083,10 @@ function buildELASection() {
         <div class="comp-hint ${cHint}" id="chint-ela">${cMsg}</div>
       </div>
       <div class="fg">
-        <div class="fl">Strength Phrases</div>
+        <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Strength Phrases</span>
+          <button class="btn sm" onclick="applyPhrasesToAll('${sid}','ela','str')">Apply to All Students</button>
+        </div>
         ${strTags?`<div class="tag-list">${strTags}</div>`:''}
         <div class="phrase-row">
           <select class="psel" id="ss-ela"><option value="">— pick a strength phrase —</option>${availStr.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
@@ -1091,7 +1094,10 @@ function buildELASection() {
         </div>
       </div>
       <div class="fg">
-        <div class="fl">Growth / Next Steps</div>
+        <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Growth / Next Steps</span>
+          <button class="btn sm" onclick="applyPhrasesToAll('${sid}','ela','grw')">Apply to All Students</button>
+        </div>
         ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
         <div class="phrase-row">
           <select class="psel" id="gs-ela"><option value="">— pick a growth phrase —</option>${availGrw.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
@@ -1184,7 +1190,10 @@ function buildCommentSection(sid, key) {
       <div class="comp-hint ${cHint}" id="chint-${key}">${cMsg}</div>
     </div>
     <div class="fg">
-      <div class="fl">Strength Phrases</div>
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Strength Phrases</span>
+        <button class="btn sm" onclick="applyPhrasesToAll('${sid}','${key}','str')">Apply to All Students</button>
+      </div>
       ${strTags?`<div class="tag-list">${strTags}</div>`:''}
       <div class="phrase-row">
         <select class="psel" id="ss-${key}"><option value="">— pick a strength phrase —</option>${availStr.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
@@ -1192,7 +1201,10 @@ function buildCommentSection(sid, key) {
       </div>
     </div>
     <div class="fg">
-      <div class="fl">Growth / Next Steps</div>
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Growth / Next Steps</span>
+        <button class="btn sm" onclick="applyPhrasesToAll('${sid}','${key}','grw')">Apply to All Students</button>
+      </div>
       ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
       <div class="phrase-row">
         <select class="psel" id="gs-${key}"><option value="">— pick a growth phrase —</option>${availGrw.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
@@ -1376,6 +1388,18 @@ function applyCompsToAll(sid,key) {
   });
   save();
   showToast('Competencies applied to all students.');
+}
+
+function applyPhrasesToAll(sid,key,type) {
+  const field=type==='str'?'strengthPhrases':'growthPhrases';
+  const phrases=[...(comments[sid]?.[key]?.[field]||[])];
+  students.filter(s=>(s.classId||classes[0]?.id)===activeClass).forEach(s=>{
+    if(!comments[s.id]?.[key]) initStudent(s.id);
+    comments[s.id][key][field]=[...phrases];
+    comments[s.id][key].customText='';
+  });
+  save();
+  showToast((type==='str'?'Strength phrases':'Growth phrases')+' applied to all students.');
 }
 
 function toggleCompEl(btn) {
