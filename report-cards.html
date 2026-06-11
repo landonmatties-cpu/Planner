@@ -763,7 +763,7 @@ function initStudent(sid) {
   ['math','ss','french','phe','science','careers'].forEach(k=>{
     if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:_dp(k),ctx:_dc(k),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
   });
-  if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],customNote:'',customText:''};
+  if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],nextGrade:false,customNote:'',customText:''};
 }
 
 function studentSubjKeys(sid) {
@@ -914,7 +914,7 @@ function assemblePHEComment(sid) {
 function assemblePG(sid) {
   const c=comments[sid]?.['_pg']; if(!c) return '';
   const s=getStudent(sid), name=s?.firstName||'', p=pr(sid);
-  const sel={habits:c.habits||[],social:c.social||[],cc:c.cc||[],support:c.support||[]};
+  const sel={habits:c.habits||[],social:c.social||[],support:c.support||[]};
   const parts=[];
   const p1=[];
   sel.habits.forEach(id=>{const ph=PG.habits.find(x=>x.id===id);if(ph)p1.push(`${name} ${ph.t}.`);});
@@ -922,17 +922,14 @@ function assemblePG(sid) {
     const ph=PG.social.find(x=>x.id===id); if(!ph) return;
     p1.push(`${p1.length===0?name:p.sub} ${ph.t}.`);
   });
-  sel.cc.forEach(id=>{
-    if(id==='c1') p1.push(`Students have been collecting evidence of their learning through the Core Competencies throughout the year. Please see ${name}'s Spaces portfolio for ${p.pos} personal reflections and goal setting.`);
-    else if(id==='c2') p1.push(`${name} has set a meaningful personal learning goal this term and is actively working towards it.`);
-    else{const ph=PG.cc.find(x=>x.id===id);if(ph)p1.push(ph.t.replace('[name]',name).replace('[pronoun]',p.obj));}
-  });
+  p1.push(`Students have been collecting evidence of their learning through the Core Competencies throughout the year. Please see ${name}'s Spaces portfolio for ${p.pos} personal reflections and goal setting.`);
   if(p1.length) parts.push(p1.join(' '));
   if(sel.support.length){
     const bullets=sel.support.map(id=>{const ph=PG.support.find(x=>x.id===id);return ph?'• '+ph.t.replace(/\[name\]/g,name):null;}).filter(Boolean);
     parts.push(`To support ${name}'s continued growth, I recommend:\n${bullets.join('\n')}`);
   }
   if(c.customNote?.trim()) parts.push(c.customNote.trim());
+  if(c.nextGrade){const ng=studentGrade(sid)+1;parts.push(`${name} has been assigned to Grade ${ng} for the upcoming school year.`);}
   return parts.join('\n\n');
 }
 
@@ -1334,30 +1331,35 @@ function buildCommentSection(sid, key) {
 function buildPG() {
   const sid=activeId;
   const c=comments[sid]['_pg'];
-  function groupHtml(groupKey, label) {
+  function groupHtml(groupKey, label, headerBtn='') {
     const phrases=PG[groupKey], sel=c[groupKey]||[];
     const items=phrases.map(ph=>{
-      let display=ph.t;
-      if(ph.id==='c1') display='Reference Spaces portfolio for Core Competency reflections';
-      else if(ph.id==='c2') display='Note that student has set a personal learning goal this term';
-      else display=display.replace(/\[name\]/g,'[student name]');
+      const display=ph.t.replace(/\[name\]/g,'[student name]');
       return `<div class="pg-check">
         <input type="checkbox" id="pg-${ph.id}" ${sel.includes(ph.id)?'checked':''} onchange="togglePG('${sid}','${groupKey}','${ph.id}',this.checked)"/>
         <label for="pg-${ph.id}">${esc(display)}</label>
       </div>`;
     }).join('');
-    return `<div class="pg-group"><div class="pg-group-label">${label}</div>${items}</div>`;
+    const hdr=headerBtn?`<div style="display:flex;justify-content:space-between;align-items:center"><span>${label}</span>${headerBtn}</div>`:label;
+    return `<div class="pg-group"><div class="pg-group-label">${hdr}</div>${items}</div>`;
   }
   const assembled=c.customText||assemblePG(sid);
   const s=getStudent(sid);
+  const ng=studentGrade(sid)+1;
   return `<div class="card">
     <div class="card-head"><div class="card-title">Progress &amp; Growth + Ways to Support at Home</div></div>
     <div class="card-body">
-      <div class="note">📌 Select phrases that apply to ${esc(s.firstName)}. The assembled comment combines habits, character, Core Competencies, and home support into one section.</div>
+      <div class="note">📌 Select phrases that apply to ${esc(s.firstName)}. The Spaces Core Competency sentence is always included automatically.</div>
       ${groupHtml('habits','Work Habits')}
       ${groupHtml('social','Attitude &amp; Character')}
-      ${groupHtml('cc','Core Competencies')}
-      ${groupHtml('support','Ways to Support at Home')}
+      ${groupHtml('support','Ways to Support at Home',`<button class="btn sm" onclick="applyPGSupportToAll('${sid}')">Apply to All Students</button>`)}
+      <div class="fg">
+        <div class="fl">Next Grade Assignment</div>
+        <div class="pg-check">
+          <input type="checkbox" id="pg-nextgrade" ${c.nextGrade?'checked':''} onchange="togglePGNextGrade('${sid}',this.checked)"/>
+          <label for="pg-nextgrade">${esc(s.firstName)} has been assigned to Grade ${ng} for the upcoming school year.</label>
+        </div>
+      </div>
       <div class="fg">
         <div class="fl">Additional Personal Note <span style="color:var(--muted);font-weight:400">(optional)</span></div>
         <textarea class="ta short" id="pg-note" placeholder="Any extra personal comment…" oninput="updatePGNote('${sid}',this.value)">${esc(c.customNote||'')}</textarea>
@@ -1553,6 +1555,22 @@ function togglePG(sid,groupKey,phraseId,checked) {
   if(checked){if(!arr.includes(phraseId))arr.push(phraseId);}
   else{comments[sid]['_pg'][groupKey]=arr.filter(x=>x!==phraseId);}
   comments[sid]['_pg'].customText=''; save(); refreshPGPreview(sid);
+}
+
+function togglePGNextGrade(sid, checked) {
+  comments[sid]['_pg'].nextGrade=checked;
+  comments[sid]['_pg'].customText=''; save(); refreshPGPreview(sid);
+}
+
+function applyPGSupportToAll(sid) {
+  const support=[...(comments[sid]?.['_pg']?.support||[])];
+  students.filter(s=>(s.classId||classes[0]?.id)===activeClass).forEach(s=>{
+    if(!comments[s.id]?.['_pg']) initStudent(s.id);
+    comments[s.id]['_pg'].support=[...support];
+    comments[s.id]['_pg'].customText='';
+  });
+  save();
+  showToast('Ways to support at home applied to all students.');
 }
 
 function updatePGNote(sid,val) {
