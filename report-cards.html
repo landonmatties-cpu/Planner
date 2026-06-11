@@ -1855,7 +1855,7 @@ function exportData() {
     classes,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  saveAs(blob, `ReportCards_${new Date().toISOString().slice(0,10)}.json`);
+  saveAs(blob, `ReportCards_${exportTimestamp()}.json`);
 }
 
 function importData(input) {
