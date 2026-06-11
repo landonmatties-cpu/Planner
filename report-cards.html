@@ -331,6 +331,12 @@ const PR = {
 };
 const PROF     = {E:'Emerging',D:'Developing',P:'Proficient',Ex:'Extending'};
 const PROF_COL = {E:'#ef4444',D:'#f59e0b',P:'#10b981',Ex:'#6366f1'};
+const PHE_PROF_DEF = {
+  Ex:`demonstrates learning in relation to the Learning Standards with increasing depth, complexity, and independence.`,
+  P:`is the standard goal for all students. It indicates that a student demonstrates the expected learning in relation to the Learning Standards of the curriculum.`,
+  D:`indicates that a student is demonstrating learning in relation to the Learning Standards with growing consistency. The student is showing initial understanding but is still in the process of developing their competency in relation to the curriculum.`,
+  E:`indicates that a student is just beginning to demonstrate learning in relation to the Learning Standards of the curriculum, but is not yet doing so consistently.`,
+};
 const ALL_SUBJECTS = ['ela','math','ss','french','phe','science','careers','pg'];
 const SUBJ_LABELS  = {ela:'ELA', math:'Math', ss:'Social Studies', french:'French', phe:'PHE', science:'Science', careers:'Career Education', pg:'Progress & Growth'};
 
@@ -885,6 +891,26 @@ function assembleELAComment(sid) {
   return parts.join('\n\n');
 }
 
+function assemblePHEComment(sid) {
+  const s=getStudent(sid); if(!s) return '';
+  const c=comments[sid]?.['phe']||{};
+  const name=s.firstName, p=pr(sid);
+  const prof=c.proficiency||'';
+  const ctx=(c.ctx||classCtx[clsKey(s.classId||classes[0]?.id||'','phe')]||'').trim();
+  const adapt=(c.adaptations||'').trim(), spec=(c.special||'').trim();
+  const parts=[];
+  if(ctx) parts.push(ctx);
+  if(prof) {
+    const article=(prof==='Ex'||prof==='E')?'an':'a';
+    const levelName=PROF[prof].toLowerCase();
+    parts.push(`As the term progressed, ${name} demonstrated ${article} ${levelName} understanding of our curricular competencies. "${PROF[prof]}" ${PHE_PROF_DEF[prof]}`);
+  }
+  parts.push(`To further strengthen ${name}'s physical literacy and teamwork skills, I recommend exploring a variety of movement-based activities such as swimming, cycling, or playing outside with friends. Opportunities that encourage cooperation, self-regulation, and goal-setting will continue to support ${p.pos} growth in PHE.`);
+  if(adapt) parts.push(adapt);
+  if(spec)  parts.push(spec);
+  return parts.join('\n\n');
+}
+
 function assemblePG(sid) {
   const c=comments[sid]?.['_pg']; if(!c) return '';
   const s=getStudent(sid), name=s?.firstName||'', p=pr(sid);
@@ -918,7 +944,7 @@ function buildFullComment(sid, key) {
   const _cid=_s?.classId||classes[0]?.id||'';
   const comps = c.competencies?.length ? c.competencies : (classComps[clsKey(_cid,key)]||[]);
   const name2=_s?.firstName||'';
-  const narrative=key==='ela'?assembleELAComment(sid):assembleSubjectComment(sid,key);
+  const narrative=key==='ela'?assembleELAComment(sid):key==='phe'?assemblePHEComment(sid):assembleSubjectComment(sid,key);
   if(!narrative.trim()&&!comps.length) return '';
   const compLines=comps.length?comps.map(c2=>`(Curricular Competency) ${c2}`).join('\n'):'';
   return [compLines,narrative].filter(Boolean).join('\n\n');
@@ -1135,10 +1161,78 @@ function buildELASection() {
 function buildSubjectCard(subj) {
   const sub=SUB[subj]; if(!sub) return '';
   const cg=studentGrade(activeId);
+  const body=subj==='phe'?buildPHESection(activeId):buildCommentSection(activeId,subj);
   return `<div class="card">
     <div class="card-head"><div class="card-title">${esc(subGradeLabel(subj,cg))}</div></div>
-    <div class="card-body">${buildCommentSection(activeId,subj)}</div>
+    <div class="card-body">${body}</div>
   </div>`;
+}
+
+function buildPHESection(sid) {
+  const sub=SUB['phe']; if(!sub) return '';
+  const c=comments[sid]['phe'];
+  const classId=getStudent(sid)?.classId||classes[0]?.id||'';
+
+  const profBtns=Object.entries(PROF).map(([code,lbl])=>
+    `<button class="pb${c.proficiency===code?' a'+code:''}" onclick="setProf('${sid}','phe','${code}')">${lbl}</button>`
+  ).join('');
+
+  const selC=c.competencies||[];
+  const cnt=selC.length;
+  const cHint=cnt===0?'':(cnt<2?'warn':cnt<=5?'ok':'warn');
+  const cMsg=cnt===0?'None selected — select 2–5':(cnt<2?cnt+' selected — need at least 2':cnt>5?cnt+' selected — try to keep to 5 or fewer':cnt+' selected ✓');
+  const compHtml=sub.competencies.map((comp,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="cphei${i}" data-sid="${sid}" data-key="phe" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
+      <label for="cphei${i}">${esc(comp)}</label>
+    </div>`).join('');
+
+  const taValue=c.customText||buildFullComment(sid,'phe');
+
+  return `
+    <div class="fg">
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Class Overview <span style="color:var(--muted);font-weight:400">(what the class studied this term)</span></span>
+        <button class="btn sm" onclick="applyCtxToAll('${sid}','phe')">Apply to All Students</button>
+      </div>
+      <textarea class="ta ctx" placeholder="${esc(sub.ctx||classCtx[clsKey(classId,'phe')]||'')}" oninput="updateStudentCtx('${sid}','phe',this.value)">${esc(c.ctx||classCtx[clsKey(classId,'phe')]||'')}</textarea>
+    </div>
+    <div class="fg">
+      <div class="fl">Proficiency Level</div>
+      <div class="prof-row">${profBtns}</div>
+    </div>
+    <div class="fg">
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></span>
+        <button class="btn sm" onclick="applyCompsToAll('${sid}','phe')">Apply to All Students</button>
+      </div>
+      <div class="comp-grid">${compHtml}</div>
+      <div class="comp-hint ${cHint}" id="chint-phe">${cMsg}</div>
+    </div>
+    <div class="fg">
+      <div class="fl">Adaptations &amp; Supports</div>
+      <input class="fi" type="text" value="${esc(c.adaptations||'')}" placeholder="e.g. extended time; modified activities" oninput="updateField('${sid}','phe','adaptations',this.value)"/>
+    </div>
+    <div class="fg">
+      <div class="fl">Special Circumstances</div>
+      <select class="fi sel" style="width:100%" onchange="setSpecial('${sid}','phe',this.value)">
+        <option value="">— None —</option>
+        <option value="iep"${c.special?.includes('IEP')?' selected':''}>IEP Student</option>
+        <option value="ell"${c.special?.includes('ELL')?' selected':''}>ELL Student</option>
+        <option value="new"${c.special?.includes('recently joined')?' selected':''}>New Student (IE)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="fl" style="display:flex;justify-content:space-between">
+        Full Comment Preview <span style="font-weight:400;color:var(--muted)">(competencies + narrative — editable)</span>
+        <button class="btn sm" onclick="regenSubj('${sid}','phe')">↺ Regenerate</button>
+      </div>
+      <textarea class="ta preview" id="ta-phe" oninput="updateCT('${sid}','phe',this.value)">${esc(taValue)}</textarea>
+      <div class="cmt-actions">
+        <span class="cc" id="cc-phe">${taValue.length} chars</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="cpok" id="cp-phe">✓ Copied</span><button class="btn sm" onclick="copyTA('ta-phe','cp-phe')">📋 Copy</button></div>
+      </div>
+    </div>`;
 }
 
 function buildCommentSection(sid, key) {
