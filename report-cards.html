@@ -856,7 +856,9 @@ function assembleSubjectComment(sid, key) {
   if(ctx) parts.push(ctx);
   if(prof) parts.push(profDef(name,prof,sub.short||sub.label,p,studentGrade(sid)));
   const strText=strs.length?strs.map((ph,i)=>`${i===0?name:p.sub} ${ph}.`).join(' '):'';
-  const grwText=grws.length?(()=>{const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];return `To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`;})():'';
+  const grwText=key==='french'
+    ? `Over the summer, I encourage ${name} to keep building ${p.pos} French skills through free apps like Duolingo, Babbel, or Lingodeer for daily vocabulary and grammar practice. Watching French movies, YouTube channels, or listening to French music with subtitles is a great way to develop an ear for the language. Even small daily habits like reading a few sentences in French or labelling household objects with French words can make a big difference by September.`
+    : grws.length?(()=>{const gl=grws.length===1?grws[0]:grws.slice(0,-1).join(', ')+', and '+grws[grws.length-1];return `To further support ${name}'s growth in ${sub.short||sub.label}, I encourage ${p.obj} to ${gl}.`;})():'';
   const transition=strs.length?(strs.length===1?`In ${p.pos} work this term, ${name} has shown a notable strength.`:`In ${p.pos} work this term, ${name} has shown several notable strengths.`):'';
   if(transition||strText||grwText) parts.push([transition,strText,grwText].filter(Boolean).join(' '));
   if(adapt) parts.push(adapt);
@@ -1291,13 +1293,18 @@ function buildCommentSection(sid, key) {
       </div>
       <div class="comp-grid">${strChecks}</div>
     </div>
+    ${key==='french'?`
+    <div class="fg">
+      <div class="fl">Growth / Next Steps</div>
+      <div class="note" style="margin:0">📌 French summer practice paragraph is included automatically — no selection needed.</div>
+    </div>`:`
     <div class="fg">
       <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
         <span>Growth / Next Steps</span>
         <button class="btn sm" onclick="applyPhrasesToAll('${sid}','${key}','grw')">Apply to All Students</button>
       </div>
       <div class="comp-grid">${grwChecks}</div>
-    </div>
+    </div>`}
     <div class="fg">
       <div class="fl">Adaptations &amp; Supports</div>
       <input class="fi" type="text" value="${esc(c.adaptations||'')}" placeholder="e.g. extended time; text-to-speech access" oninput="updateField('${sid}','${key}','adaptations',this.value)"/>
