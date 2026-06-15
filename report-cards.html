@@ -1072,10 +1072,16 @@ function buildELASection() {
     </div>`).join('');
 
   const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
-  const strTags=selStr.map((ph,i)=>`<div class="tag str"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="ela" data-type="str" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
-  const grwTags=selGrw.map((ph,i)=>`<div class="tag grw"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="ela" data-type="grw" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
-  const availStr=sub.strengths.filter(x=>!selStr.includes(x));
-  const availGrw=sub.growth.filter(x=>!selGrw.includes(x));
+  const strChecks=sub.strengths.map((ph,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="str-ela-${i}" data-sid="${sid}" data-key="ela" data-type="str" data-idx="${i}" ${selStr.includes(ph)?'checked':''} onchange="togglePhrase(this)"/>
+      <label for="str-ela-${i}">${esc(ph)}</label>
+    </div>`).join('');
+  const grwChecks=sub.growth.map((ph,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="grw-ela-${i}" data-sid="${sid}" data-key="ela" data-type="grw" data-idx="${i}" ${selGrw.includes(ph)?'checked':''} onchange="togglePhrase(this)"/>
+      <label for="grw-ela-${i}">${esc(ph)}</label>
+    </div>`).join('');
 
   const taValue=c.customText||buildFullComment(sid,'ela');
 
@@ -1110,22 +1116,14 @@ function buildELASection() {
           <span>Strength Phrases</span>
           <button class="btn sm" onclick="applyPhrasesToAll('${sid}','ela','str')">Apply to All Students</button>
         </div>
-        ${strTags?`<div class="tag-list">${strTags}</div>`:''}
-        <div class="phrase-row">
-          <select class="psel" id="ss-ela"><option value="">— pick a strength phrase —</option>${availStr.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
-          <button class="btn sm" onclick="addPhrase('${sid}','ela','str','ss-ela')">+ Add</button>
-        </div>
+        <div class="comp-grid">${strChecks}</div>
       </div>
       <div class="fg">
         <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
           <span>Growth / Next Steps</span>
           <button class="btn sm" onclick="applyPhrasesToAll('${sid}','ela','grw')">Apply to All Students</button>
         </div>
-        ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
-        <div class="phrase-row">
-          <select class="psel" id="gs-ela"><option value="">— pick a growth phrase —</option>${availGrw.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
-          <button class="btn sm" onclick="addPhrase('${sid}','ela','grw','gs-ela')">+ Add</button>
-        </div>
+        <div class="comp-grid">${grwChecks}</div>
       </div>
       <div class="fg">
         <div class="fl">Adaptations &amp; Supports</div>
@@ -1253,10 +1251,16 @@ function buildCommentSection(sid, key) {
     </div>`).join('');
 
   const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
-  const strTags=selStr.map((ph,i)=>`<div class="tag str"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="${key}" data-type="str" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
-  const grwTags=selGrw.map((ph,i)=>`<div class="tag grw"><span>${esc(ph)}</span><button data-sid="${sid}" data-key="${key}" data-type="grw" data-idx="${i}" onclick="removePhraseEl(this)">✕</button></div>`).join('');
-  const availStr=sub.strengths.filter(x=>!selStr.includes(x));
-  const availGrw=sub.growth.filter(x=>!selGrw.includes(x));
+  const strChecks=sub.strengths.map((ph,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="str-${key}-${i}" data-sid="${sid}" data-key="${key}" data-type="str" data-idx="${i}" ${selStr.includes(ph)?'checked':''} onchange="togglePhrase(this)"/>
+      <label for="str-${key}-${i}">${esc(ph)}</label>
+    </div>`).join('');
+  const grwChecks=sub.growth.map((ph,i)=>`
+    <div class="comp-item">
+      <input type="checkbox" id="grw-${key}-${i}" data-sid="${sid}" data-key="${key}" data-type="grw" data-idx="${i}" ${selGrw.includes(ph)?'checked':''} onchange="togglePhrase(this)"/>
+      <label for="grw-${key}-${i}">${esc(ph)}</label>
+    </div>`).join('');
 
   const taValue=c.customText||buildFullComment(sid,key);
 
@@ -1285,22 +1289,14 @@ function buildCommentSection(sid, key) {
         <span>Strength Phrases</span>
         <button class="btn sm" onclick="applyPhrasesToAll('${sid}','${key}','str')">Apply to All Students</button>
       </div>
-      ${strTags?`<div class="tag-list">${strTags}</div>`:''}
-      <div class="phrase-row">
-        <select class="psel" id="ss-${key}"><option value="">— pick a strength phrase —</option>${availStr.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
-        <button class="btn sm" onclick="addPhrase('${sid}','${key}','str','ss-${key}')">+ Add</button>
-      </div>
+      <div class="comp-grid">${strChecks}</div>
     </div>
     <div class="fg">
       <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
         <span>Growth / Next Steps</span>
         <button class="btn sm" onclick="applyPhrasesToAll('${sid}','${key}','grw')">Apply to All Students</button>
       </div>
-      ${grwTags?`<div class="tag-list">${grwTags}</div>`:''}
-      <div class="phrase-row">
-        <select class="psel" id="gs-${key}"><option value="">— pick a growth phrase —</option>${availGrw.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('')}</select>
-        <button class="btn sm" onclick="addPhrase('${sid}','${key}','grw','gs-${key}')">+ Add</button>
-      </div>
+      <div class="comp-grid">${grwChecks}</div>
     </div>
     <div class="fg">
       <div class="fl">Adaptations &amp; Supports</div>
@@ -1442,6 +1438,19 @@ function removePhraseEl(btn) {
   comments[sid][key].customText='';
   save();
   renderSubjBody();
+}
+
+function togglePhrase(el) {
+  const {sid,key,type,idx}=el.dataset;
+  const sub=SUB[key]; if(!sub) return;
+  const field=type==='str'?'strengthPhrases':'growthPhrases';
+  const phrase=(type==='str'?sub.strengths:sub.growth)[parseInt(idx)];
+  if(!phrase) return;
+  const arr=comments[sid][key][field]||(comments[sid][key][field]=[]);
+  if(el.checked){if(!arr.includes(phrase))arr.push(phrase);}
+  else{comments[sid][key][field]=arr.filter(x=>x!==phrase);}
+  comments[sid][key].customText='';
+  save(); refreshPreview(sid,key);
 }
 
 function updateField(sid,key,field,val) {
