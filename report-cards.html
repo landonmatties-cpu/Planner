@@ -2052,14 +2052,12 @@ function buildGradeSummary(targetStudents) {
   const thStyle='border:.5pt solid #d1d5db;padding:2pt 5pt;text-align:center;background:#f3f4f6;font-weight:600';
   const tdStyle='border:.5pt solid #d1d5db;padding:2pt 5pt;text-align:center';
   const profCell=prof=>prof?`<span style="color:${PROF_COL[prof]};font-weight:600">${PROF[prof]}</span>`:`<span style="color:#9ca3af">—</span>`;
-  let html=`<div style="margin-bottom:10pt">`;
-  html+=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin-bottom:8pt">Grade Overview — ${esc(getClass(activeClass)?.name||'')}</h1>`;
+  let html=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin:0 0 6pt">Grade Overview — ${esc(getClass(activeClass)?.name||'')}</h1>`;
 
-  // ELA — separate Reading/Writing/Oral columns
   const elaRows=targetStudents.filter(s=>classSubjects(s.classId||classes[0]?.id).includes('ela'));
   if(elaRows.length){
     html+=`<p style="font-weight:700;font-size:9pt;margin:0 0 2pt;color:#374151">English Language Arts ${grade}</p>`;
-    html+=`<table style="border-collapse:collapse;width:100%;font-size:8.5pt;margin-bottom:8pt"><thead><tr>`;
+    html+=`<table style="border-collapse:collapse;width:100%;font-size:8.5pt;margin-bottom:6pt"><thead><tr>`;
     html+=`<th style="${thStyle};text-align:left;width:36%">Student</th>`;
     html+=`<th style="${thStyle}">Reading</th><th style="${thStyle}">Writing</th><th style="${thStyle}">Oral Language</th>`;
     html+=`</tr></thead><tbody>`;
@@ -2072,12 +2070,11 @@ function buildGradeSummary(targetStudents) {
     html+=`</tbody></table>`;
   }
 
-  // All other subjects — single proficiency column each
   SUB_ORDER.filter(k=>k!=='ela').forEach(key=>{
     const rows=targetStudents.filter(s=>classSubjects(s.classId||classes[0]?.id).includes(key));
     if(!rows.length) return;
     html+=`<p style="font-weight:700;font-size:9pt;margin:0 0 2pt;color:#374151">${subExportLabel(key,grade)}</p>`;
-    html+=`<table style="border-collapse:collapse;width:100%;font-size:8.5pt;margin-bottom:8pt"><thead><tr>`;
+    html+=`<table style="border-collapse:collapse;width:100%;font-size:8.5pt;margin-bottom:6pt"><thead><tr>`;
     html+=`<th style="${thStyle};text-align:left;width:55%">Student</th>`;
     html+=`<th style="${thStyle}">Proficiency</th>`;
     html+=`</tr></thead><tbody>`;
@@ -2089,7 +2086,6 @@ function buildGradeSummary(targetStudents) {
     html+=`</tbody></table>`;
   });
 
-  html+=`</div>`;
   return html;
 }
 
@@ -2097,8 +2093,8 @@ function buildByStudent(targetStudents) {
   let body=buildGradeSummary(targetStudents);
   targetStudents.forEach((s)=>{
     initStudent(s.id);
-    body+=`<div style="page-break-before:always;margin-bottom:8pt">`;
-    body+=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin-bottom:6pt">${esc(s.firstName+' '+s.lastName)} <span style="font-size:9pt;color:#6b7280;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h1>`;
+    body+=`<p style="page-break-before:always;margin:0;line-height:1"> </p>`;
+    body+=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin:0 0 5pt">${esc(s.firstName+' '+s.lastName)} <span style="font-size:9pt;color:#6b7280;font-weight:normal">${esc(getClass(s.classId||classes[0]?.id).name)}</span></h1>`;
     [...SUB_ORDER,'_pg'].forEach(key=>{
       const subs=classSubjects(s.classId||classes[0]?.id);
       const show=key==='_pg'?subs.includes('pg'):subs.includes(key);
@@ -2106,12 +2102,10 @@ function buildByStudent(targetStudents) {
       const text=getFullComment(s.id,key); if(!text.trim()) return;
       const c=comments[s.id]?.[key]||{};
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
-      body+=`<div style="margin-bottom:6pt">`;
-      body+=`<h2 style="font-size:9pt;color:#374151;margin-bottom:2pt">${subExportLabel(key,studentGrade(s.id))}${profLabel}</h2>`;
+      body+=`<h2 style="font-size:9pt;color:#374151;margin:0 0 1pt">${subExportLabel(key,studentGrade(s.id))}${profLabel}</h2>`;
       body+=textToWordHtml(text);
-      body+=`</div>`;
+      body+=`<p style="margin:0 0 5pt;line-height:1"> </p>`;
     });
-    body+=`</div>`;
   });
   return wrapDoc(body);
 }
@@ -2128,16 +2122,14 @@ function buildBySubject(targetStudents) {
       return {s,text,c:comments[s.id]?.[key]||{}};
     }).filter(Boolean);
     if(!entries.length) return;
-    body+=`<div style="page-break-before:always;margin-bottom:8pt">`;
-    body+=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin-bottom:6pt">${subExportLabel(key,classGrade(activeClass))}</h1>`;
+    body+=`<p style="page-break-before:always;margin:0;line-height:1"> </p>`;
+    body+=`<h1 style="font-size:10pt;color:#1e3a6e;border-bottom:1pt solid #1e3a6e;padding-bottom:2pt;margin:0 0 5pt">${subExportLabel(key,classGrade(activeClass))}</h1>`;
     entries.forEach(({s,text,c})=>{
       const profLabel=key==='ela'?elaProfLabel(c):key==='_pg'?'':(c.proficiency?` — <span style="color:${PROF_COL[c.proficiency]}">${PROF[c.proficiency]}</span>`:'');
-      body+=`<div style="margin-bottom:6pt">`;
-      body+=`<h2 style="font-size:9pt;color:#374151;margin-bottom:2pt;padding-bottom:1pt;border-bottom:.5pt solid #e4e7ec">${esc(s.firstName+' '+s.lastName)}${profLabel}</h2>`;
+      body+=`<h2 style="font-size:9pt;color:#374151;margin:0 0 1pt;padding-bottom:1pt;border-bottom:.5pt solid #e4e7ec">${esc(s.firstName+' '+s.lastName)}${profLabel}</h2>`;
       body+=textToWordHtml(text);
-      body+=`</div>`;
+      body+=`<p style="margin:0 0 5pt;line-height:1"> </p>`;
     });
-    body+=`</div>`;
   });
   return wrapDoc(body);
 }
