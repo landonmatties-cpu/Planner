@@ -1070,7 +1070,7 @@ function buildELASection() {
   const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
       <input type="checkbox" id="cela${i}" data-sid="${sid}" data-key="ela" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
-      <label for="cela${i}">${esc(comp)}</label>
+      <label for="cela${i}" title="${esc(comp)}">${esc(comp)}</label>
     </div>`).join('');
 
   const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
@@ -1181,7 +1181,7 @@ function buildPHESection(sid) {
   const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
       <input type="checkbox" id="cphei${i}" data-sid="${sid}" data-key="phe" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
-      <label for="cphei${i}">${esc(comp)}</label>
+      <label for="cphei${i}" title="${esc(comp)}">${esc(comp)}</label>
     </div>`).join('');
 
   const taValue=c.customText||buildFullComment(sid,'phe');
@@ -1249,7 +1249,7 @@ function buildCommentSection(sid, key) {
   const compHtml=sub.competencies.map((comp,i)=>`
     <div class="comp-item">
       <input type="checkbox" id="c${key}${i}" data-sid="${sid}" data-key="${key}" data-idx="${i}" ${selC.includes(comp)?'checked':''} onchange="toggleCompEl(this)"/>
-      <label for="c${key}${i}">${esc(comp)}</label>
+      <label for="c${key}${i}" title="${esc(comp)}">${esc(comp)}</label>
     </div>`).join('');
 
   const selStr=c.strengthPhrases||[], selGrw=c.growthPhrases||[];
@@ -1761,7 +1761,7 @@ function renderSubjectSetup() {
   const compHtml=sub.competencies.map((comp,i)=>
     `<div class="comp-item">
       <input type="checkbox" id="ssc${key}${i}" ${comps.includes(comp)?'checked':''} onchange="toggleSetupComp('${key}',${i},this.checked)"/>
-      <label for="ssc${key}${i}" style="font-size:.81rem;cursor:pointer;line-height:1.4;color:var(--text2)">${esc(comp)}</label>
+      <label for="ssc${key}${i}" title="${esc(comp)}" style="font-size:.81rem;cursor:pointer;line-height:1.4;color:var(--text2)">${esc(comp)}</label>
     </div>`
   ).join('');
   bodyEl.innerHTML=`
@@ -1773,7 +1773,7 @@ function renderSubjectSetup() {
     </div>
     <div class="fg">
       <div class="fl">Curricular Competencies <span style="color:var(--muted);font-weight:400">(select 2–5)</span></div>
-      <div class="comp-grid" style="max-height:220px;overflow-y:auto;padding-right:4px">${compHtml}</div>
+      <div class="comp-grid">${compHtml}</div>
       <div class="comp-hint ${cHint}" id="setup-chint-${key}">${cMsg}</div>
     </div>
     <button class="btn sm" style="margin-top:6px;width:100%" onclick="applySetupToAll('${key}')">Apply Class Defaults to All Students in This Class</button>`;
