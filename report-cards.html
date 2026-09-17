@@ -1024,15 +1024,17 @@ function renderEditor() {
     `<button class="stab${activeSubj===t.key?' active':''}" onclick="switchSubj('${t.key}')">${t.label}${tabChip(t.key)}</button>`
   ).join('');
   panel.innerHTML=`
-    <div class="stu-hdr">
-      <div style="font-size:1.8rem">👤</div>
-      <div style="flex:1">
-        <div class="stu-name">${esc(s.firstName+' '+s.lastName)}</div>
-        <div class="stu-sub">${esc(getClass(s.classId||classes[0]?.id).name)} · ${s.pronouns==='they'?'They/Them':s.pronouns==='she'?'She/Her':'He/Him'}</div>
+    <div style="position:sticky;top:0;z-index:6;background:var(--bg);padding-bottom:1px;margin-bottom:14px">
+      <div class="stu-hdr" style="margin-bottom:0;border-radius:10px 10px 0 0">
+        <div style="font-size:1.8rem">👤</div>
+        <div style="flex:1">
+          <div class="stu-name">${esc(s.firstName+' '+s.lastName)}</div>
+          <div class="stu-sub">${esc(getClass(s.classId||classes[0]?.id).name)} · ${s.pronouns==='they'?'They/Them':s.pronouns==='she'?'She/Her':'He/Him'}</div>
+        </div>
+        <button class="btn sm" onclick="openEditStudent(null,'${s.id}')">Edit Details</button>
       </div>
-      <button class="btn sm" onclick="openEditStudent(null,'${s.id}')">Edit Details</button>
+      <div class="stabs" style="margin-bottom:0;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:0 8px">${tabs}</div>
     </div>
-    <div class="stabs">${tabs}</div>
     <div id="subj-body"></div>
     <div style="height:20px"></div>`;
   renderSubjBody();
