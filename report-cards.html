@@ -759,9 +759,9 @@ function initStudent(sid) {
   const _cid = getStudent(sid)?.classId||classes[0]?.id||'';
   const _dc = k => classCtx[clsKey(_cid,k)]||'';
   const _dp = k => [...(classComps[clsKey(_cid,k)]||[])];
-  if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:_dp('ela'),ctx:_dc('ela'),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
+  if (!comments[sid]['ela']) comments[sid]['ela']={profR:'',profW:'',profO:'',competencies:_dp('ela'),ctx:_dc('ela'),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:'',notes:''};
   ['math','ss','french','phe','science','careers'].forEach(k=>{
-    if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:_dp(k),ctx:_dc(k),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:''};
+    if (!comments[sid][k]) comments[sid][k]={proficiency:'',competencies:_dp(k),ctx:_dc(k),strengthPhrases:[],growthPhrases:[],adaptations:'',customText:'',special:'',notes:''};
   });
   if (!comments[sid]['_pg']) comments[sid]['_pg']={habits:[],social:[],cc:[],support:[],nextGrade:false,customNote:'',customText:''};
 }
@@ -1143,6 +1143,10 @@ function buildELASection() {
         </select>
       </div>
       <div class="fg">
+        <div class="fl">Teacher Notes <span style="color:var(--muted);font-weight:400">(private — not in comment)</span></div>
+        <textarea class="ta short" placeholder="Observations, assignment notes, informal assessments…" oninput="updateNotes('${sid}','ela',this.value)">${esc(c.notes||'')}</textarea>
+      </div>
+      <div class="fg">
         <div class="fl" style="display:flex;justify-content:space-between">
           Full Comment Preview <span style="font-weight:400;color:var(--muted)">(competencies + narrative — editable)</span>
           <button class="btn sm" onclick="regenSubj('${sid}','ela')">↺ Regenerate</button>
@@ -1220,6 +1224,10 @@ function buildPHESection(sid) {
         <option value="ell"${c.special?.includes('ELL')?' selected':''}>ELL Student</option>
         <option value="new"${c.special?.includes('recently joined')?' selected':''}>New Student (IE)</option>
       </select>
+    </div>
+    <div class="fg">
+      <div class="fl">Teacher Notes <span style="color:var(--muted);font-weight:400">(private — not in comment)</span></div>
+      <textarea class="ta short" placeholder="Observations, assignment notes, informal assessments…" oninput="updateNotes('${sid}','phe',this.value)">${esc(c.notes||'')}</textarea>
     </div>
     <div class="fg">
       <div class="fl" style="display:flex;justify-content:space-between">
@@ -1319,6 +1327,10 @@ function buildCommentSection(sid, key) {
         <option value="ell"${c.special?.includes('ELL')?' selected':''}>ELL Student</option>
         <option value="new"${c.special?.includes('recently joined')?' selected':''}>New Student (IE)</option>
       </select>
+    </div>
+    <div class="fg">
+      <div class="fl">Teacher Notes <span style="color:var(--muted);font-weight:400">(private — not in comment)</span></div>
+      <textarea class="ta short" placeholder="Observations, assignment notes, informal assessments…" oninput="updateNotes('${sid}','${key}',this.value)">${esc(c.notes||'')}</textarea>
     </div>
     <div class="fg">
       <div class="fl" style="display:flex;justify-content:space-between">
@@ -1464,6 +1476,10 @@ function togglePhrase(el) {
 
 function updateField(sid,key,field,val) {
   comments[sid][key][field]=val; save();
+}
+
+function updateNotes(sid,key,val) {
+  comments[sid][key].notes=val; save();
 }
 
 function updateCtx(key,val) {
